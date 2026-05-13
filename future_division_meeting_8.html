@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Future Division — Monthly Meeting</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --green:#1D9E75;--green-dark:#0F6E56;--green-light:#E1F5EE;--green-text:#085041;
+  --blue-light:#E6F1FB;--blue-text:#0C447C;
+  --purple-light:#EEEDFE;--purple-text:#3C3489;
+  --amber:#BA7517;--amber-light:#FAEEDA;--amber-border:#FAC775;--amber-text:#854F0B;
+  --red:#D85A30;--red-dark:#993C1D;
+  --bg:#F7F6F3;--surface:#FFFFFF;--surface2:#F1EFE8;
+  --border:#E4E2D9;--border2:#D3D0C6;
+  --text1:#1A1A18;--text2:#5F5E5A;--text3:#9A9890;
+  --radius-sm:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:20px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow-md:0 4px 16px rgba(0,0,0,.08);
+  --font:'Sarabun',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;}
+body{font-family:var(--font);background:var(--bg);color:var(--text1);min-height:100vh;}
+
+.app-shell{display:grid;grid-template-rows:auto 1fr;min-height:100vh;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
+.topbar-brand{display:flex;align-items:center;gap:12px;}
+.topbar-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#1D9E75,#0F6E56);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.topbar-logo svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.topbar-titles{display:flex;flex-direction:column;}
+.topbar-title{font-size:15px;font-weight:700;color:var(--text1);letter-spacing:-.01em;line-height:1.2;}
+.topbar-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:6px;}
+.nav-tab{font-size:13px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid transparent;cursor:pointer;font-family:var(--font);color:var(--text2);background:transparent;transition:all .12s;white-space:nowrap;}
+.nav-tab:hover{background:var(--surface2);}
+.nav-tab.active{background:var(--green-light);color:var(--green-text);border-color:var(--green-light);}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:background .3s;}
+.sync-dot.syncing{background:var(--amber);animation:pulse .8s infinite;}
+.sync-dot.ok{background:var(--green);}
+.sync-dot.err{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.main{padding:1.5rem;max-width:960px;margin:0 auto;width:100%;}
+
+.page{display:none;animation:fadeIn .18s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+.section-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green-text);font-size:11.5px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.02em;text-transform:uppercase;}
+.section-title{font-size:22px;font-weight:700;color:var(--text1);margin-bottom:3px;letter-spacing:-.02em;}
+.section-sub{font-size:13.5px;color:var(--text2);margin-bottom:1.5rem;line-height:1.5;}
+
+/* CONFIG BANNER */
+.config-banner{background:var(--amber-light);border:1px solid var(--amber-border);border-radius:var(--radius-md);padding:12px 16px;font-size:13px;color:var(--amber-text);margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:10px;line-height:1.55;}
+.config-banner code{background:rgba(0,0,0,.08);padding:1px 6px;border-radius:4px;font-family:var(--mono);font-size:11.5px;}
+.config-banner svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex-shrink:0;margin-top:1px;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr);}}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;box-shadow:var(--shadow-sm);}
+.stat-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+.stat-val{font-size:26px;font-weight:700;color:var(--text1);font-family:var(--mono);letter-spacing:-.03em;line-height:1;}
+.stat-val.green{color:var(--green);}
+.stat-val.amber{color:var(--amber);}
+.stat-val.blue{color:#185FA5;}
+
+.search-row{display:flex;gap:8px;margin-bottom:10px;}
+.search-wrap{position:relative;flex:1;}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;}
+.search-input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:14px;font-family:var(--font);color:var(--text1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.search-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12);}
+.btn-icon{display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:40px;border:1px solid var(--border2);border-radius:var(--radius-md);background:var(--surface);font-size:12.5px;font-family:var(--font);color:var(--text2);cursor:pointer;transition:background .12s;white-space:nowrap;}
+.btn-icon:hover{background:var(--surface2);}
+.btn-icon svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+.filter-chip{font-size:12px;padding:5px 13px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.filter-chip:hover{background:var(--surface2);}
+.filter-chip.active{background:var(--green);color:#fff;border-color:var(--green);}
+.filter-select{font-size:12px;padding:5px 26px 5px 10px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--text2);font-family:var(--font);font-weight:500;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%239A9890' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;cursor:pointer;}
+.filter-select:focus{border-color:var(--green);outline:none;}
+
+.member-list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);}
+.member-row{display:flex;align-items:center;gap:12px;padding:11px 15px;border-bottom:1px solid var(--border);transition:background .1s;}
+.member-row:last-child{border-bottom:none;}
+.member-row:hover{background:var(--bg);}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;font-family:var(--mono);}
+.av0{background:#E1F5EE;color:#085041;}.av1{background:#E6F1FB;color:#0C447C;}
+.av2{background:#FAECE7;color:#712B13;}.av3{background:#EEEDFE;color:#3C3489;}.av4{background:#FBEAF0;color:#72243E;}
+.member-info{flex:1;min-width:0;}
+.member-name{font-size:13.5px;font-weight:600;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.member-name .nick{font-size:12px;font-weight:400;color:var(--text2);margin-left:4px;}
+.member-meta{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.tag{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:20px;margin-left:3px;font-weight:500;}
+.tag-g{background:var(--green-light);color:var(--green-text);}
+.tag-b{background:var(--blue-light);color:var(--blue-text);}
+.tag-p{background:var(--purple-light);color:var(--purple-text);}
+.status-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;flex-shrink:0;letter-spacing:.01em;}
+.pill-present{background:var(--green-light);color:var(--green-text);}
+.pill-absent{background:var(--surface2);color:var(--text2);}
+.action-btn{font-size:12px;padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:transparent;cursor:pointer;font-family:var(--font);font-weight:500;color:var(--text1);flex-shrink:0;transition:all .12s;display:flex;align-items:center;gap:5px;}
+.action-btn:hover{background:var(--surface2);}
+.action-btn.mark{background:var(--green);color:#fff;border-color:var(--green);}
+.action-btn.mark:hover{background:var(--green-dark);}
+.action-btn.saving{opacity:.55;pointer-events:none;}
+.action-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.history-btn{font-size:11px;padding:5px 9px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;cursor:pointer;font-family:var(--font);color:var(--text2);flex-shrink:0;display:flex;align-items:center;gap:4px;transition:all .12s;}
+.history-btn:hover{background:var(--surface2);border-color:var(--border2);}
+.history-btn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.no-results{text-align:center;padding:1rem 1rem .5rem;font-size:13px;color:var(--text2);}
+.add-new-btn{width:100%;padding:10px;border:1.5px dashed var(--border2);border-radius:var(--radius-md);background:transparent;font-size:13px;color:var(--text2);cursor:pointer;font-family:var(--font);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .12s;font-weight:500;}
+.add-new-btn:hover{background:var(--surface2);color:var(--text1);border-color:var(--green);}
+.add-new-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);background:none;border:none;cursor:pointer;padding:0;margin-bottom:1rem;font-family:var(--font);font-weight:500;transition:color .12s;}
+.back-btn:hover{color:var(--text1);}
+.back-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.75rem;box-shadow:var(--shadow-md);}
+.pre-note{background:var(--amber-light);border-radius:var(--radius-md);padding:10px 14px;font-size:12.5px;color:var(--amber-text);margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:8px;line-height:1.55;border:1px solid var(--amber-border);}
+.pre-note svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:600px){.form-grid-2,.form-grid-3{grid-template-columns:1fr;}}
+.field{margin-bottom:1rem;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.02em;text-transform:uppercase;}
+.field label .req{color:var(--red);margin-left:2px;}
+.field input,.field select,.field textarea{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:13.5px;font-family:var(--font);color:var(--text1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12);}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%239A9890' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.field textarea{resize:vertical;min-height:80px;}
+.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0;}
+.form-actions{display:flex;gap:10px;}
+.btn-primary{flex:1;padding:11px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.btn-primary:hover{background:var(--green-dark);}
+.btn-primary svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.btn-secondary{padding:11px 20px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:14px;font-family:var(--font);color:var(--text1);cursor:pointer;transition:background .12s;font-weight:500;}
+.btn-secondary:hover{background:var(--surface2);}
+
+.success-wrap{text-align:center;padding:3rem 1rem;}
+.success-icon{width:60px;height:60px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;}
+.success-icon svg{width:28px;height:28px;fill:none;stroke:var(--green);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;animation:fadeIn .15s ease;}
+.modal{background:var(--surface);border-radius:var(--radius-xl);width:100%;max-width:720px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);}
+.modal-title{font-size:16px;font-weight:700;color:var(--text1);}
+.modal-sub{font-size:12px;color:var(--text2);margin-top:2px;}
+.modal-close{width:30px;height:30px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;}
+.modal-close:hover{background:var(--border2);}
+.modal-close svg{width:14px;height:14px;fill:none;stroke:var(--text2);stroke-width:2.5;stroke-linecap:round;}
+.modal-body{padding:1.25rem 1.5rem;overflow-y:auto;flex:1;}
+
+.year-tabs{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.year-tab{font-size:12px;padding:4px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.year-tab.active{background:var(--green);color:#fff;border-color:var(--green);}
+
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
+@media(max-width:480px){.month-grid{grid-template-columns:repeat(3,1fr);}}
+.month-cell{border-radius:var(--radius-md);border:1px solid var(--border);padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;position:relative;user-select:none;}
+.month-cell:hover:not(.future):not(.present){background:var(--bg);border-color:var(--border2);}
+.month-cell.present{background:var(--green-light);border-color:var(--green);}
+.month-cell.future{opacity:.35;cursor:not-allowed;pointer-events:none;}
+.month-cell.current-month{border-color:var(--green);border-width:2px;}
+.month-cell.saving-cell{opacity:.6;pointer-events:none;}
+.month-name{font-size:13px;font-weight:600;color:var(--text1);margin-bottom:4px;}
+.month-cell.present .month-name{color:var(--green-text);}
+.month-status{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);}
+.month-cell.present .month-status{color:var(--green);}
+.month-check{width:20px;height:20px;border-radius:50%;background:var(--green);display:none;align-items:center;justify-content:center;margin:5px auto 0;}
+.month-cell.present .month-check{display:flex;}
+.month-check svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
+
+.history-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem;}
+.hsumstat{background:var(--surface2);border-radius:var(--radius-md);padding:10px 12px;text-align:center;}
+.hsumstat-val{font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text1);}
+.hsumstat-val.green{color:var(--green);}
+.hsumstat-label{font-size:10px;color:var(--text2);margin-top:2px;text-transform:uppercase;letter-spacing:.04em;}
+
+/* TOAST */
+.save-toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--text1);color:#fff;font-size:13px;font-weight:500;padding:10px 16px;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);z-index:500;display:flex;align-items:center;gap:8px;transform:translateY(12px);opacity:0;transition:all .22s;pointer-events:none;max-width:320px;}
+.save-toast.show{transform:none;opacity:1;}
+.save-toast svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;flex-shrink:0;}
+.save-toast.ok svg{stroke:var(--green);}
+.save-toast.err svg{stroke:#F87171;}
+
+/* loading overlay */
+.loading-overlay{position:fixed;inset:0;background:rgba(247,246,243,.88);z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.loading-overlay.show{display:flex;}
+.spinner{width:28px;height:28px;border:3px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-msg{font-size:14px;color:var(--text2);}
+
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+@media(max-width:600px){
+  .main{padding:1rem;}
+  .topbar{padding:0 1rem;}
+  .topbar-sub{display:none;}
+  .card{padding:1.25rem;}
+  .modal-body{padding:1rem;}
+  .modal-header{padding:1rem;}
+  .history-summary{grid-template-columns:repeat(2,1fr);}
+}
+/* ── DASHBOARD ───────────────────────────────────────────── */
+.db-filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 14px;margin-bottom:1rem;box-shadow:var(--shadow-sm);}
+.db-legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.db-group-cards{display:flex;flex-direction:column;gap:12px;}
+.db-group-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:border-color .2s,box-shadow .2s;}
+.db-group-card.target-met{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.1),var(--shadow-sm);}
+.db-group-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;user-select:none;}
+.db-group-header:hover{background:var(--bg);}
+.db-group-name{font-size:15px;font-weight:700;color:var(--text1);display:flex;align-items:center;gap:10px;}
+.db-group-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;}
+.db-group-badge.met{background:var(--green-light);color:var(--green-text);}
+.db-group-badge.unmet{background:var(--surface2);color:var(--text2);}
+.db-group-right{display:flex;align-items:center;gap:12px;}
+.db-group-stat{text-align:right;}
+.db-group-stat-val{font-size:20px;font-weight:700;font-family:var(--mono);line-height:1;}
+.db-group-stat-val.green{color:var(--green);}
+.db-group-stat-val.grey{color:var(--text2);}
+.db-group-stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;}
+/* target ring */
+.db-target-ring{position:relative;width:52px;height:52px;flex-shrink:0;}
+.db-target-ring svg{width:52px;height:52px;transform:rotate(-90deg);}
+.db-target-ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:var(--mono);color:var(--text1);}
+/* chevron */
+.db-chevron{width:16px;height:16px;fill:none;stroke:var(--text3);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;flex-shrink:0;}
+.db-group-card.open .db-chevron{transform:rotate(180deg);}
+/* breakdown inside card */
+.db-breakdown{display:none;padding:0 16px 16px;border-top:1px solid var(--border);}
+.db-group-card.open .db-breakdown{display:block;}
+.db-breakdown-tabs{display:flex;gap:6px;margin-bottom:12px;padding-top:12px;flex-wrap:wrap;}
+.db-btab{font-size:11.5px;padding:3px 11px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.db-btab.active{background:var(--text1);color:#fff;border-color:var(--text1);}
+.db-section{display:none;}.db-section.active{display:block;}
+/* bar */
+.db-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.db-bar-row:last-child{margin-bottom:0;}
+.db-bar-label{font-size:12.5px;color:var(--text1);width:100px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.db-bar-track{flex:1;height:22px;background:var(--surface2);border-radius:20px;overflow:hidden;}
+.db-bar-fill{height:100%;border-radius:20px;transition:width .5s cubic-bezier(.4,0,.2,1);min-width:2px;display:flex;align-items:center;padding-left:8px;}
+.db-bar-pct{font-size:10.5px;font-weight:700;color:#fff;font-family:var(--mono);white-space:nowrap;opacity:0;transition:opacity .3s .3s;}
+.db-bar-fill.loaded .db-bar-pct{opacity:1;}
+.db-bar-count{font-size:11.5px;font-family:var(--mono);color:var(--text2);flex-shrink:0;min-width:40px;text-align:right;}
+/* absent */
+.db-absent-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.db-chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 11px;}
+.db-chip-av{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;font-family:var(--mono);}
+.db-chip-meta{font-size:10.5px;color:var(--text3);}
+.db-empty{font-size:13px;color:var(--text3);text-align:center;padding:1rem 0;}
+.db-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow-sm);}
+.db-card-header{display:flex;align-items:center;justify-content:space-between;}
+.db-card-title{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--text1);text-transform:uppercase;letter-spacing:.04em;}
+.db-card-title svg{width:14px;height:14px;fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── MONTHLY CHART ─────────────────────────────────────── */
+.ch-controls{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 14px;margin-bottom:1rem;box-shadow:var(--shadow-sm);}
+.ch-year-tabs{display:flex;gap:5px;}
+.ch-year-tab{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.ch-year-tab.active{background:var(--green);color:#fff;border-color:var(--green);}
+.ch-view-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.ch-view-btn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ch-view-btn.active{background:var(--text1);color:#fff;border-color:var(--text1);}
+.ch-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow-sm);}
+.ch-card-title{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--text1);text-transform:uppercase;letter-spacing:.04em;margin-bottom:1rem;}
+.ch-card-title svg{width:14px;height:14px;fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ch-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:.75rem;}
+.ch-legend-item{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text2);}
+.ch-legend-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+.ch-wrap{position:relative;width:100%;overflow:hidden;}
+.ch-wrap canvas{width:100%!important;}
+.ch-xaxis{display:flex;justify-content:space-around;padding:0 8px;margin-top:4px;}
+.ch-xaxis span{font-size:10.5px;color:var(--text3);font-family:var(--mono);text-align:center;flex:1;}
+/* table */
+.ch-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+.ch-tbl th{background:var(--surface2);color:var(--text2);font-weight:600;padding:7px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+.ch-tbl td{padding:7px 12px;border-bottom:1px solid var(--border);color:var(--text1);white-space:nowrap;}
+.ch-tbl tr:last-child td{border-bottom:none;}
+.ch-tbl tr:hover td{background:var(--bg);}
+.ch-tbl .met{color:var(--green);font-weight:700;}
+.ch-tbl .unmet{color:var(--amber);}
+.ch-mini-wrap{position:relative;width:100%;overflow:hidden;}
+.ch-mini-wrap canvas{width:100%!important;}
+
+/* ── BUDDY NOTES ───────────────────────────────────────── */
+.bn-q{margin-bottom:1.25rem;}
+.bn-q-label{font-size:13.5px;font-weight:600;color:var(--text1);margin-bottom:8px;display:flex;align-items:center;gap:8px;line-height:1.4;}
+.bn-q-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;flex-shrink:0;font-family:var(--mono);}
+/* stars */
+.bn-stars{display:flex;gap:6px;margin-bottom:4px;}
+.bn-star{width:36px;height:36px;cursor:pointer;transition:transform .12s;display:flex;align-items:center;justify-content:center;}
+.bn-star:hover{transform:scale(1.2);}
+.bn-star svg{width:28px;height:28px;transition:fill .1s,stroke .1s;}
+.bn-star-label{font-size:12px;color:var(--text3);font-family:var(--mono);min-height:16px;}
+/* text inputs */
+.bn-textarea{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:13.5px;font-family:var(--font);color:var(--text1);background:var(--surface);outline:none;resize:vertical;min-height:80px;transition:border-color .15s,box-shadow .15s;}
+.bn-textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12);}
+.bn-input{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:13.5px;font-family:var(--font);color:var(--text1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.bn-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12);}
+.bn-faculty-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+@media(max-width:480px){.bn-faculty-row{grid-template-columns:1fr;}}
+/* mood row */
+.bn-mood-row{display:flex;gap:8px;flex-wrap:wrap;}
+.bn-mood{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all .12s;font-size:11px;color:var(--text2);font-weight:500;min-width:56px;}
+.bn-mood:hover{border-color:var(--border2);background:var(--bg);}
+.bn-mood.selected{border-color:var(--green);background:var(--green-light);color:var(--green-text);}
+.bn-mood-emoji{font-size:22px;line-height:1;}
+/* saved note cards */
+.bn-note-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.bn-note-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.bn-note-name{font-size:14px;font-weight:600;color:var(--text1);}
+.bn-note-meta{font-size:11.5px;color:var(--text3);}
+.bn-note-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;font-size:13px;}
+.bn-note-row:last-child{margin-bottom:0;}
+.bn-note-q{color:var(--text3);font-size:12px;font-weight:600;min-width:180px;flex-shrink:0;}
+.bn-note-a{color:var(--text1);}
+.bn-star-filled{color:#F59E0B;}
+.bn-note-edit{font-size:11.5px;padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;cursor:pointer;font-family:var(--font);color:var(--text2);transition:background .12s;}
+.bn-note-edit:hover{background:var(--surface2);}
+
+/* log toggle */
+.bn-log-toggle{display:flex;align-items:center;gap:7px;width:100%;padding:10px 1.25rem;background:transparent;border:none;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:600;color:var(--text2);text-align:left;transition:background .12s;}
+.bn-log-toggle:hover{background:var(--surface2);}
+.bn-log-toggle svg{width:14px;height:14px;fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+/* log entries */
+.bn-log-entry{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem 1rem;margin-bottom:8px;}
+.bn-log-entry:last-child{margin-bottom:0;}
+.bn-log-month{font-size:12px;font-weight:700;color:var(--amber);font-family:var(--mono);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.bn-log-month svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;}
+.bn-log-row{display:flex;gap:6px;font-size:12px;margin-bottom:4px;line-height:1.4;}
+.bn-log-row:last-child{margin-bottom:0;}
+.bn-log-q{color:var(--text3);font-weight:500;min-width:140px;flex-shrink:0;}
+.bn-log-a{color:var(--text1);}
+
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">
+        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="topbar-titles">
+        <div class="topbar-title">Future Division</div>
+        <div class="topbar-sub" id="tb-sub">Monthly Meeting</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="sync-dot" id="sync-dot" title="Sheet sync status"></div>
+      <button class="nav-tab active" id="tab-tracker" onclick="switchTab('pg-tracker',this)">Tracker</button>
+      <button class="nav-tab" id="tab-dashboard" onclick="switchTab('pg-dashboard',this)">Dashboard</button>
+      <button class="nav-tab" id="tab-chart" onclick="switchTab('pg-chart',this)">Monthly Chart</button>
+      <button class="nav-tab" id="tab-buddy" onclick="switchTab('pg-buddy',this)">Buddy Notes</button>
+      <button class="nav-tab" id="tab-history" onclick="switchTab('pg-history-list',this)">History</button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- ══ TRACKER ══ -->
+    <div class="page active" id="pg-tracker">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span id="badge-month">Monthly meeting</span>
+      </div>
+      <h1 class="section-title">Attendance tracker</h1>
+      <p class="section-sub">ค้นหาชื่อสมาชิก กด <strong>Present</strong> เพื่อบันทึกลง Google Sheet ทันที ใช้งานได้พร้อมกันหลายอุปกรณ์</p>
+
+      
+
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Total members</div><div class="stat-val" id="s-total">—</div></div>
+        <div class="stat"><div class="stat-label">Present</div><div class="stat-val green" id="s-present">—</div></div>
+        <div class="stat"><div class="stat-label">Absent</div><div class="stat-val amber" id="s-absent">—</div></div>
+        <div class="stat"><div class="stat-label">Rate</div><div class="stat-val blue" id="s-rate">—</div></div>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" id="srch" placeholder="ค้นหา ชื่อ, ชื่อเล่น, เบอร์โทร…" oninput="doFilter()" autocomplete="off"/>
+        </div>
+        <button class="btn-icon" onclick="loadAll(true)">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Refresh
+        </button>
+      </div>
+
+      <div class="filter-row">
+        <button class="filter-chip active" onclick="setF('all',this)">ทั้งหมด</button>
+        <button class="filter-chip" onclick="setF('present',this)">Present</button>
+        <button class="filter-chip" onclick="setF('absent',this)">Absent</button>
+        <select class="filter-select" id="fgrp" onchange="doFilter()"><option value="">All groups</option></select>
+        <select class="filter-select" id="fregion" onchange="doFilter()"><option value="">All regions</option></select>
+        <select class="filter-select" id="fzone" onchange="doFilter()"><option value="">All zones</option></select>
+        <select class="filter-select" id="fcls" onchange="doFilter()"><option value="">All classes</option></select>
+      </div>
+
+      <div class="member-list" id="member-list"><div style="padding:2rem;text-align:center;color:var(--text3);">กำลังโหลด…</div></div>
+      <div id="no-results" style="display:none;">
+        <p class="no-results" id="no-msg">ไม่พบสมาชิก</p>
+        <button class="add-new-btn" onclick="goReg()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          ไม่พบในรายชื่อ? ลงทะเบียนสมาชิกใหม่
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ REGISTER ══ -->
+    <div class="page" id="pg-reg">
+      <button class="back-btn" onclick="goBack()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>กลับ Tracker
+      </button>
+      <h1 class="section-title">ลงทะเบียนสมาชิกใหม่</h1>
+      <p class="section-sub">กรอกข้อมูลให้ครบ — บันทึกลง Members sheet และทำเครื่องหมาย Present อัตโนมัติ</p>
+      <div class="card">
+        <div class="pre-note" id="pre-note" style="display:none;">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="pre-note-txt"></span>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label>ชื่อ-นามสกุล <span class="req">*</span></label><input id="r-name" type="text" placeholder="ชื่อเต็ม"/></div>
+          <div class="field"><label>ชื่อเล่น</label><input id="r-nick" type="text" placeholder="ชื่อเล่น"/></div>
+        </div>
+        <div class="form-grid-3">
+          <!-- Group: fixed options -->
+          <div class="field">
+            <label>Group <span class="req">*</span></label>
+            <select id="r-group">
+              <option value="">เลือก…</option>
+              <option value="YWD">YWD</option>
+              <option value="YMD">YMD</option>
+            </select>
+          </div>
+          <!-- Region: fixed options, drives zone -->
+          <div class="field">
+            <label>Region <span class="req">*</span></label>
+            <select id="r-region" onchange="onRegionChange()">
+              <option value="">เลือก…</option>
+              <option value="มหานคร 2">มหานคร 2</option>
+              <option value="มหานคร 3">มหานคร 3</option>
+              <option value="อื่น ๆ">อื่น ๆ</option>
+            </select>
+          </div>
+          <!-- Zone: dropdown for มหานคร 2/3, free text for อื่น ๆ -->
+          <div class="field" id="r-zone-wrap">
+            <label>Zone</label>
+            <select id="r-zone" style="display:block;">
+              <option value="">เลือก Region ก่อน…</option>
+            </select>
+            <input id="r-zone-text" type="text" placeholder="ระบุ Zone…" style="display:none;"/>
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label>เบอร์โทรศัพท์ <span class="req">*</span></label><input id="r-phone" type="tel" placeholder="081-234-5678"/></div>
+          <div class="field"><label>Class of 2026</label>
+            <select id="r-class">
+              <option value="">เลือก…</option>
+              <optgroup label="ประถม">
+                <option value="อ.1">อ.1</option>
+                <option value="อ.2">อ.2</option>
+                <option value="อ.3">อ.3</option>
+                <option value="ป.1">ป.1</option>
+                <option value="ป.2">ป.2</option>
+                <option value="ป.3">ป.3</option>
+                <option value="ป.4">ป.4</option>
+                <option value="ป.5">ป.5</option>
+                <option value="ป.6">ป.6</option>
+              </optgroup>
+              <optgroup label="มัธยม">
+                <option value="ม.1">ม.1</option>
+                <option value="ม.2">ม.2</option>
+                <option value="ม.3">ม.3</option>
+              </optgroup>
+              <optgroup label="เตรียมอุดม">
+                <option value="ม.4">ม.4</option>
+                <option value="ม.5">ม.5</option>
+                <option value="ม.6">ม.6</option>
+                <option value="ปวช.1">ปวช.1</option>
+                <option value="ปวช.2">ปวช.2</option>
+                <option value="ปวช.3">ปวช.3</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>หมายเหตุ</label><textarea id="r-notes" placeholder="ข้อมูลเพิ่มเติม…"></textarea></div>
+        <div class="divider"></div>
+        <div class="form-actions">
+          <button class="btn-secondary" onclick="goBack()">ยกเลิก</button>
+          <button class="btn-primary" onclick="submitReg()">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Register &amp; Mark Present
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SUCCESS ══ -->
+    <div class="page" id="pg-suc">
+      <div class="success-wrap">
+        <div class="success-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h1 class="section-title" id="suc-title" style="margin-bottom:8px;">Registered &amp; Marked Present!</h1>
+        <p class="section-sub" id="suc-sub" style="max-width:420px;margin:0 auto 1.5rem;"></p>
+        <button class="btn-primary" style="max-width:220px;margin:0 auto;" onclick="showPage('pg-tracker')">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>กลับ Tracker
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ HISTORY LIST ══ -->
+    <div class="page" id="pg-history-list">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Monthly attendance history
+      </div>
+      <h1 class="section-title">ประวัติการเข้าร่วมประชุม</h1>
+      <p class="section-sub">คลิกชื่อสมาชิกเพื่อดูและแก้ไขประวัติรายเดือน — ข้อมูลซิงค์จาก Google Sheet ตลอดเวลา</p>
+      <div class="search-row" style="margin-bottom:10px;">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" id="hist-srch" placeholder="ค้นหาชื่อ, ชื่อเล่น…" oninput="renderHistoryList()" autocomplete="off"/>
+        </div>
+        <select class="filter-select" id="hist-fgrp" onchange="renderHistoryList()" style="padding:0 26px 0 10px;height:40px;border-radius:var(--radius-md);border:1px solid var(--border2);"><option value="">All groups</option></select>
+      </div>
+      <div class="member-list" id="history-member-list"><div style="padding:2rem;text-align:center;color:var(--text3);">กำลังโหลด…</div></div>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page" id="pg-dashboard">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span id="db-badge">Dashboard</span>
+      </div>
+      <h1 class="section-title">Attendance Dashboard</h1>
+      <p class="section-sub" id="db-sub">ภาพรวมสถานะการเข้าร่วมประชุมประจำเดือน — เป้าหมาย 5 คน/กลุ่ม/เดือน</p>
+
+      <!-- Overall summary cards -->
+      <div class="stats" style="margin-bottom:1.25rem;">
+        <div class="stat"><div class="stat-label">Total members</div><div class="stat-val" id="db-total">—</div></div>
+        <div class="stat"><div class="stat-label">Present</div><div class="stat-val green" id="db-present">—</div></div>
+        <div class="stat"><div class="stat-label">Absent</div><div class="stat-val amber" id="db-absent">—</div></div>
+        <div class="stat"><div class="stat-label">Overall rate</div><div class="stat-val blue" id="db-rate">—</div></div>
+      </div>
+
+      <!-- Dashboard filters -->
+      <div class="db-filter-bar">
+        <svg style="width:14px;height:14px;fill:none;stroke:var(--text3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <span style="font-size:12px;color:var(--text2);font-weight:600;">Filter:</span>
+        <select class="filter-select" id="db-f-region" onchange="renderDashboard()" style="border-radius:var(--radius-sm);">
+          <option value="">All regions</option>
+          <option value="มหานคร 2">มหานคร 2</option>
+          <option value="มหานคร 3">มหานคร 3</option>
+          <option value="อื่น ๆ">อื่น ๆ</option>
+        </select>
+        <select class="filter-select" id="db-f-zone" onchange="renderDashboard()" style="border-radius:var(--radius-sm);">
+          <option value="">All zones</option>
+        </select>
+        <select class="filter-select" id="db-f-level" onchange="renderDashboard()" style="border-radius:var(--radius-sm);">
+          <option value="">All levels</option>
+          <option value="ประถม">ประถม</option>
+          <option value="มัธยม">มัธยม</option>
+          <option value="เตรียมอุดม">เตรียมอุดม</option>
+        </select>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+          <span class="db-legend-dot" style="background:var(--green);"></span>
+          <span style="font-size:11.5px;color:var(--text2);">ถึงเป้า ≥5 คน</span>
+          <span class="db-legend-dot" style="background:var(--border2);margin-left:6px;"></span>
+          <span style="font-size:11.5px;color:var(--text2);">ยังไม่ถึงเป้า</span>
+        </div>
+      </div>
+
+      <!-- Group cards -->
+      <div id="db-group-cards"></div>
+
+    </div>
+
+    <!-- ══ MONTHLY CHART ══ -->
+    <div class="page" id="pg-chart">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Monthly trend
+      </div>
+      <h1 class="section-title">Monthly Attendance Chart</h1>
+      <p class="section-sub">สถิติจำนวนผู้เข้าร่วมประชุมรายเดือน แบ่งตามกลุ่ม เทียบเป้าหมาย 90 คน/เดือน</p>
+
+      <!-- Chart controls -->
+      <div class="ch-controls">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <label style="font-size:12px;font-weight:600;color:var(--text2);">Year:</label>
+          <div class="ch-year-tabs" id="ch-year-tabs"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <label style="font-size:12px;font-weight:600;color:var(--text2);">View:</label>
+          <button class="ch-view-btn active" id="ch-btn-bar" onclick="setChartView('bar',this)">
+            <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>Bar
+          </button>
+          <button class="ch-view-btn" id="ch-btn-line" onclick="setChartView('line',this)">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Line
+          </button>
+        </div>
+      </div>
+
+      <!-- Main chart -->
+      <div class="ch-card">
+        <div class="ch-card-title">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Attendance by Month
+        </div>
+        <div class="ch-legend" id="ch-legend"></div>
+        <div class="ch-wrap">
+          <canvas id="ch-main" height="300"></canvas>
+        </div>
+        <div class="ch-xaxis" id="ch-xaxis"></div>
+      </div>
+
+      <!-- Per-group rate cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;" id="ch-group-charts"></div>
+
+      <!-- Month-by-month table -->
+      <div class="ch-card" style="margin-top:1rem;">
+        <div class="ch-card-title">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          Monthly Summary Table
+        </div>
+        <div id="ch-table" style="overflow-x:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ══ BUDDY NOTES ══ -->
+    <div class="page" id="pg-buddy">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="bn-badge">Buddy Notes</span>
+      </div>
+      <h1 class="section-title">Buddy Notes</h1>
+      <p class="section-sub">บันทึกความรู้สึกของสมาชิกที่มาร่วมประชุมเดือนนี้ — ค้นหาชื่อแล้วกรอกคำตอบ 5 ข้อ</p>
+
+      <!-- search + list -->
+      <div class="search-row" style="margin-bottom:10px;">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" id="bn-srch" placeholder="ค้นหาชื่อ, ชื่อเล่น สมาชิกที่มาแล้ว…" oninput="renderBuddyList()" autocomplete="off"/>
+        </div>
+      </div>
+
+      <!-- present-only member list -->
+      <div class="member-list" id="bn-member-list"></div>
+      <div id="bn-no-present" style="display:none;text-align:center;padding:2rem 1rem;color:var(--text3);font-size:14px;">ยังไม่มีสมาชิกที่ Mark Present ในเดือนนี้</div>
+
+      <!-- saved notes summary -->
+      <div id="bn-summary-wrap" style="margin-top:1.5rem;display:none;">
+        <div class="section-badge" style="margin-bottom:8px;">
+          <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          บันทึกแล้ว
+        </div>
+        <div id="bn-notes-list"></div>
+      </div>
+    </div>
+
+    <!-- Buddy Notes form modal -->
+    <div class="modal-overlay" id="bn-modal" onclick="closeBnModal(event)">
+      <div class="modal" style="max-width:560px;">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title" id="bn-modal-name">—</div>
+            <div class="modal-sub" id="bn-modal-meta">Buddy Notes — <span id="bn-modal-month"></span></div>
+          </div>
+          <button class="modal-close" onclick="closeBnModalDirect()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body" style="padding:0;display:flex;flex-direction:column;">
+
+          <!-- Previous notes log (collapsible) -->
+          <div id="bn-prev-log" style="display:none;border-bottom:1px solid var(--border);background:var(--bg);">
+            <button class="bn-log-toggle" id="bn-log-toggle-btn" onclick="toggleBnLog()">
+              <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+              <span id="bn-log-toggle-label">ดูบันทึกเดือนก่อน ▾</span>
+            </button>
+            <div id="bn-log-body" style="display:none;padding:0 1.25rem 1rem;max-height:280px;overflow-y:auto;">
+              <div id="bn-log-entries"></div>
+            </div>
+          </div>
+
+          <!-- Form area -->
+          <div style="padding:1.25rem 1.5rem;overflow-y:auto;flex:1;">
+
+          <!-- Q1 -->
+          <div class="bn-q">
+            <div class="bn-q-label"><span class="bn-q-num">1</span>ความสุขที่ได้จากกิจกรรมเดือนนี้</div>
+            <div class="bn-stars" id="bn-q1-stars" data-q="q1"></div>
+            <div class="bn-star-label" id="bn-q1-label">เลือกคะแนน</div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bn-q">
+            <div class="bn-q-label"><span class="bn-q-num">2</span>ความสนิทกับเพื่อน ๆ พี่ ๆ น้อง ๆ</div>
+            <div class="bn-stars" id="bn-q2-stars" data-q="q2"></div>
+            <div class="bn-star-label" id="bn-q2-label">เลือกคะแนน</div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bn-q">
+            <div class="bn-q-label"><span class="bn-q-num">3</span>ข้อเสนอแนะในกิจกรรม</div>
+            <textarea class="bn-textarea" id="bn-q3" placeholder="ข้อเสนอแนะ / ความคิดเห็น…"></textarea>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bn-q">
+            <div class="bn-q-label"><span class="bn-q-num">4</span>3 คณะที่อยากเข้า</div>
+            <div class="bn-faculty-row">
+              <input class="bn-input" id="bn-q4a" type="text" placeholder="คณะที่ 1"/>
+              <input class="bn-input" id="bn-q4b" type="text" placeholder="คณะที่ 2"/>
+              <input class="bn-input" id="bn-q4c" type="text" placeholder="คณะที่ 3"/>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bn-q" style="margin-bottom:0;">
+            <div class="bn-q-label"><span class="bn-q-num">5</span>ตอนนี้เป็นอย่างไรบ้าง</div>
+            <div class="bn-mood-row" id="bn-q5-moods"></div>
+            <textarea class="bn-textarea" id="bn-q5-text" placeholder="เล่าให้ฟังได้เลย…" style="margin-top:8px;"></textarea>
+          </div>
+
+          </div><!-- end form area -->
+        <div style="padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:10px;">
+          <button class="btn-secondary" onclick="closeBnModalDirect()">ยกเลิก</button>
+          <button class="btn-primary" onclick="saveBuddyNote()">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            บันทึก Buddy Note
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="history-modal" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-name">—</div>
+        <div class="modal-sub" id="modal-meta">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="year-tabs" id="year-tabs"></div>
+      <div class="history-summary" id="hist-summary"></div>
+      <div class="month-grid" id="month-grid"></div>
+      <p style="font-size:11.5px;color:var(--text3);text-align:center;">แตะที่เดือนเพื่อสลับสถานะ — บันทึกลง Google Sheet ทันที (เฉพาะเดือนที่ผ่านมาแล้ว)</p>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-msg" id="loading-msg">กำลังโหลดข้อมูล…</div>
+</div>
+
+<!-- TOAST -->
+<div class="save-toast" id="save-toast">
+  <svg id="toast-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-msg">Saved</span>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  ▶  PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
+// ════════════════════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3b4JbmC_b6uSNnyJfvuxr_4hao9RWUSalY27p0-lmldB8hOxAl-GEUrBESliWLIgwRg/exec';
+// ════════════════════════════════════════════════════════
+
+const MONTHS     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHS_TH  = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                    'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const YEARS      = [2025, 2026, 2027, 2028];
+const AVC        = ['av0','av1','av2','av3','av4'];
+const NOW        = new Date();
+const CUR_YEAR   = NOW.getFullYear();
+const CUR_MONTH  = NOW.getMonth();  // 0-indexed
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let members    = [];               // [{id,group,region,zone,name,nick,phone,cls,idx,present}]
+let attendance = {};               // {memberId: {"2025-0":true, "2025-5":false, ...}}
+let curFilter  = 'all';
+let srchVal    = '';
+let modalMid   = null;
+let modalYear  = CUR_YEAR;
+let pollTimer  = null;
+
+// ── SEED MEMBERS (fallback if sheet unavailable) ──────────────────────
+const SEED = [
+  {id:'YWD00001',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 2',name:'กัญญฤดี เปไอยทิพย์',nick:'พริกหอม',phone:'091-820-0013',cls:'ม.4'},
+  {id:'YWD00003',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'เจษฎิกา อาสัสส์',nick:'เจษฎิกา',phone:'099-276-0005',cls:'ม.4'},
+  {id:'YWD00004',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'ธัณฑิรา อดุภาทันกน',nick:'ตาล',phone:'099-891-7592',cls:'ม.4'},
+  {id:'YWD00005',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'ชิษฎุลี สัตรันกศ',nick:'อลมี',phone:'080-957-5777',cls:'ม.4'},
+  {id:'YWD00006',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'ชิษฑุลี สัตรันกศ',nick:'อลมี',phone:'080-957-5777',cls:'ม.4'},
+  {id:'YWD00007',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'นิสิรา หองคำ',nick:'ไอซ์',phone:'085-391-5988',cls:'ม.4'},
+  {id:'YWD00008',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'มภาร วงศ์สดกร',nick:'แนน',phone:'083-229-9540',cls:'ม.4'},
+  {id:'YWD00009',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 5',name:'นีชนา ปรัสฐิ์หรี',nick:'พิน',phone:'065-990-1550',cls:'ม.4'},
+  {id:'YWD00010',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 5',name:'พิทพขน วงศ์หรานาขาณี',nick:'พุม',phone:'082-202-8752',cls:'ม.4'},
+  {id:'YWD00011',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 5',name:'วาที่กา มางทตักา',nick:'ขีล่',phone:'082-108-1468',cls:'ม.4'},
+  {id:'YWD00012',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 5',name:'ดีที่ ปีริสนิทย์',nick:'มิม',phone:'064-286-5297',cls:'ม.4'},
+  {id:'YWD00013',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 12',name:'วิมัส ดีรางค์ทำใช้',nick:'วิมัส',phone:'092-520-2468',cls:'ม.4'},
+  {id:'YWD00014',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'มิชา จิมเทค',nick:'มิว',phone:'082-905-3646',cls:'ม.4'},
+  {id:'YWD00015',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 2',name:'ดีชา โอภาสเมียนนจร',nick:'โมมิ',phone:'081-446-5483',cls:'ม.5'},
+  {id:'YWD00016',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 2',name:'จิตสดา เดสักเงา',nick:'พลอย',phone:'094-303-1015',cls:'ม.5'},
+  {id:'YWD00017',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 2',name:'ที่ดีกมา เดีนมิมบน์',nick:'',phone:'',cls:'ม.5'},
+  {id:'YWD00018',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'ชา สัดคุมทิช',nick:'อุน',phone:'062-342-7172',cls:'ม.5'},
+  {id:'YWD00019',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'พิมบาน เดาวะทาวทราง',nick:'ขิขตน์',phone:'092-267-4981',cls:'ม.5'},
+  {id:'YWD00020',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 4',name:'ยุทดา ริกขปริมาณ์',nick:'',phone:'034-200-0050',cls:'ม.5'},
+  {id:'YWD00021',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 4',name:'พิทพที่ ขาทใสล้',nick:'มิน',phone:'092-267-4981',cls:'ม.5'},
+  {id:'YWD00022',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 4',name:'กิดยะ บางส่วนหวง',nick:'มีว',phone:'097-024-7097',cls:'ม.5'},
+  {id:'YWD00023',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 8',name:'สทัตกัน ดีดกาง',nick:'โปล',phone:'065-950-1719',cls:'ม.5'},
+  {id:'YWD00024',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 8',name:'รีสฺฤปี กฤตฉัอสำนว',nick:'',phone:'064-940-0976',cls:'ม.5'},
+  {id:'YWD00025',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 5',name:'อุบุมี ดีชา',nick:'แตงหม',phone:'094-686-1379',cls:'ม.5'},
+  {id:'YWD00026',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 5',name:'ภิตรนันท์ หลักแทรส',nick:'พีเจ่',phone:'094-669-6916',cls:'ม.5'},
+  {id:'YWD00027',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 3',name:'นายวาธา ธิญฉวัย อินทยะ',nick:'เนียร์',phone:'097-329-8921',cls:'ม.5'},
+  {id:'YWD00028',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 7',name:'นูนริช สิดกิโดย',nick:'แอร้งข',phone:'082-516-4827',cls:'ม.5'},
+  {id:'YWD00029',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 11',name:'แมษรัต พริฑยมีโตสก',nick:'ครีม',phone:'091-708-1743',cls:'ม.5'},
+  {id:'YWD00030',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 8',name:'สิรา หลอนำ',nick:'โน',phone:'083-847-7711',cls:'ม.5'},
+  {id:'YWD00031',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 8',name:'นุชยะ กิตติ้อยสุกา',nick:'',phone:'092-623-7111',cls:'ม.5'},
+  {id:'YWD00032',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 12',name:'ปุชยะ กิตติ้อยสุกา',nick:'',phone:'092-623-7111',cls:'ม.5'},
+  {id:'YWD00033',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 2',name:'สลัขา บุธวันย์',nick:'แพร',phone:'',cls:'ม.6'},
+  {id:'YWD00034',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 2',name:'อาทิตยา อาณาทัตย์',nick:'กีก',phone:'065-968-8411',cls:'ม.6'},
+  {id:'YWD00035',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 2',name:'จิดมาร พัดชาวพรรณ',nick:'ข่าว',phone:'',cls:'ม.6'},
+  {id:'YWD00036',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 4',name:'จัดมาร พิดชมพรรณ',nick:'ข่าว',phone:'097-293-2189',cls:'ม.6'},
+  {id:'YWD00037',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 8',name:'พิษฎุสัส แก้วบ่ปรนาท',nick:'มิท',phone:'092-794-1453',cls:'ม.6'},
+  {id:'YWD00038',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 8',name:'มีดขิดา กฤดิ์',nick:'แนน',phone:'083-928-5945',cls:'ม.6'},
+  {id:'YWD00039',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 5',name:'นิสฐิกา เม่อสิตา',nick:'นิม',phone:'098-579-1462',cls:'ม.6'},
+  {id:'YWD00040',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 3',name:'นุสสา กุสาลน',nick:'',phone:'062-035-8245',cls:'ม.6'},
+  {id:'YWD00041',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 3',name:'นุสสา กุลสาน',nick:'',phone:'062-035-8245',cls:'ม.6'},
+  {id:'YWD00042',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 6',name:'ปุยยะ สิมต่ำ',nick:'โปนา',phone:'096-915-9296',cls:'ม.6'},
+  {id:'YWD00043',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 7',name:'สิตรา เท่าสมบุญ',nick:'ฝ้าย',phone:'098-534-4699',cls:'ม.6'},
+  {id:'YWD00044',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 11',name:'ซีอรรถ อินทร่า',nick:'เนม',phone:'089-967-7972',cls:'ม.6'},
+  {id:'YWD00045',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 11',name:'สัตพร ดูลนกลน',nick:'',phone:'092-854-3508',cls:'ม.6'},
+  {id:'YWD00046',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 3',name:'พิทพกรา เท้าเล้น',nick:'พิมิ',phone:'097-057-1071',cls:'ม.6'},
+  {id:'YWD00047',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 5',name:'ฐากีร เขียวส',nick:'ขี่',phone:'095-979-6099',cls:'ม.6'},
+  {id:'YWD00048',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 7',name:'รนขน บาเช่า',nick:'ยู',phone:'061-694-9801',cls:'ม.6'},
+  {id:'YWD00049',group:'YWD',region:'มหานคร 3',zone:'กรุงเทพ 3',name:'วิรัญดา โพสัตสงส์',nick:'เอ้งลิ้ง',phone:'063-354-9461',cls:'ม.6'},
+  {id:'YWD00050',group:'YWD',region:'มหานคร 2',zone:'กรุงเทพ 8',name:'พิษฎุกา รู้งกั้',nick:'สมฆ์',phone:'094-979-9132',cls:'ม.6'},
+];
+
+// ── INIT ──────────────────────────────────────────────────────────────
+function init(){
+  const mo = NOW.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  document.getElementById('badge-month').textContent = 'Monthly meeting — '+mo;
+  document.getElementById('tb-sub').textContent = mo;
+
+  if(false){ // URL is hardcoded — banner never shown
+    document.getElementById('config-banner').style.display='flex';
+    setSyncDot('err');
+    // load seed data anyway
+    loadSeed();
+    return;
+  }
+  loadAll(true);
+  // poll every 30s for multi-device sync
+  pollTimer = setInterval(()=>loadAll(false), 30000);
+  // also refresh when tab becomes visible again
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) loadAll(false); });
+}
+
+function loadSeed(){
+  members = SEED.map((m,i)=>({
+    ...m,
+    // generate stable ID from name since no MemberID column
+    id: 'M'+(m.name||'').replace(/\s/g,'').slice(0,6)+'_'+i,
+    idx:i, present:false
+  }));
+  populateFilters(); render(); renderHistoryList();
+  updateStats();
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function avInit(n){ if(!n)return'?'; const p=n.trim().split(' '); return p.length>=2?(p[0][0]||'')+(p[1][0]||''):n.slice(0,2); }
+function avc(i){ return AVC[i%AVC.length]; }
+function ts(){ return new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok'}); }
+function attKey(y,m){ return `${y}-${m}`; }
+function isPresent(mid,y,m){ return !!(attendance[mid]&&attendance[mid][attKey(y,m)]); }
+function setAtt(mid,y,m,v){ if(!attendance[mid])attendance[mid]={}; attendance[mid][attKey(y,m)]=v; }
+function setSyncDot(s){ const d=document.getElementById('sync-dot'); d.className='sync-dot '+(s==='ok'?'ok':s==='syncing'?'syncing':'err'); }
+
+// ── LOAD FROM SHEET (GET) ──────────────────────────────────────────────
+async function loadAll(showLoader){
+  if(!SCRIPT_URL||SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL') return;
+  if(showLoader){ showLoading('กำลังโหลดข้อมูลจาก Google Sheet…'); }
+  setSyncDot('syncing');
+  try{
+    const res = await fetch(SCRIPT_URL+'?t='+Date.now()); // cache-bust
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const json = await res.json();
+
+    // members — columns: Group, Region, Zone, Name, Nickname, Class of 2026, Phone
+    if((json.members||[]).length){
+      members = json.members.map((m,i)=>({
+        idx:i,
+        // generate stable ID from name+group since no MemberID column
+        id: 'M'+(m['Name']||'').replace(/\s/g,'').slice(0,6)+'_'+i,
+        group:  m['Group']         || '',
+        region: m['Region']        || '',
+        zone:   m['Zone']          || '',
+        name:   m['Name']          || '',
+        nick:   m['Nickname']      || '',
+        cls:    m['Class of 2026'] || '',
+        phone:  m['Phone']         || '',
+        present: false // set from attendance below
+      }));
+    }
+
+    // attendance history keyed by Name (no MemberID column)
+    // doGet returns { "กัญญฤดี เปไอยทิพย์": {"2025-4": true}, ... }
+    // re-key to match internal m.id (Name_index) for fast lookup
+    if(json.attendance){
+      // build name→id map after members are loaded
+      const nameToId = {};
+      members.forEach(m => { nameToId[m.name] = m.id; });
+      attendance = {};
+      Object.entries(json.attendance).forEach(([name, months]) => {
+        const id = nameToId[name] || name; // fallback to name if not found
+        attendance[id] = months;
+      });
+    }
+
+    // sync present state for current month
+    members.forEach(m=>{ m.present = isPresent(m.id, CUR_YEAR, CUR_MONTH); });
+
+    // buddy notes history keyed by Name → re-key to member id
+    if(json.buddynotes){
+      const nameToId = {};
+      members.forEach(m=>{ nameToId[m.name]=m.id; });
+      Object.entries(json.buddynotes).forEach(([name, months])=>{
+        const id = nameToId[name] || name;
+        if(!buddyNotes[id]) buddyNotes[id]={};
+        // merge only — don't overwrite notes already typed in this session
+        Object.entries(months).forEach(([key, note])=>{
+          if(!buddyNotes[id][key]) buddyNotes[id][key]=note;
+        });
+      });
+    }
+
+    populateFilters(); render(); renderHistoryList();
+    setSyncDot('ok');
+    if(showLoader) showToast('โหลดข้อมูลสำเร็จ','ok');
+  }catch(e){
+    setSyncDot('err');
+    if(showLoader) showToast('โหลดไม่สำเร็จ: '+e.message,'err');
+    // fallback to seed if first load
+    if(!members.length) loadSeed();
+  }
+  if(showLoader) hideLoading();
+}
+
+// ── WRITE TO SHEET (POST) ─────────────────────────────────────────────
+async function writeToSheet(payload){
+  if(!SCRIPT_URL||SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL') return;
+  setSyncDot('syncing');
+  try{
+    await fetch(SCRIPT_URL,{
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    setSyncDot('ok');
+  }catch(e){
+    setSyncDot('err');
+    throw e;
+  }
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────
+function populateFilters(){
+  const u=a=>[...new Set(a.filter(Boolean))].sort();
+  const g=u(members.map(m=>m.group)),r=u(members.map(m=>m.region)),
+        z=u(members.map(m=>m.zone)),c=u(members.map(m=>m.cls));
+  const opt=(arr,ph)=>`<option value="">${ph}</option>`+arr.map(v=>`<option>${v}</option>`).join('');
+  // tracker filter dropdowns (populated dynamically from sheet data)
+  document.getElementById('fgrp').innerHTML=opt(g,'All groups');
+  document.getElementById('fregion').innerHTML=opt(r,'All regions');
+  document.getElementById('fzone').innerHTML=opt(z,'All zones');
+  document.getElementById('fcls').innerHTML=opt(c,'All classes');
+  // r-class is hardcoded in HTML — no dynamic population needed
+  document.getElementById('hist-fgrp').innerHTML=opt(g,'All groups');
+}
+
+// ── ZONE LOGIC (register form) ────────────────────────────────────────
+const ZONE_MAP = {
+  'มหานคร 2': ['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8'],
+  'มหานคร 3': ['กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12'],
+};
+function onRegionChange(){
+  const region  = document.getElementById('r-region').value;
+  const selEl   = document.getElementById('r-zone');
+  const txtEl   = document.getElementById('r-zone-text');
+  const label   = document.querySelector('#r-zone-wrap label');
+  if(region === 'อื่น ๆ'){
+    // free-text input
+    selEl.style.display = 'none';
+    txtEl.style.display = 'block';
+    txtEl.value = '';
+    if(label) label.innerHTML = 'Zone';
+  } else if(ZONE_MAP[region]){
+    // dropdown from map
+    selEl.style.display = 'block';
+    txtEl.style.display = 'none';
+    selEl.innerHTML = '<option value="">เลือก Zone…</option>' +
+      ZONE_MAP[region].map(z=>`<option value="${z}">${z}</option>`).join('');
+    if(label) label.innerHTML = 'Zone <span class="req">*</span>';
+  } else {
+    // no region selected yet
+    selEl.style.display = 'block';
+    txtEl.style.display = 'none';
+    selEl.innerHTML = '<option value="">เลือก Region ก่อน…</option>';
+    if(label) label.innerHTML = 'Zone';
+  }
+}
+function getZoneValue(){
+  const region = document.getElementById('r-region').value;
+  if(region === 'อื่น ๆ') return document.getElementById('r-zone-text').value.trim();
+  return document.getElementById('r-zone').value;
+}
+function setF(f,btn){ curFilter=f; document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(); }
+function doFilter(){ srchVal=document.getElementById('srch').value.toLowerCase().trim(); render(); }
+
+// ── RENDER TRACKER ────────────────────────────────────────────────────
+function render(){
+  const gF=document.getElementById('fgrp').value, rF=document.getElementById('fregion').value,
+        zF=document.getElementById('fzone').value, cF=document.getElementById('fcls').value;
+  const list=members.filter(m=>{
+    const q=srchVal;
+    const ms=!q||m.name.toLowerCase().includes(q)||(m.nick||'').toLowerCase().includes(q)||(m.phone||'').includes(q);
+    return ms&&(curFilter==='all'||(curFilter==='present'&&m.present)||(curFilter==='absent'&&!m.present))
+           &&(!gF||m.group===gF)&&(!rF||m.region===rF)&&(!zF||m.zone===zF)&&(!cF||m.cls===cF);
+  });
+  const el=document.getElementById('member-list'), nr=document.getElementById('no-results');
+  if(!list.length){
+    el.innerHTML=''; nr.style.display='block';
+    document.getElementById('no-msg').textContent=srchVal?`"${srchVal}" ไม่พบในรายชื่อสมาชิก`:'ไม่พบสมาชิกที่ตรงกับตัวกรองนี้';
+  } else {
+    nr.style.display='none';
+    el.innerHTML=list.map(m=>`
+      <div class="member-row">
+        <div class="avatar ${avc(m.idx)}">${avInit(m.name)}</div>
+        <div class="member-info">
+          <div class="member-name">${m.name}${m.nick?`<span class="nick">(${m.nick})</span>`:''}</div>
+          <div class="member-meta"><span class="tag tag-g">${m.region}</span><span class="tag tag-b">${m.zone}</span><span class="tag tag-p">${m.cls}</span></div>
+        </div>
+        <span class="status-pill ${m.present?'pill-present':'pill-absent'}">${m.present?'Present':'Absent'}</span>
+        <button class="history-btn" onclick="openModal('${m.id}')" title="ประวัติรายเดือน">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>ประวัติ
+        </button>
+        ${m.present
+          ?`<button class="action-btn" id="btn-${m.id}" onclick="togglePresence('${m.id}')">
+              <svg viewBox="0 0 24 24"><polyline points="9 14 4 9 1 12"/><line x1="8" y1="21" x2="8" y2="14"/></svg>Undo
+            </button>`
+          :`<button class="action-btn mark" id="btn-${m.id}" onclick="togglePresence('${m.id}')">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Present
+            </button>`
+        }
+      </div>`).join('');
+  }
+  updateStats();
+}
+
+function updateStats(){
+  const t=members.length, p=members.filter(m=>m.present).length;
+  document.getElementById('s-total').textContent=t;
+  document.getElementById('s-present').textContent=p;
+  document.getElementById('s-absent').textContent=t-p;
+  document.getElementById('s-rate').textContent=t?Math.round(p/t*100)+'%':'0%';
+}
+
+// ── TOGGLE PRESENCE (direct write) ───────────────────────────────────
+async function togglePresence(id){
+  const m=members.find(x=>x.id===id); if(!m) return;
+  // optimistic update
+  m.present=!m.present;
+  setAtt(id, CUR_YEAR, CUR_MONTH, m.present);
+  // disable button while saving
+  const btn=document.getElementById('btn-'+id);
+  if(btn){ btn.classList.add('saving'); btn.textContent='…'; }
+  render();
+  try{
+    await writeToSheet({
+      action:'attendance', id:m.id, name:m.name, nick:m.nick,
+      group:m.group, region:m.region, zone:m.zone, phone:m.phone, cls:m.cls,
+      year:CUR_YEAR, month:MONTHS[CUR_MONTH], monthIndex:CUR_MONTH+1,
+      present:m.present, timestamp:ts()
+    });
+    showToast(m.present?`✓ ${m.name} — Present`:`↩ ${m.name} — Absent`,'ok');
+  }catch(e){
+    // rollback on error
+    m.present=!m.present;
+    setAtt(id, CUR_YEAR, CUR_MONTH, m.present);
+    render();
+    showToast('บันทึกไม่สำเร็จ — ลองใหม่อีกครั้ง','err');
+  }
+}
+
+// ── REGISTER ──────────────────────────────────────────────────────────
+function goReg(){
+  const pre=srchVal||'';
+  document.getElementById('r-name').value=pre;
+  ['r-nick','r-phone','r-notes'].forEach(id=>document.getElementById(id).value='');
+  // reset hardcoded selects
+  document.getElementById('r-group').value='';
+  document.getElementById('r-region').value='';
+  document.getElementById('r-class').value='';
+  // reset zone UI to initial state
+  const selEl=document.getElementById('r-zone');
+  const txtEl=document.getElementById('r-zone-text');
+  selEl.innerHTML='<option value="">เลือก Region ก่อน…</option>';
+  selEl.style.display='block'; txtEl.style.display='none'; txtEl.value='';
+  const label=document.querySelector('#r-zone-wrap label');
+  if(label) label.innerHTML='Zone';
+  const pn=document.getElementById('pre-note');
+  if(pre){pn.style.display='flex';document.getElementById('pre-note-txt').textContent=`"${pre}" ไม่พบในรายชื่อ — ชื่อถูกกรอกไว้ให้แล้ว กรุณากรอกข้อมูลที่เหลือ`;}
+  else{pn.style.display='none';}
+  showPage('pg-reg');
+}
+async function submitReg(){
+  const name=document.getElementById('r-name').value.trim(), phone=document.getElementById('r-phone').value.trim(),
+        grp=document.getElementById('r-group').value, region=document.getElementById('r-region').value;
+  if(!name||!phone||!grp||!region){alert('กรุณากรอก ชื่อ, เบอร์โทร, กลุ่ม และภาค');return;}
+  // stable ID from name+timestamp (no MemberID column)
+  const nid='M'+(name).replace(/\s/g,'').slice(0,6)+'_'+Date.now();
+  const nick=document.getElementById('r-nick').value.trim(), zone=getZoneValue(),
+        cls=document.getElementById('r-class').value, notes=document.getElementById('r-notes').value.trim();
+  const nm={idx:members.length,id:nid,group:grp,region,zone,name,nick,cls,phone,present:true};
+  members.push(nm); setAtt(nid,CUR_YEAR,CUR_MONTH,true); populateFilters();
+  try{
+    // column order: Group, Region, Zone, Name, Nickname, Class of 2026, Phone
+    await writeToSheet({action:'register',group:grp,region,zone,name,nick,cls,phone,notes,
+      year:CUR_YEAR,month:MONTHS[CUR_MONTH],monthIndex:CUR_MONTH+1,present:true,timestamp:ts()});
+    showToast(`✓ ลงทะเบียน ${name} สำเร็จ`,'ok');
+  }catch(e){ showToast('บันทึกไม่สำเร็จ','err'); }
+  document.getElementById('suc-title').textContent='Registered & Marked Present!';
+  document.getElementById('suc-sub').textContent=`${name}${nick?' ('+nick+')':''} — ${region}${zone?' / '+zone:''} — เพิ่มในรายชื่อและทำเครื่องหมาย Present เรียบร้อยแล้ว`;
+  srchVal=''; document.getElementById('srch').value=''; curFilter='all';
+  document.querySelectorAll('.filter-chip').forEach((b,i)=>b.classList.toggle('active',i===0));
+  ['fgrp','fregion','fzone','fcls'].forEach(id=>document.getElementById(id).value='');
+  showPage('pg-suc');
+}
+
+// ── HISTORY LIST ──────────────────────────────────────────────────────
+function renderHistoryList(){
+  const q=(document.getElementById('hist-srch').value||'').toLowerCase().trim();
+  const grp=document.getElementById('hist-fgrp').value;
+  const list=members.filter(m=>(!q||m.name.toLowerCase().includes(q)||(m.nick||'').toLowerCase().includes(q))&&(!grp||m.group===grp));
+  const el=document.getElementById('history-member-list');
+  if(!list.length){el.innerHTML='<p class="no-results">ไม่พบสมาชิก</p>';return;}
+  el.innerHTML=list.map(m=>{
+    let total=0;
+    if(attendance[m.id]) Object.values(attendance[m.id]).forEach(v=>{if(v)total++;});
+    const dots=MONTHS.map((_,mi)=>{
+      const isFut=CUR_YEAR<CUR_YEAR||(mi>CUR_MONTH&&CUR_YEAR===CUR_YEAR);
+      // simplified: future if same year and month index > current
+      const fut=(mi>CUR_MONTH);
+      const p=isPresent(m.id,CUR_YEAR,mi);
+      return `<span style="width:8px;height:8px;border-radius:50%;display:inline-block;margin:1px;
+        background:${fut?'var(--border)':p?'var(--green)':'var(--border2)'};opacity:${fut?.35:1};" title="${MONTHS[mi]} ${CUR_YEAR}"></span>`;
+    }).join('');
+    return `
+      <div class="member-row" style="cursor:pointer;" onclick="openModal('${m.id}')">
+        <div class="avatar ${avc(m.idx)}">${avInit(m.name)}</div>
+        <div class="member-info">
+          <div class="member-name">${m.name}${m.nick?`<span class="nick">(${m.nick})</span>`:''}</div>
+          <div class="member-meta">${m.phone||'—'}<span class="tag tag-g">${m.region}</span><span class="tag tag-b">${m.zone}</span></div>
+          <div style="margin-top:6px;">${dots}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;min-width:44px;">
+          <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--green);">${total}</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;">ครั้ง</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────
+function openModal(mid){
+  modalMid=mid; modalYear=CUR_YEAR;
+  const m=members.find(x=>x.id===mid); if(!m) return;
+  document.getElementById('modal-name').textContent=m.name+(m.nick?' ('+m.nick+')':'');
+  document.getElementById('modal-meta').textContent=`${m.group} · ${m.region} · ${m.zone} · ${m.cls}`;
+  document.getElementById('year-tabs').innerHTML=YEARS.map(y=>
+    `<button class="year-tab${y===CUR_YEAR?' active':''}" onclick="setModalYear(${y},this)">${y}</button>`).join('');
+  renderModal();
+  document.getElementById('history-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function setModalYear(y,btn){
+  modalYear=y;
+  document.querySelectorAll('.year-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  renderModal();
+}
+function renderModal(){
+  const m=members.find(x=>x.id===modalMid); if(!m) return;
+  let yPresent=0, yPossible=0;
+  MONTHS.forEach((_,mi)=>{
+    const fut=modalYear>CUR_YEAR||(modalYear===CUR_YEAR&&mi>CUR_MONTH);
+    if(!fut){ yPossible++; if(isPresent(m.id,modalYear,mi)) yPresent++; }
+  });
+  let allTotal=0;
+  if(attendance[m.id]) Object.values(attendance[m.id]).forEach(v=>{if(v)allTotal++;});
+  document.getElementById('hist-summary').innerHTML=`
+    <div class="hsumstat"><div class="hsumstat-val green">${yPresent}</div><div class="hsumstat-label">Present ${modalYear}</div></div>
+    <div class="hsumstat"><div class="hsumstat-val">${yPossible-yPresent}</div><div class="hsumstat-label">Absent ${modalYear}</div></div>
+    <div class="hsumstat"><div class="hsumstat-val">${yPossible?Math.round(yPresent/yPossible*100):0}%</div><div class="hsumstat-label">Rate ${modalYear}</div></div>
+    <div class="hsumstat"><div class="hsumstat-val green">${allTotal}</div><div class="hsumstat-label">All-time</div></div>`;
+  document.getElementById('month-grid').innerHTML=MONTHS.map((mn,mi)=>{
+    const fut=modalYear>CUR_YEAR||(modalYear===CUR_YEAR&&mi>CUR_MONTH);
+    const isCur=modalYear===CUR_YEAR&&mi===CUR_MONTH;
+    const p=isPresent(m.id,modalYear,mi);
+    let cls='month-cell';
+    if(p) cls+=' present'; if(fut) cls+=' future'; if(isCur) cls+=' current-month';
+    return `<div class="${cls}" id="mc-${modalYear}-${mi}" ${!fut?`onclick="toggleModal('${m.id}',${modalYear},${mi})"`:''}>
+      <div class="month-name">${mn}</div>
+      <div class="month-status">${fut?'—':p?'Present':'Absent'}</div>
+      <div class="month-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>`;
+  }).join('');
+}
+async function toggleModal(mid,year,mi){
+  const m=members.find(x=>x.id===mid); if(!m) return;
+  const newVal=!isPresent(mid,year,mi);
+  setAtt(mid,year,mi,newVal);
+  if(year===CUR_YEAR&&mi===CUR_MONTH) m.present=newVal;
+  // dim cell while saving
+  const cell=document.getElementById(`mc-${year}-${mi}`);
+  if(cell) cell.classList.add('saving-cell');
+  renderModal(); render(); renderHistoryList();
+  try{
+    await writeToSheet({action:'attendance',id:m.id,name:m.name,nick:m.nick,
+      group:m.group,region:m.region,zone:m.zone,phone:m.phone,cls:m.cls,
+      year,month:MONTHS[mi],monthIndex:mi+1,present:newVal,timestamp:ts()});
+    showToast(newVal?`✓ ${mn(mi)} ${year} — Present`:`↩ ${mn(mi)} ${year} — Absent`,'ok');
+  }catch(e){ showToast('บันทึกไม่สำเร็จ','err'); }
+  renderModal();
+}
+function mn(i){ return MONTHS_TH[i]||MONTHS[i]; }
+function closeModal(){ document.getElementById('history-modal').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalBg(e){ if(e.target.id==='history-modal') closeModal(); }
+
+// ── UI HELPERS ────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg,type='ok'){
+  const t=document.getElementById('save-toast'), ic=document.getElementById('toast-icon');
+  document.getElementById('toast-msg').textContent=msg;
+  t.className='save-toast show '+type;
+  ic.innerHTML=type==='err'?'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>':'<polyline points="20 6 9 17 4 12"/>';
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+function showLoading(msg){ document.getElementById('loading-msg').textContent=msg||'กำลังโหลด…'; document.getElementById('loading-overlay').classList.add('show'); }
+function hideLoading(){ document.getElementById('loading-overlay').classList.remove('show'); }
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────
+// Target rules:
+//   Group total (all zones, all levels) = 90
+//   Per zone per education level          = 5
+const TARGET_GROUP = 90;
+const TARGET_ZONE_LEVEL = 5;
+
+function clsLevel(cls){
+  const c=(cls||'').trim();
+  if(['ม.1','ม.2','ม.3'].includes(c)) return 'มัธยม';
+  if(['ม.4','ม.5','ม.6','ปวช.1','ปวช.2','ปวช.3'].includes(c)) return 'เตรียมอุดม';
+  if(['อ.1','อ.2','อ.3','ป.1','ป.2','ป.3','ป.4','ป.5','ป.6'].includes(c)) return 'ประถม';
+  return c||'(ไม่ระบุ)';
+}
+
+function renderDashboard(){
+  const mo = NOW.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  document.getElementById('db-badge').textContent = 'Dashboard — '+mo;
+
+  // read filters
+  const fRegion = document.getElementById('db-f-region').value;
+  const fLevel  = document.getElementById('db-f-level').value;
+  const fZone   = document.getElementById('db-f-zone').value;
+
+  // update zone dropdown
+  const zSel = document.getElementById('db-f-zone');
+  const zMap = {'มหานคร 2':['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8'],'มหานคร 3':['กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12']};
+  const zOpts = fRegion&&zMap[fRegion] ? zMap[fRegion] : [...new Set(members.map(m=>m.zone).filter(Boolean))].sort();
+  const prevZone = zSel.value;
+  zSel.innerHTML='<option value="">All zones</option>'+zOpts.map(z=>`<option value="${z}"${z===prevZone?' selected':''}>${z}</option>`).join('');
+
+  // filtered set
+  const filtered = members.filter(m=>{
+    if(fRegion && m.region!==fRegion) return false;
+    if(fZone   && m.zone!==fZone)     return false;
+    if(fLevel  && clsLevel(m.cls)!==fLevel) return false;
+    return true;
+  });
+
+  const total   = filtered.length;
+  const present = filtered.filter(m=>m.present).length;
+  document.getElementById('db-total').textContent   = total;
+  document.getElementById('db-present').textContent = present;
+  document.getElementById('db-absent').textContent  = total-present;
+  document.getElementById('db-rate').textContent    = total?Math.round(present/total*100)+'%':'—';
+
+  // group → members
+  const groupMap={};
+  filtered.forEach(m=>{ const g=m.group||'(ไม่ระบุ)'; if(!groupMap[g])groupMap[g]=[]; groupMap[g].push(m); });
+  const groups=Object.keys(groupMap).sort();
+
+  const PALETTE=['#1D9E75','#185FA5','#854F0B','#712B13','#3C3489','#0F6E56','#BA7517','#0C447C'];
+  const LEVEL_ORDER=['ประถม','มัธยม','เตรียมอุดม'];
+  const LEVEL_COLOR={'ประถม':'#185FA5','มัธยม':'#0F6E56','เตรียมอุดม':'#854F0B'};
+
+  // ── ring SVG ─────────────────────────────────────────────────────────
+  function ring(val, target, met, size=52){
+    const r=(size-8)/2, circ=2*Math.PI*r;
+    const fill=target?Math.min(val/target,1):0;
+    const col=met?'var(--green)':'var(--border2)';
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--surface2)" stroke-width="4"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${col}" stroke-width="4" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-fill)}" stroke-linecap="round" style="transition:stroke-dashoffset .6s ease;"/></svg>`;
+  }
+
+  // ── simple bar row ────────────────────────────────────────────────────
+  function barRow(label, present, total, col, target){
+    const pct=total?Math.round(present/total*100):0;
+    const met=target!=null&&present>=target;
+    const tLabel=target!=null?`<span style="font-size:10px;color:${met?'var(--green)':'var(--text3)'};margin-left:4px;">/ เป้า ${target}</span>`:'';
+    return `<div class="db-bar-row">
+      <div class="db-bar-label" title="${label}">${label}${tLabel}</div>
+      <div class="db-bar-track" style="${met?'outline:1.5px solid var(--green);border-radius:20px;':''}" >
+        <div class="db-bar-fill" style="width:${pct}%;background:${met?'var(--green)':col};">
+          <span class="db-bar-pct">${pct}%</span>
+        </div>
+      </div>
+      <div class="db-bar-count" style="${met?'color:var(--green);font-weight:700;':''}">${present}/${total}</div>
+    </div>`;
+  }
+
+  // ── zone×level breakdown (the core sub-target grid) ─────────────────
+  function zoneLevelSection(ms){
+    const zones=[...new Set(ms.map(m=>m.zone).filter(Boolean))].sort();
+    const levels=LEVEL_ORDER.filter(lv=>ms.some(m=>clsLevel(m.cls)===lv));
+    if(!zones.length&&!levels.length) return '<div class="db-empty">ไม่มีข้อมูล</div>';
+
+    // build zone×level matrix
+    let html='';
+    zones.forEach(z=>{
+      const zMs=ms.filter(m=>m.zone===z);
+      html+=`<div style="margin-bottom:14px;">
+        <div style="font-size:11.5px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;display:flex;align-items:center;gap:6px;">
+          <svg style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>${z}
+        </div>`;
+      LEVEL_ORDER.forEach(lv=>{
+        const lvMs=zMs.filter(m=>clsLevel(m.cls)===lv);
+        if(!lvMs.length) return;
+        const p=lvMs.filter(m=>m.present).length, t=lvMs.length;
+        const col=LEVEL_COLOR[lv]||'#888';
+        html+=barRow(lv,p,t,col,TARGET_ZONE_LEVEL);
+      });
+      // also show ประถม if present (they may not have sub-targets but show anyway)
+      html+='</div>';
+    });
+    return html||'<div class="db-empty">ไม่มีข้อมูล</div>';
+  }
+
+  // ── zone breakdown bars ───────────────────────────────────────────────
+  function zoneSection(ms){
+    const zones=[...new Set(ms.map(m=>m.zone).filter(Boolean))].sort();
+    return zones.map((z,i)=>{
+      const zMs=ms.filter(m=>m.zone===z);
+      const p=zMs.filter(m=>m.present).length, t=zMs.length;
+      return barRow(z,p,t,PALETTE[i%PALETTE.length],null);
+    }).join('')||'<div class="db-empty">ไม่มีข้อมูล</div>';
+  }
+
+  // ── region breakdown ──────────────────────────────────────────────────
+  function regionSection(ms){
+    const rMap={};
+    ms.forEach(m=>{ const r=m.region||'(ไม่ระบุ)'; if(!rMap[r])rMap[r]={p:0,t:0}; rMap[r].t++; if(m.present)rMap[r].p++; });
+    return Object.entries(rMap).sort((a,b)=>b[1].t-a[1].t).map(([r,d],i)=>barRow(r,d.p,d.t,PALETTE[i%PALETTE.length],null)).join('')||'<div class="db-empty">ไม่มีข้อมูล</div>';
+  }
+
+  // ── build cards ───────────────────────────────────────────────────────
+  const container=document.getElementById('db-group-cards');
+  if(!groups.length){ container.innerHTML='<div class="db-empty" style="padding:2rem;">ไม่มีข้อมูล</div>'; return; }
+
+  container.innerHTML=groups.map((g,gi)=>{
+    const ms  =groupMap[g];
+    const gP  =ms.filter(m=>m.present).length;
+    const gT  =ms.length;
+    const met =gP>=TARGET_GROUP;
+    const uid ='grp-'+gi;
+
+    // zone×level sub-target summary: count how many zone+level combos have met target
+    const zls=[];
+    const zones=[...new Set(ms.map(m=>m.zone).filter(Boolean))].sort();
+    zones.forEach(z=>{
+      LEVEL_ORDER.forEach(lv=>{
+        const sub=ms.filter(m=>m.zone===z&&clsLevel(m.cls)===lv);
+        if(sub.length) zls.push({z,lv,p:sub.filter(m=>m.present).length,t:sub.length,met:sub.filter(m=>m.present).length>=TARGET_ZONE_LEVEL});
+      });
+    });
+    const zlMet=zls.filter(x=>x.met).length, zlTotal=zls.length;
+
+    return `
+    <div class="db-group-card${met?' target-met':''}" id="card-${uid}">
+      <div class="db-group-header" onclick="toggleDbCard('${uid}')">
+        <div class="db-group-name">
+          <div class="db-target-ring" title="${gP}/${TARGET_GROUP} เป้าหมายรวม">
+            ${ring(gP,TARGET_GROUP,met)}
+            <div class="db-target-ring-val" style="color:${met?'var(--green)':'var(--text2)'};">${gP}</div>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:15px;font-weight:700;">${g}</span>
+              <span class="db-group-badge ${met?'met':'unmet'}">${met?`✓ ถึงเป้า ${TARGET_GROUP}`:`${gP}/${TARGET_GROUP} เป้ารวม`}</span>
+            </div>
+            <div style="font-size:11.5px;color:var(--text2);margin-top:3px;">
+              Sub-targets met: <strong style="color:${zlMet===zlTotal&&zlTotal>0?'var(--green)':'var(--amber)'};">${zlMet}/${zlTotal}</strong> zone×level combos
+            </div>
+          </div>
+        </div>
+        <div class="db-group-right">
+          <div class="db-group-stat">
+            <div class="db-group-stat-val ${met?'green':'grey'}">${gP}/${gT}</div>
+            <div class="db-group-stat-label">Present</div>
+          </div>
+          <div class="db-group-stat">
+            <div class="db-group-stat-val">${gT?Math.round(gP/gT*100):0}%</div>
+            <div class="db-group-stat-label">Rate</div>
+          </div>
+          <svg class="db-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="db-breakdown">
+        <div class="db-breakdown-tabs">
+          <button class="db-btab active" onclick="switchDbTab(this,'${uid}','zonelevel')">Zone × Level <span style="background:${zlMet===zlTotal&&zlTotal>0?'var(--green)':'var(--amber)'};color:#fff;font-size:10px;padding:1px 7px;border-radius:20px;margin-left:4px;">${zlMet}/${zlTotal}</span></button>
+          <button class="db-btab" onclick="switchDbTab(this,'${uid}','zone')">Zone</button>
+          <button class="db-btab" onclick="switchDbTab(this,'${uid}','region')">Region</button>
+        </div>
+        <div class="db-section active" id="${uid}-zonelevel">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;padding:8px 10px;background:var(--surface2);border-radius:var(--radius-md);font-size:12px;color:var(--text2);">
+            <svg style="width:13px;height:13px;fill:none;stroke:var(--green);stroke-width:2.5;flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            เป้าหมาย <strong style="color:var(--text1);">${TARGET_ZONE_LEVEL} คน</strong> ต่อ Zone × ระดับชั้น — แถบสีเขียว = ถึงเป้าแล้ว
+          </div>
+          ${zoneLevelSection(ms)}
+        </div>
+        <div class="db-section" id="${uid}-zone">${zoneSection(ms)}</div>
+        <div class="db-section" id="${uid}-region">${regionSection(ms)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // animate bars
+  requestAnimationFrame(()=>{ document.querySelectorAll('.db-bar-fill').forEach(b=>b.classList.add('loaded')); });
+}
+
+function toggleDbCard(uid){
+  const card=document.getElementById('card-'+uid);
+  card.classList.toggle('open');
+}
+function switchDbTab(btn,uid,section){
+  const card=document.getElementById('card-'+uid);
+  card.querySelectorAll('.db-btab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  card.querySelectorAll('.db-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(uid+'-'+section).classList.add('active');
+  // re-animate bars in newly shown section
+  requestAnimationFrame(()=>{
+    document.querySelectorAll(`#${uid}-${section} .db-bar-fill`).forEach(b=>b.classList.add('loaded'));
+  });
+}
+
+// ── MONTHLY CHART ─────────────────────────────────────────────────────
+let chartYear = CUR_YEAR;
+let chartView = 'bar'; // 'bar' | 'line'
+const GROUP_COLORS = {'YWD':'#1D9E75','YMD':'#185FA5'};
+const DEFAULT_COLORS = ['#1D9E75','#185FA5','#854F0B','#712B13','#3C3489'];
+const CH_TARGET = 90;
+
+function renderMonthlyChart(){
+  // build year tabs
+  const ytEl = document.getElementById('ch-year-tabs');
+  ytEl.innerHTML = YEARS.map(y=>
+    `<button class="ch-year-tab${y===chartYear?' active':''}" onclick="setChartYear(${y},this)">${y}</button>`
+  ).join('');
+
+  // gather groups
+  const groups = [...new Set(members.map(m=>m.group).filter(Boolean))].sort();
+
+  // for each month in chartYear, count present per group from attendance[]
+  // attendance[id] = {"2025-4": true, ...}
+  const monthData = MONTHS.map((_,mi)=>{
+    const isFut = chartYear > CUR_YEAR || (chartYear === CUR_YEAR && mi > CUR_MONTH);
+    const total = members.filter(m => isPresent(m.id, chartYear, mi)).length;
+    const byGrp = {};
+    groups.forEach(g=>{
+      byGrp[g] = members.filter(m=>m.group===g && isPresent(m.id, chartYear, mi)).length;
+    });
+    return {month: MONTHS[mi], mi, isFut, total, byGrp};
+  });
+
+  // legend
+  const legEl = document.getElementById('ch-legend');
+  legEl.innerHTML =
+    groups.map((g,i)=>{
+      const col = GROUP_COLORS[g] || DEFAULT_COLORS[i % DEFAULT_COLORS.length];
+      return `<div class="ch-legend-item"><div class="ch-legend-swatch" style="background:${col};"></div>${g}</div>`;
+    }).join('') +
+    `<div class="ch-legend-item"><div class="ch-legend-swatch" style="background:var(--red);opacity:.35;border:1.5px dashed var(--red);"></div>เป้า ${CH_TARGET} คน</div>`;
+
+  // draw main canvas
+  drawChart('ch-main', monthData, groups, false);
+
+  // x-axis labels
+  const xEl = document.getElementById('ch-xaxis');
+  xEl.innerHTML = MONTHS.map((m,i)=>{
+    const d = monthData[i];
+    return `<span style="opacity:${d.isFut?.35:1};">${m}</span>`;
+  }).join('');
+
+  // per-group mini charts
+  const gcEl = document.getElementById('ch-group-charts');
+  gcEl.innerHTML = groups.map((g,gi)=>{
+    const col = GROUP_COLORS[g] || DEFAULT_COLORS[gi % DEFAULT_COLORS.length];
+    const uid = 'ch-mini-'+gi;
+    const gData = monthData.map(d=>({...d, singleVal: d.byGrp[g]||0}));
+    const maxVal = Math.max(...gData.filter(d=>!d.isFut).map(d=>d.singleVal), 1);
+    return `<div class="ch-card">
+      <div class="ch-card-title" style="color:${col};">
+        <svg viewBox="0 0 24 24" style="stroke:${col};"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        ${g}
+      </div>
+      <div class="ch-mini-wrap"><canvas id="${uid}" height="140"></canvas></div>
+      <div style="display:flex;justify-content:space-around;margin-top:4px;">${MONTHS.map((m,i)=>`<span style="font-size:10px;color:var(--text3);font-family:var(--mono);opacity:${monthData[i].isFut?.35:1};">${m}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  // draw mini canvases after DOM is built
+  requestAnimationFrame(()=>{
+    groups.forEach((g,gi)=>{
+      const gData = monthData.map(d=>({...d, singleVal: d.byGrp[g]||0}));
+      drawMiniChart('ch-mini-'+gi, gData, GROUP_COLORS[g]||DEFAULT_COLORS[gi%DEFAULT_COLORS.length]);
+    });
+  });
+
+  // table
+  buildChartTable(monthData, groups);
+}
+
+function drawChart(canvasId, monthData, groups, mini=false){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const dpr = window.devicePixelRatio||1;
+  const W = canvas.parentElement.clientWidth||600;
+  const H = canvas.height? parseInt(canvas.getAttribute('height')): 300;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W+'px';
+  canvas.style.height = H+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const PAD = {t:20, r:20, b:10, l:44};
+  const chartW = W - PAD.l - PAD.r;
+  const chartH = H - PAD.t - PAD.b;
+  const maxVal = Math.max(CH_TARGET + 10, ...monthData.filter(d=>!d.isFut).map(d=>d.total), 1);
+  const yStep = niceStep(maxVal);
+  const yMax  = Math.ceil(maxVal/yStep)*yStep;
+  const toY = v => PAD.t + chartH - (v/yMax)*chartH;
+  const toX = i => PAD.l + (i/(MONTHS.length-1))*chartW;
+  const barW = chartW/MONTHS.length * 0.65;
+
+  // grid lines & y-axis labels
+  ctx.font = `${10*dpr/dpr}px IBM Plex Mono, monospace`;
+  ctx.fillStyle = '#9A9890';
+  ctx.textAlign = 'right';
+  for(let v=0; v<=yMax; v+=yStep){
+    const y = toY(v);
+    ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(W-PAD.r,y);
+    ctx.strokeStyle = v===0?'#D3D0C6':'#E4E2D9'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillText(v, PAD.l-6, y+4);
+  }
+
+  // target line
+  const ty = toY(CH_TARGET);
+  ctx.beginPath(); ctx.moveTo(PAD.l,ty); ctx.lineTo(W-PAD.r,ty);
+  ctx.strokeStyle = 'rgba(216,90,48,.4)'; ctx.lineWidth = 1.5;
+  ctx.setLineDash([5,4]); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(216,90,48,.7)'; ctx.textAlign='left';
+  ctx.fillText('เป้า '+CH_TARGET, PAD.l+4, ty-4);
+
+  if(chartView==='bar'){
+    // stacked bars
+    monthData.forEach((d,i)=>{
+      if(d.isFut) return;
+      const x = PAD.l + (i/MONTHS.length)*chartW + (chartW/MONTHS.length - barW)/2;
+      let yBase = PAD.t + chartH;
+      groups.forEach((g,gi)=>{
+        const val = d.byGrp[g]||0; if(!val) return;
+        const bh = (val/yMax)*chartH;
+        ctx.fillStyle = (GROUP_COLORS[g]||DEFAULT_COLORS[gi%DEFAULT_COLORS.length])+(d.isFut?'55':'CC');
+        ctx.beginPath();
+        const r=3;
+        if(gi===groups.length-1||!groups.slice(gi+1).some(gg=>d.byGrp[gg])){
+          roundRect(ctx,x,yBase-bh,barW,bh,r,0,0,r);
+        } else { ctx.rect(x,yBase-bh,barW,bh); }
+        ctx.fill();
+        yBase -= bh;
+      });
+      // total label
+      if(d.total>0){
+        ctx.fillStyle = d.total>=CH_TARGET ? '#1D9E75' : '#5F5E5A';
+        ctx.font = `bold ${11}px IBM Plex Mono, monospace`;
+        ctx.textAlign='center';
+        ctx.fillText(d.total, x+barW/2, toY(d.total)-5);
+      }
+    });
+  } else {
+    // line chart — total line + per-group lines
+    const allLines = [
+      {label:'Total', color:'#1A1A18', data: monthData.map(d=>d.isFut?null:d.total)},
+      ...groups.map((g,gi)=>({label:g, color:GROUP_COLORS[g]||DEFAULT_COLORS[gi%DEFAULT_COLORS.length], data:monthData.map(d=>d.isFut?null:d.byGrp[g]||0)}))
+    ];
+    allLines.forEach(({color,data})=>{
+      ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath();
+      let first=true;
+      data.forEach((v,i)=>{
+        if(v===null){first=true;return;}
+        const x = chartView==='line'? toX(i) : PAD.l+(i/MONTHS.length)*chartW+(chartW/MONTHS.length)*0.5;
+        const y = toY(v);
+        first ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+        first=false;
+      });
+      ctx.stroke();
+      // dots
+      data.forEach((v,i)=>{
+        if(v===null) return;
+        const x = toX(i);
+        ctx.beginPath(); ctx.arc(x,toY(v),3,0,Math.PI*2);
+        ctx.fillStyle=color; ctx.fill();
+      });
+    });
+  }
+}
+
+function drawMiniChart(canvasId, gData, color){
+  const canvas=document.getElementById(canvasId); if(!canvas) return;
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.parentElement.clientWidth||200, H=parseInt(canvas.getAttribute('height'))||140;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  const PAD={t:16,r:8,b:4,l:28};
+  const cW=W-PAD.l-PAD.r, cH=H-PAD.t-PAD.b;
+  const maxVal=Math.max(...gData.filter(d=>!d.isFut).map(d=>d.singleVal),1,10);
+  const toY=v=>PAD.t+cH-(v/maxVal)*cH;
+  const bW=cW/MONTHS.length*0.6;
+  // grid
+  ctx.strokeStyle='#E4E2D9'; ctx.lineWidth=0.5;
+  [0, Math.round(maxVal/2), maxVal].forEach(v=>{
+    ctx.beginPath(); ctx.moveTo(PAD.l,toY(v)); ctx.lineTo(W-PAD.r,toY(v)); ctx.stroke();
+    ctx.fillStyle='#9A9890'; ctx.font=`9px IBM Plex Mono`; ctx.textAlign='right';
+    ctx.fillText(v,PAD.l-3,toY(v)+3);
+  });
+  // target line (5 per group — not applicable here, but show context)
+  // bars
+  gData.forEach((d,i)=>{
+    if(d.isFut) return;
+    const v=d.singleVal;
+    const x=PAD.l+(i/MONTHS.length)*cW+(cW/MONTHS.length-bW)/2;
+    const bh=v?(v/maxVal)*cH:0;
+    ctx.fillStyle=color+(v?'BB':'44');
+    ctx.beginPath(); roundRect(ctx,x,toY(v),bW,bh,2,0,0,2); ctx.fill();
+    if(v>0){
+      ctx.fillStyle=color; ctx.font=`bold 9px IBM Plex Mono`; ctx.textAlign='center';
+      ctx.fillText(v,x+bW/2,toY(v)-3);
+    }
+  });
+}
+
+function roundRect(ctx,x,y,w,h,tl,tr,br,bl){
+  ctx.moveTo(x+tl,y);
+  ctx.lineTo(x+w-tr,y); ctx.quadraticCurveTo(x+w,y,x+w,y+tr);
+  ctx.lineTo(x+w,y+h-br); ctx.quadraticCurveTo(x+w,y+h,x+w-br,y+h);
+  ctx.lineTo(x+bl,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-bl);
+  ctx.lineTo(x,y+tl); ctx.quadraticCurveTo(x,y,x+tl,y);
+  ctx.closePath();
+}
+
+function niceStep(max){
+  const steps=[1,2,5,10,20,25,50,100,200];
+  const target=max/5;
+  return steps.find(s=>s>=target)||100;
+}
+
+function buildChartTable(monthData, groups){
+  const el=document.getElementById('ch-table');
+  const pastData=monthData.filter(d=>!d.isFut);
+  if(!pastData.length){el.innerHTML='<p style="text-align:center;color:var(--text3);padding:1rem;">ยังไม่มีข้อมูลในปีนี้</p>';return;}
+  const groupCols=groups.map((g,gi)=>`<th>${g}</th>`).join('');
+  const rows=pastData.map(d=>{
+    const met=d.total>=CH_TARGET;
+    const gCols=groups.map(g=>`<td style="font-family:var(--mono);">${d.byGrp[g]||0}</td>`).join('');
+    return `<tr>
+      <td style="font-weight:600;">${d.month} ${chartYear}</td>
+      ${gCols}
+      <td style="font-family:var(--mono);font-weight:700;" class="${met?'met':'unmet'}">${d.total}${met?' ✓':''}</td>
+      <td><div style="flex:1;height:8px;background:var(--surface2);border-radius:20px;overflow:hidden;width:80px;display:inline-block;"><div style="height:100%;width:${Math.min(d.total/CH_TARGET*100,100)}%;background:${met?'var(--green)':'var(--amber)'};border-radius:20px;"></div></div></td>
+    </tr>`;
+  }).join('');
+  el.innerHTML=`<table class="ch-tbl"><thead><tr><th>Month</th>${groupCols}<th>Total</th><th>vs Target ${CH_TARGET}</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function setChartYear(y,btn){
+  chartYear=y;
+  document.querySelectorAll('.ch-year-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMonthlyChart();
+}
+function setChartView(v,btn){
+  chartView=v;
+  document.querySelectorAll('.ch-view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMonthlyChart();
+}
+function switchTab(pid,btn){
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  showPage(pid);
+  if(pid==='pg-history-list') renderHistoryList();
+  if(pid==='pg-dashboard') renderDashboard();
+  if(pid==='pg-chart') renderMonthlyChart();
+  if(pid==='pg-buddy') renderBuddyPage();
+}
+
+// ── BUDDY NOTES ───────────────────────────────────────────────────────
+const STAR_LABELS = ['','แย่มาก 😞','ไม่ค่อยดี 😕','พอใช้ 😐','ดี 😊','ดีมาก 🤩'];
+const MOODS = [
+  {emoji:'😄',label:'สุขใจ'},{emoji:'😌',label:'สงบ'},{emoji:'🤔',label:'กังวล'},
+  {emoji:'😴',label:'เหนื่อย'},{emoji:'😤',label:'หงุดหงิด'},{emoji:'😢',label:'เศร้า'},
+  {emoji:'🔥',label:'มีพลัง'},{emoji:'🥰',label:'อบอุ่น'},
+];
+
+// buddyNotes[memberId][monthKey] = {q1,q2,q3,q4a,q4b,q4c,q5mood,q5text,savedAt,monthLabel}
+// monthKey = "YYYY-M"  e.g. "2025-4"
+let buddyNotes = {};
+let bnCurrentId = null;
+let bnLogOpen = false;
+
+function bnMonthKey(year, monthIdx){ return `${year}-${monthIdx}`; }
+function bnCurKey(){ return bnMonthKey(CUR_YEAR, CUR_MONTH); }
+function bnGetNote(mid, key){ return (buddyNotes[mid]||{})[key]||null; }
+function bnSetNote(mid, key, note){ if(!buddyNotes[mid]) buddyNotes[mid]={}; buddyNotes[mid][key]=note; }
+function bnPrevNotes(mid){
+  // all saved month keys for this member, sorted newest first, excluding current month
+  const curKey = bnCurKey();
+  return Object.entries(buddyNotes[mid]||{})
+    .filter(([k])=>k!==curKey)
+    .sort((a,b)=>b[0].localeCompare(a[0]));
+}
+
+function renderBuddyPage(){
+  const mo = NOW.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  document.getElementById('bn-badge').textContent = 'Buddy Notes — '+mo;
+  renderBuddyList();
+  renderBuddySummary();
+}
+
+function renderBuddyList(){
+  const q = (document.getElementById('bn-srch').value||'').toLowerCase().trim();
+  const presentMembers = members.filter(m=>{
+    if(!m.present) return false;
+    if(q && !m.name.toLowerCase().includes(q) && !(m.nick||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const el  = document.getElementById('bn-member-list');
+  const nop = document.getElementById('bn-no-present');
+  if(!presentMembers.length){ el.innerHTML=''; nop.style.display='block'; return; }
+  nop.style.display='none';
+  el.innerHTML = presentMembers.map(m=>{
+    const hasNote = !!bnGetNote(m.id, bnCurKey());
+    const prevCount = bnPrevNotes(m.id).length;
+    return `
+    <div class="member-row">
+      <div class="avatar ${avc(m.idx)}">${avInit(m.name)}</div>
+      <div class="member-info">
+        <div class="member-name">${m.name}${m.nick?`<span class="nick">(${m.nick})</span>`:''}</div>
+        <div class="member-meta">
+          <span class="tag tag-g">${m.region}</span><span class="tag tag-b">${m.zone}</span><span class="tag tag-p">${m.cls}</span>
+          ${prevCount>0?`<span class="tag" style="background:var(--amber-light);color:var(--amber-text);">📋 ${prevCount} บันทึกเก่า</span>`:''}
+        </div>
+      </div>
+      ${hasNote
+        ? `<span class="status-pill pill-present" style="white-space:nowrap;">✓ บันทึกแล้ว</span>
+           <button class="bn-note-edit" onclick="openBuddyForm('${m.id}')">แก้ไข</button>`
+        : `<button class="action-btn mark" onclick="openBuddyForm('${m.id}')">
+             <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+             กรอก
+           </button>`
+      }
+    </div>`;
+  }).join('');
+}
+
+function renderBuddySummary(){
+  const wrap = document.getElementById('bn-summary-wrap');
+  const list = document.getElementById('bn-notes-list');
+  // collect all members with a note for THIS month
+  const thisMonthEntries = members
+    .filter(m=>bnGetNote(m.id, bnCurKey()))
+    .map(m=>({m, note:bnGetNote(m.id, bnCurKey())}));
+  if(!thisMonthEntries.length){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  const stars = v => v ? '⭐'.repeat(v)+`<span style="font-size:11px;color:var(--text3);margin-left:4px;">${STAR_LABELS[v]}</span>` : '—';
+  list.innerHTML = thisMonthEntries.map(({m,note:n})=>`
+    <div class="bn-note-card">
+      <div class="bn-note-header">
+        <div>
+          <div class="bn-note-name">${m.name}${m.nick?' ('+m.nick+')':''}</div>
+          <div class="bn-note-meta">${m.region} · ${m.zone} · ${m.cls} — ${n.monthLabel}</div>
+        </div>
+        <button class="bn-note-edit" onclick="openBuddyForm('${m.id}')">แก้ไข</button>
+      </div>
+      <div class="bn-note-row"><span class="bn-note-q">1. ความสุขจากกิจกรรม</span><span class="bn-note-a">${stars(n.q1)}</span></div>
+      <div class="bn-note-row"><span class="bn-note-q">2. ความสนิทกับเพื่อน</span><span class="bn-note-a">${stars(n.q2)}</span></div>
+      <div class="bn-note-row"><span class="bn-note-q">3. ข้อเสนอแนะ</span><span class="bn-note-a">${n.q3||'—'}</span></div>
+      <div class="bn-note-row"><span class="bn-note-q">4. คณะที่อยากเข้า</span><span class="bn-note-a">${[n.q4a,n.q4b,n.q4c].filter(Boolean).join(' · ')||'—'}</span></div>
+      <div class="bn-note-row"><span class="bn-note-q">5. ตอนนี้เป็นอย่างไรบ้าง</span><span class="bn-note-a">${n.q5mood?n.q5mood+' ':''} ${n.q5text||'—'}</span></div>
+    </div>`).join('');
+}
+
+function openBuddyForm(mid){
+  bnCurrentId = mid; bnLogOpen = false;
+  const m = members.find(x=>x.id===mid); if(!m) return;
+  const curKey = bnCurKey();
+  const n = bnGetNote(mid, curKey) || {};
+  const prevList = bnPrevNotes(mid);
+
+  document.getElementById('bn-modal-name').textContent = m.name+(m.nick?' ('+m.nick+')':'');
+  document.getElementById('bn-modal-month').textContent = NOW.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+
+  // ── previous notes log ──────────────────────────────
+  const logWrap = document.getElementById('bn-prev-log');
+  if(prevList.length){
+    logWrap.style.display='block';
+    const toggle = document.getElementById('bn-log-toggle-btn');
+    document.getElementById('bn-log-toggle-label').textContent = `ดูบันทึกเดือนก่อน (${prevList.length} เดือน) ▾`;
+    document.getElementById('bn-log-body').style.display='none';
+    bnLogOpen=false;
+
+    const stars = v => v ? '⭐'.repeat(v) : '—';
+    document.getElementById('bn-log-entries').innerHTML = prevList.map(([key,note])=>{
+      const [y,mi] = key.split('-').map(Number);
+      const label = note.monthLabel || (MONTHS_TH[mi]||MONTHS[mi])+' '+y;
+      return `
+      <div class="bn-log-entry">
+        <div class="bn-log-month">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          ${label}
+        </div>
+        <div class="bn-log-row"><span class="bn-log-q">1. ความสุขจากกิจกรรม</span><span class="bn-log-a">${stars(note.q1)}</span></div>
+        <div class="bn-log-row"><span class="bn-log-q">2. ความสนิทกับเพื่อน</span><span class="bn-log-a">${stars(note.q2)}</span></div>
+        <div class="bn-log-row"><span class="bn-log-q">3. ข้อเสนอแนะ</span><span class="bn-log-a">${note.q3||'—'}</span></div>
+        <div class="bn-log-row"><span class="bn-log-q">4. คณะที่อยากเข้า</span><span class="bn-log-a">${[note.q4a,note.q4b,note.q4c].filter(Boolean).join(' · ')||'—'}</span></div>
+        <div class="bn-log-row"><span class="bn-log-q">5. ตอนนี้เป็นอย่างไร</span><span class="bn-log-a">${note.q5mood?note.q5mood+' ':''} ${note.q5text||'—'}</span></div>
+      </div>`;
+    }).join('');
+  } else {
+    logWrap.style.display='none';
+  }
+
+  // ── star widgets ─────────────────────────────────────
+  ['q1','q2'].forEach(q=>{
+    const el = document.getElementById(`bn-${q}-stars`);
+    el.innerHTML = [1,2,3,4,5].map(v=>`
+      <div class="bn-star" onclick="setStar('${q}',${v})">
+        <svg viewBox="0 0 24 24" fill="${(n[q]||0)>=v?'#F59E0B':'none'}" stroke="${(n[q]||0)>=v?'#F59E0B':'#D3D0C6'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>`).join('');
+    document.getElementById(`bn-${q}-label`).textContent = n[q] ? STAR_LABELS[n[q]] : 'เลือกคะแนน';
+  });
+
+  // ── text fields ──────────────────────────────────────
+  document.getElementById('bn-q3').value      = n.q3    || '';
+  document.getElementById('bn-q4a').value     = n.q4a   || '';
+  document.getElementById('bn-q4b').value     = n.q4b   || '';
+  document.getElementById('bn-q4c').value     = n.q4c   || '';
+  document.getElementById('bn-q5-text').value = n.q5text|| '';
+
+  // ── mood buttons ─────────────────────────────────────
+  document.getElementById('bn-q5-moods').innerHTML = MOODS.map(({emoji,label})=>{
+    const val=emoji+' '+label;
+    return `<div class="bn-mood${n.q5mood===val?' selected':''}" onclick="selectMood(this,'${val}')">
+      <span class="bn-mood-emoji">${emoji}</span><span>${label}</span>
+    </div>`;
+  }).join('');
+
+  // store current q1/q2 state so setStar works before save
+  if(!buddyNotes[mid]) buddyNotes[mid]={};
+  if(!buddyNotes[mid][curKey]) buddyNotes[mid][curKey]={q1:n.q1||0,q2:n.q2||0};
+
+  document.getElementById('bn-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function toggleBnLog(){
+  bnLogOpen=!bnLogOpen;
+  document.getElementById('bn-log-body').style.display=bnLogOpen?'block':'none';
+  const [txt,arr] = bnLogOpen ? ['ซ่อนบันทึกเดือนก่อน ▴', '▴'] : ['ดูบันทึกเดือนก่อน ▾', '▾'];
+  const el = document.getElementById('bn-log-toggle-label');
+  const count = document.getElementById('bn-log-entries').children.length;
+  el.textContent = `${bnLogOpen?'ซ่อน':'ดู'}บันทึกเดือนก่อน (${count} เดือน) ${bnLogOpen?'▴':'▾'}`;
+}
+
+function setStar(q, val){
+  const curKey = bnCurKey();
+  if(!buddyNotes[bnCurrentId]) buddyNotes[bnCurrentId]={};
+  if(!buddyNotes[bnCurrentId][curKey]) buddyNotes[bnCurrentId][curKey]={};
+  const prev = buddyNotes[bnCurrentId][curKey][q]||0;
+  const newVal = prev===val ? 0 : val;
+  buddyNotes[bnCurrentId][curKey][q] = newVal;
+  const el = document.getElementById(`bn-${q}-stars`);
+  el.querySelectorAll('.bn-star svg').forEach((svg,i)=>{
+    const filled = newVal >= i+1;
+    svg.setAttribute('fill', filled?'#F59E0B':'none');
+    svg.setAttribute('stroke', filled?'#F59E0B':'#D3D0C6');
+  });
+  document.getElementById(`bn-${q}-label`).textContent = newVal ? STAR_LABELS[newVal] : 'เลือกคะแนน';
+}
+function selectMood(el, val){
+  document.querySelectorAll('.bn-mood').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected'); el.dataset.val=val;
+}
+
+function saveBuddyNote(){
+  if(!bnCurrentId) return;
+  const curKey = bnCurKey();
+  const cur = (buddyNotes[bnCurrentId]||{})[curKey]||{};
+  const selectedMood = document.querySelector('.bn-mood.selected');
+  const monthLabel = NOW.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  const note = {
+    q1:      cur.q1||0,
+    q2:      cur.q2||0,
+    q3:      document.getElementById('bn-q3').value.trim(),
+    q4a:     document.getElementById('bn-q4a').value.trim(),
+    q4b:     document.getElementById('bn-q4b').value.trim(),
+    q4c:     document.getElementById('bn-q4c').value.trim(),
+    q5mood:  selectedMood ? selectedMood.dataset.val : '',
+    q5text:  document.getElementById('bn-q5-text').value.trim(),
+    monthLabel,
+    savedAt: ts()
+  };
+  bnSetNote(bnCurrentId, curKey, note);
+  closeBnModalDirect();
+  renderBuddyList();
+  renderBuddySummary();
+  showToast('✓ บันทึก Buddy Note เรียบร้อย','ok');
+  // sync to sheet
+  const m=members.find(x=>x.id===bnCurrentId)||{};
+  if(SCRIPT_URL&&SCRIPT_URL!=='YOUR_GOOGLE_APPS_SCRIPT_URL'){
+    fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'buddynote',name:m.name,nick:m.nick,group:m.group,
+        region:m.region,zone:m.zone,cls:m.cls,
+        month:MONTHS[CUR_MONTH],monthIndex:CUR_MONTH+1,year:CUR_YEAR,...note})}).catch(()=>{});
+  }
+}
+
+function closeBnModal(e){ if(e.target.id==='bn-modal') closeBnModalDirect(); }
+function closeBnModalDirect(){ document.getElementById('bn-modal').classList.remove('open'); document.body.style.overflow=''; bnCurrentId=null; bnLogOpen=false; }
+function goBack(){ showPage('pg-tracker'); render(); }
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='pg-tracker') render();
+  window.scrollTo(0,0);
+}
+
+init();
+</script>
+</body>
+</html>
