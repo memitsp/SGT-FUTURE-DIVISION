@@ -461,7 +461,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text1);min-height:
       <div class="search-row">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-input" type="text" id="srch" placeholder="ค้นหา ชื่อ, ชื่อเล่น, เบอร์โทร…" oninput="doFilter()" autocomplete="off"/>
+          <input class="search-input" type="text" id="srch"
+            placeholder="ค้นหา ชื่อ, ชื่อเล่น…"
+            oninput="doFilter()"
+            onkeyup="doFilter()"
+            onchange="doFilter()"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"/>
         </div>
       </div>
 
@@ -481,6 +489,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text1);min-height:
         <button class="add-new-btn" onclick="goReg()">
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           ไม่พบในรายชื่อ? ลงทะเบียนสมาชิกใหม่
+        </button>
+      </div>
+
+      <!-- Always-visible add member button below list -->
+      <div style="text-align:center;padding:.75rem 0 .25rem;">
+        <button class="add-new-btn" onclick="goReg()" style="display:inline-flex;">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          ลงทะเบียนสมาชิกใหม่
         </button>
       </div>
 
@@ -1029,6 +1045,16 @@ function init(){
   // default buddy insights filter to current month
   document.getElementById('bi-f-month').value = String(CUR_MONTH);
   document.getElementById('bi-f-year').value  = String(CUR_YEAR);
+
+  // poll search input every 300ms — catches mobile keyboards that don't fire oninput
+  let _lastSrch='';
+  setInterval(()=>{
+    const el=document.getElementById('srch');
+    if(el && el.value.toLowerCase().trim()!==_lastSrch){
+      _lastSrch=el.value.toLowerCase().trim();
+      doFilter();
+    }
+  },300);
 
   if(false){ // URL is hardcoded — banner never shown
     document.getElementById('config-banner').style.display='flex';
