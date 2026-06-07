@@ -1,0 +1,3209 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Future Division — Monthly Meeting</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --green:#1D9E75;--green-dark:#0F6E56;--green-light:#E1F5EE;--green-text:#085041;
+  --blue-light:#E6F1FB;--blue-text:#0C447C;
+  --purple-light:#EEEDFE;--purple-text:#3C3489;
+  --amber:#BA7517;--amber-light:#FAEEDA;--amber-border:#FAC775;--amber-text:#854F0B;
+  --red:#D85A30;--red-dark:#993C1D;
+  --bg:#F7F6F3;--surface:#FFFFFF;--surface2:#F1EFE8;
+  --border:#E4E2D9;--border2:#D3D0C6;
+  --text1:#1A1A18;--text2:#5F5E5A;--text3:#9A9890;
+  --radius-sm:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:20px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow-md:0 4px 16px rgba(0,0,0,.08);
+  --font:'Sarabun',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;}
+body{font-family:var(--font);background:var(--bg);color:var(--text1);min-height:100vh;}
+
+.app-shell{display:grid;grid-template-rows:auto 1fr;min-height:100vh;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
+.topbar-brand{display:flex;align-items:center;gap:12px;}
+.topbar-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#1D9E75,#0F6E56);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.topbar-logo svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.topbar-titles{display:flex;flex-direction:column;}
+.topbar-title{font-size:15px;font-weight:700;color:var(--text1);letter-spacing:-.01em;line-height:1.2;}
+.topbar-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:6px;}
+.nav-tab{font-size:13px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid transparent;cursor:pointer;font-family:var(--font);color:var(--text2);background:transparent;transition:all .12s;white-space:nowrap;}
+.nav-tab:hover{background:var(--surface2);}
+.nav-tab.active{background:var(--green-light);color:var(--green-text);border-color:var(--green-light);}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:background .3s;}
+.sync-dot.syncing{background:var(--amber);animation:pulse .8s infinite;}
+.sync-dot.ok{background:var(--green);}
+.sync-dot.err{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.main{padding:1.5rem;max-width:960px;margin:0 auto;width:100%;}
+
+.page{display:none;animation:fadeIn .18s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+.section-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green-text);font-size:11.5px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.02em;text-transform:uppercase;}
+.section-title{font-size:22px;font-weight:700;color:var(--text1);margin-bottom:3px;letter-spacing:-.02em;}
+.section-sub{font-size:13.5px;color:var(--text2);margin-bottom:1.5rem;line-height:1.5;}
+
+/* CONFIG BANNER */
+.config-banner{background:var(--amber-light);border:1px solid var(--amber-border);border-radius:var(--radius-md);padding:12px 16px;font-size:13px;color:var(--amber-text);margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:10px;line-height:1.55;}
+.config-banner code{background:rgba(0,0,0,.08);padding:1px 6px;border-radius:4px;font-family:var(--mono);font-size:11.5px;}
+.config-banner svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex-shrink:0;margin-top:1px;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr);}}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;box-shadow:var(--shadow-sm);}
+.stat-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+.stat-val{font-size:26px;font-weight:700;color:var(--text1);font-family:var(--mono);letter-spacing:-.03em;line-height:1;}
+.stat-val.green{color:var(--green);}
+.stat-val.amber{color:var(--amber);}
+.stat-val.blue{color:#185FA5;}
+
+.search-row{display:flex;gap:8px;margin-bottom:10px;}
+.search-wrap{position:relative;flex:1;}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;}
+.search-input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:14px;font-family:var(--font);color:var(--text1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.search-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12);}
+.btn-icon{display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:40px;border:1px solid var(--border2);border-radius:var(--radius-md);background:var(--surface);font-size:12.5px;font-family:var(--font);color:var(--text2);cursor:pointer;transition:background .12s;white-space:nowrap;}
+.btn-icon:hover{background:var(--surface2);}
+.btn-icon svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+.filter-chip{font-size:12px;padding:5px 13px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.filter-chip:hover{background:var(--surface2);}
+.filter-chip.active{background:var(--green);color:#fff;border-color:var(--green);}
+.filter-select{font-size:12px;padding:5px 26px 5px 10px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--text2);font-family:var(--font);font-weight:500;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%239A9890' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;cursor:pointer;}
+.filter-select:focus{border-color:var(--green);outline:none;}
+
+.member-list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);}
+.member-row{display:flex;align-items:center;gap:12px;padding:11px 15px;border-bottom:1px solid var(--border);transition:background .1s;}
+.member-row:last-child{border-bottom:none;}
+.member-row:hover{background:var(--bg);}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;font-family:var(--mono);}
+.av0{background:#E1F5EE;color:#085041;}.av1{background:#E6F1FB;color:#0C447C;}
+.av2{background:#FAECE7;color:#712B13;}.av3{background:#EEEDFE;color:#3C3489;}.av4{background:#FBEAF0;color:#72243E;}
+.member-info{flex:1;min-width:0;}
+.member-name{font-size:13.5px;font-weight:600;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.member-name .nick{font-size:12px;font-weight:400;color:var(--text2);margin-left:4px;}
+.member-meta{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.tag{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:20px;margin-left:3px;font-weight:500;}
+.tag-g{background:var(--green-light);color:var(--green-text);}
+.tag-b{background:var(--blue-light);color:var(--blue-text);}
+.tag-p{background:var(--purple-light);color:var(--purple-text);}
+.status-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;flex-shrink:0;letter-spacing:.01em;}
+.pill-present{background:var(--green-light);color:var(--green-text);}
+.pill-absent{background:var(--surface2);color:var(--text2);}
+.action-btn{font-size:12px;padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:transparent;cursor:pointer;font-family:var(--font);font-weight:500;color:var(--text1);flex-shrink:0;transition:all .12s;display:flex;align-items:center;gap:5px;}
+.action-btn:hover{background:var(--surface2);}
+.action-btn.mark{background:var(--green);color:#fff;border-color:var(--green);}
+.action-btn.mark:hover{background:var(--green-dark);}
+.action-btn.saving{opacity:.55;pointer-events:none;}
+.action-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.history-btn{font-size:11px;padding:5px 9px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;cursor:pointer;font-family:var(--font);color:var(--text2);flex-shrink:0;display:flex;align-items:center;gap:4px;transition:all .12s;}
+.history-btn:hover{background:var(--surface2);border-color:var(--border2);}
+.history-btn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.no-results{text-align:center;padding:1rem 1rem .5rem;font-size:13px;color:var(--text2);}
+.add-new-btn{width:100%;padding:10px;border:1.5px dashed var(--border2);border-radius:var(--radius-md);background:transparent;font-size:13px;color:var(--text2);cursor:pointer;font-family:var(--font);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .12s;font-weight:500;}
+.add-new-btn:hover{background:var(--surface2);color:var(--text1);border-color:var(--green);}
+.add-new-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);background:none;border:none;cursor:pointer;padding:0;margin-bottom:1rem;font-family:var(--font);font-weight:500;transition:color .12s;}
+.back-btn:hover{color:var(--text1);}
+.back-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.75rem;box-shadow:var(--shadow-md);}
+.pre-note{background:var(--amber-light);border-radius:var(--radius-md);padding:10px 14px;font-size:12.5px;color:var(--amber-text);margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:8px;line-height:1.55;border:1px solid var(--amber-border);}
+.pre-note svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:600px){.form-grid-2,.form-grid-3{grid-template-columns:1fr;}}
+.field{margin-bottom:1rem;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.02em;text-transform:uppercase;}
+.field label .req{color:var(--red);margin-left:2px;}
+.field input,.field select,.field textarea{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:13.5px;font-family:var(--font);color:var(--text1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12);}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%239A9890' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.field textarea{resize:vertical;min-height:80px;}
+.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0;}
+.form-actions{display:flex;gap:10px;}
+.btn-primary{flex:1;padding:11px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.btn-primary:hover{background:var(--green-dark);}
+.btn-primary svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.btn-secondary{padding:11px 20px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:14px;font-family:var(--font);color:var(--text1);cursor:pointer;transition:background .12s;font-weight:500;}
+.btn-secondary:hover{background:var(--surface2);}
+
+.success-wrap{text-align:center;padding:3rem 1rem;}
+.success-icon{width:60px;height:60px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;}
+.success-icon svg{width:28px;height:28px;fill:none;stroke:var(--green);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;animation:fadeIn .15s ease;}
+.modal{background:var(--surface);border-radius:var(--radius-xl);width:100%;max-width:720px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);}
+.modal-title{font-size:16px;font-weight:700;color:var(--text1);}
+.modal-sub{font-size:12px;color:var(--text2);margin-top:2px;}
+.modal-close{width:30px;height:30px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;}
+.modal-close:hover{background:var(--border2);}
+.modal-close svg{width:14px;height:14px;fill:none;stroke:var(--text2);stroke-width:2.5;stroke-linecap:round;}
+.modal-body{padding:1.25rem 1.5rem;overflow-y:auto;flex:1;}
+
+.year-tabs{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.year-tab{font-size:12px;padding:4px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.year-tab.active{background:var(--green);color:#fff;border-color:var(--green);}
+
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
+@media(max-width:480px){.month-grid{grid-template-columns:repeat(3,1fr);}}
+.month-cell{border-radius:var(--radius-md);border:1px solid var(--border);padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;position:relative;user-select:none;}
+.month-cell:hover:not(.future):not(.present){background:var(--bg);border-color:var(--border2);}
+.month-cell.present{background:var(--green-light);border-color:var(--green);}
+.month-cell.future{opacity:.35;cursor:not-allowed;pointer-events:none;}
+.month-cell.current-month{border-color:var(--green);border-width:2px;}
+.month-cell.saving-cell{opacity:.6;pointer-events:none;}
+.month-name{font-size:13px;font-weight:600;color:var(--text1);margin-bottom:4px;}
+.month-cell.present .month-name{color:var(--green-text);}
+.month-status{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);}
+.month-cell.present .month-status{color:var(--green);}
+.month-check{width:20px;height:20px;border-radius:50%;background:var(--green);display:none;align-items:center;justify-content:center;margin:5px auto 0;}
+.month-cell.present .month-check{display:flex;}
+.month-check svg{width:11px;height:11px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
+
+.history-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem;}
+.hsumstat{background:var(--surface2);border-radius:var(--radius-md);padding:10px 12px;text-align:center;}
+.hsumstat-val{font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text1);}
+.hsumstat-val.green{color:var(--green);}
+.hsumstat-label{font-size:10px;color:var(--text2);margin-top:2px;text-transform:uppercase;letter-spacing:.04em;}
+
+/* TOAST */
+.save-toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--text1);color:#fff;font-size:13px;font-weight:500;padding:10px 16px;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);z-index:500;display:flex;align-items:center;gap:8px;transform:translateY(12px);opacity:0;transition:all .22s;pointer-events:none;max-width:320px;}
+.save-toast.show{transform:none;opacity:1;}
+.save-toast svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;flex-shrink:0;}
+.save-toast.ok svg{stroke:var(--green);}
+.save-toast.err svg{stroke:#F87171;}
+
+/* loading overlay */
+.loading-overlay{position:fixed;inset:0;background:rgba(247,246,243,.88);z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.loading-overlay.show{display:flex;}
+.spinner{width:28px;height:28px;border:3px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-msg{font-size:14px;color:var(--text2);}
+
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+@media(max-width:600px){
+  .main{padding:1rem;}
+  .topbar{padding:0 1rem;}
+  .topbar-sub{display:none;}
+  .card{padding:1.25rem;}
+  .modal-body{padding:1rem;}
+  .modal-header{padding:1rem;}
+  .history-summary{grid-template-columns:repeat(2,1fr);}
+}
+/* ── DASHBOARD ───────────────────────────────────────────── */
+.db-filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 14px;margin-bottom:1rem;box-shadow:var(--shadow-sm);}
+.db-legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.db-group-cards{display:flex;flex-direction:column;gap:12px;}
+.db-group-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:border-color .2s,box-shadow .2s;}
+.db-group-card.target-met{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.1),var(--shadow-sm);}
+.db-group-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;user-select:none;}
+.db-group-header:hover{background:var(--bg);}
+.db-group-name{font-size:15px;font-weight:700;color:var(--text1);display:flex;align-items:center;gap:10px;}
+.db-group-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;}
+.db-group-badge.met{background:var(--green-light);color:var(--green-text);}
+.db-group-badge.unmet{background:var(--surface2);color:var(--text2);}
+.db-group-right{display:flex;align-items:center;gap:12px;}
+.db-group-stat{text-align:right;}
+.db-group-stat-val{font-size:20px;font-weight:700;font-family:var(--mono);line-height:1;}
+.db-group-stat-val.green{color:var(--green);}
+.db-group-stat-val.grey{color:var(--text2);}
+.db-group-stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;}
+/* target ring */
+.db-target-ring{position:relative;width:52px;height:52px;flex-shrink:0;}
+.db-target-ring svg{width:52px;height:52px;transform:rotate(-90deg);}
+.db-target-ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:var(--mono);color:var(--text1);}
+/* chevron */
+.db-chevron{width:16px;height:16px;fill:none;stroke:var(--text3);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;flex-shrink:0;}
+.db-group-card.open .db-chevron{transform:rotate(180deg);}
+/* breakdown inside card */
+.db-breakdown{display:none;padding:0 16px 16px;border-top:1px solid var(--border);}
+.db-group-card.open .db-breakdown{display:block;}
+.db-breakdown-tabs{display:flex;gap:6px;margin-bottom:12px;padding-top:12px;flex-wrap:wrap;}
+.db-btab{font-size:11.5px;padding:3px 11px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.db-btab.active{background:var(--text1);color:#fff;border-color:var(--text1);}
+.db-section{display:none;}.db-section.active{display:block;}
+/* bar */
+.db-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.db-bar-row:last-child{margin-bottom:0;}
+.db-bar-label{font-size:12.5px;color:var(--text1);width:100px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.db-bar-track{flex:1;height:22px;background:var(--surface2);border-radius:20px;overflow:hidden;}
+.db-bar-fill{height:100%;border-radius:20px;transition:width .5s cubic-bezier(.4,0,.2,1);min-width:2px;display:flex;align-items:center;padding-left:8px;}
+.db-bar-pct{font-size:10.5px;font-weight:700;color:#fff;font-family:var(--mono);white-space:nowrap;opacity:0;transition:opacity .3s .3s;}
+.db-bar-fill.loaded .db-bar-pct{opacity:1;}
+.db-bar-count{font-size:11.5px;font-family:var(--mono);color:var(--text2);flex-shrink:0;min-width:40px;text-align:right;}
+/* absent */
+.db-absent-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.db-chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 11px;}
+.db-chip-av{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;font-family:var(--mono);}
+.db-chip-meta{font-size:10.5px;color:var(--text3);}
+.db-empty{font-size:13px;color:var(--text3);text-align:center;padding:1rem 0;}
+.db-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow-sm);}
+.db-card-header{display:flex;align-items:center;justify-content:space-between;}
+.db-card-title{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--text1);text-transform:uppercase;letter-spacing:.04em;}
+.db-card-title svg{width:14px;height:14px;fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── MONTHLY CHART ─────────────────────────────────────── */
+.ch-controls{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 14px;margin-bottom:1rem;box-shadow:var(--shadow-sm);}
+.ch-year-tabs{display:flex;gap:5px;}
+.ch-year-tab{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.ch-year-tab.active{background:var(--green);color:#fff;border-color:var(--green);}
+.ch-view-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.ch-view-btn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ch-view-btn.active{background:var(--text1);color:#fff;border-color:var(--text1);}
+.ch-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow-sm);}
+.ch-card-title{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--text1);text-transform:uppercase;letter-spacing:.04em;margin-bottom:1rem;}
+.ch-card-title svg{width:14px;height:14px;fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ch-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:.75rem;}
+.ch-legend-item{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text2);}
+.ch-legend-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+.ch-wrap{position:relative;width:100%;overflow:hidden;}
+.ch-wrap canvas{width:100%!important;}
+.ch-xaxis{display:flex;justify-content:space-around;padding:0 8px;margin-top:4px;}
+.ch-xaxis span{font-size:10.5px;color:var(--text3);font-family:var(--mono);text-align:center;flex:1;}
+/* table */
+.ch-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+.ch-tbl th{background:var(--surface2);color:var(--text2);font-weight:600;padding:7px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+.ch-tbl td{padding:7px 12px;border-bottom:1px solid var(--border);color:var(--text1);white-space:nowrap;}
+.ch-tbl tr:last-child td{border-bottom:none;}
+.ch-tbl tr:hover td{background:var(--bg);}
+.ch-tbl .met{color:var(--green);font-weight:700;}
+.ch-tbl .unmet{color:var(--amber);}
+.ch-mini-wrap{position:relative;width:100%;overflow:hidden;}
+.ch-mini-wrap canvas{width:100%!important;}
+
+/* ── BUDDY NOTES ───────────────────────────────────────── */
+.bn-q{margin-bottom:1.25rem;}
+.bn-q-label{font-size:13.5px;font-weight:600;color:var(--text1);margin-bottom:8px;display:flex;align-items:center;gap:8px;line-height:1.4;}
+.bn-q-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;flex-shrink:0;font-family:var(--mono);}
+/* stars */
+.bn-stars{display:flex;gap:6px;margin-bottom:4px;}
+.bn-star{width:36px;height:36px;cursor:pointer;transition:transform .12s;display:flex;align-items:center;justify-content:center;}
+.bn-star:hover{transform:scale(1.2);}
+.bn-star svg{width:28px;height:28px;transition:fill .1s,stroke .1s;}
+.bn-star-label{font-size:12px;color:var(--text3);font-family:var(--mono);min-height:16px;}
+/* text inputs */
+.bn-textarea{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:13.5px;font-family:var(--font);color:var(--text1);background:var(--surface);outline:none;resize:vertical;min-height:80px;transition:border-color .15s,box-shadow .15s;}
+.bn-textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12);}
+.bn-input{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:var(--radius-md);font-size:13.5px;font-family:var(--font);color:var(--text1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;}
+.bn-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.12);}
+.bn-faculty-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+@media(max-width:480px){.bn-faculty-row{grid-template-columns:1fr;}}
+/* mood row */
+.bn-mood-row{display:flex;gap:8px;flex-wrap:wrap;}
+.bn-mood{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all .12s;font-size:11px;color:var(--text2);font-weight:500;min-width:56px;}
+.bn-mood:hover{border-color:var(--border2);background:var(--bg);}
+.bn-mood.selected{border-color:var(--green);background:var(--green-light);color:var(--green-text);}
+.bn-mood-emoji{font-size:22px;line-height:1;}
+/* saved note cards */
+.bn-note-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.bn-note-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.bn-note-name{font-size:14px;font-weight:600;color:var(--text1);}
+.bn-note-name.clickable{color:var(--green);cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+.bn-note-name.clickable:hover{color:var(--green-dark);}
+.bn-hist-entry{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem 1rem;margin-bottom:10px;border-left:3px solid var(--green);}
+.bn-hist-entry:last-child{margin-bottom:0;}
+.bn-hist-month{font-size:12px;font-weight:700;color:var(--green-text);font-family:var(--mono);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.bn-hist-month svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+.bn-hist-row{display:flex;gap:8px;font-size:12.5px;margin-bottom:5px;line-height:1.45;}
+.bn-hist-row:last-child{margin-bottom:0;}
+.bn-hist-q{color:var(--text3);font-weight:500;min-width:150px;flex-shrink:0;}
+.bn-hist-a{color:var(--text1);}
+.bn-hist-empty{text-align:center;padding:2rem;font-size:13px;color:var(--text3);}
+.bn-note-meta{font-size:11.5px;color:var(--text3);}
+.bn-note-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;font-size:13px;}
+.bn-note-row:last-child{margin-bottom:0;}
+.bn-note-q{color:var(--text3);font-size:12px;font-weight:600;min-width:180px;flex-shrink:0;}
+.bn-note-a{color:var(--text1);}
+.bn-star-filled{color:#F59E0B;}
+.bn-note-edit{font-size:11.5px;padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;cursor:pointer;font-family:var(--font);color:var(--text2);transition:background .12s;}
+.bn-note-edit:hover{background:var(--surface2);}
+
+/* log toggle */
+.bn-log-toggle{display:flex;align-items:center;gap:7px;width:100%;padding:10px 1.25rem;background:transparent;border:none;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:600;color:var(--text2);text-align:left;transition:background .12s;}
+.bn-log-toggle:hover{background:var(--surface2);}
+.bn-log-toggle svg{width:14px;height:14px;fill:none;stroke:var(--amber);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+/* log entries */
+.bn-log-entry{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem 1rem;margin-bottom:8px;}
+.bn-log-entry:last-child{margin-bottom:0;}
+.bn-log-month{font-size:12px;font-weight:700;color:var(--amber);font-family:var(--mono);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.bn-log-month svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;}
+.bn-log-row{display:flex;gap:6px;font-size:12px;margin-bottom:4px;line-height:1.4;}
+.bn-log-row:last-child{margin-bottom:0;}
+.bn-log-q{color:var(--text3);font-weight:500;min-width:140px;flex-shrink:0;}
+.bn-log-a{color:var(--text1);}
+
+.db-chart-wrap{position:relative;width:100%;overflow:hidden;}
+.db-chart-wrap canvas{width:100%!important;}
+@media(max-width:600px){#db-charts-row1{grid-template-columns:1fr!important;}}
+
+/* ── BUDDY INSIGHTS ─────────────────────────────────────────── */
+.bi-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:.75rem;}
+.bi-legend-item{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text2);}
+.bi-legend-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+/* comment wall — mentimeter word cloud style */
+.bi-comment-wall{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;min-height:60px;padding:.5rem 0;}
+.bi-cloud-word{display:inline-block;cursor:default;line-height:1.3;font-family:var(--font);transition:transform .15s;animation:bi-pop .35s ease both;}
+.bi-cloud-word:hover{transform:scale(1.08);}
+.bi-comment-card{background:var(--surface2);border-radius:var(--radius-md);padding:8px 14px;font-size:13px;color:var(--text1);border-left:3px solid var(--green);animation:bi-pop .3s ease;line-height:1.45;max-width:280px;}
+.bi-comment-card .bi-cm-who{font-size:10.5px;color:var(--text3);margin-bottom:3px;font-weight:500;}
+.bi-comment-empty{font-size:13px;color:var(--text3);padding:.75rem 0;}
+@keyframes bi-pop{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:none;}}
+.bi-month-tab{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;}
+.bi-month-tab.active{background:var(--green);color:#fff;border-color:var(--green);}
+/* Q4 bars */
+.bi-q4-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.bi-q4-rank{font-size:13px;font-weight:700;color:var(--text3);font-family:var(--mono);width:22px;text-align:right;flex-shrink:0;}
+.bi-q4-rank.gold{color:#F59E0B;}
+.bi-q4-rank.silver{color:#9CA3AF;}
+.bi-q4-rank.bronze{color:#B45309;}
+.bi-q4-label{font-size:13px;font-weight:500;color:var(--text1);width:120px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bi-q4-track{flex:1;height:22px;background:var(--surface2);border-radius:20px;overflow:hidden;}
+.bi-q4-fill{height:100%;border-radius:20px;transition:width .5s ease;display:flex;align-items:center;padding-left:8px;}
+.bi-q4-count{font-size:11px;font-weight:700;font-family:var(--mono);color:#fff;white-space:nowrap;}
+.bi-q4-total{font-size:11.5px;font-family:var(--mono);color:var(--text2);flex-shrink:0;min-width:28px;text-align:right;}
+
+.bi-wrap{position:relative;width:100%;overflow:hidden;}
+.bi-wrap canvas{display:block;}
+.search-input::-webkit-search-cancel-button{cursor:pointer;}
+.search-input{-webkit-appearance:none;appearance:none;border-radius:var(--radius-md)!important;}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">
+        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="topbar-titles">
+        <div class="topbar-title" style="font-size:17px;letter-spacing:.1em;text-transform:uppercase;">Future Division</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="sync-dot" id="sync-dot" title="Sheet sync status"></div>
+      <button class="nav-tab active" id="tab-tracker" onclick="switchTab('pg-tracker',this)">Tracker</button>
+      <button class="nav-tab" id="tab-dashboard" onclick="switchTab('pg-dashboard',this)">Dashboard</button>
+      <button class="nav-tab" id="tab-chart" onclick="switchTab('pg-chart',this)">Monthly Chart</button>
+      <button class="nav-tab" id="tab-history" onclick="switchTab('pg-history-list',this)">History</button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- ══ TRACKER ══ -->
+    <div class="page active" id="pg-tracker">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span id="badge-month">Monthly meeting</span>
+      </div>
+      <h1 class="section-title">Attendance tracker</h1>
+      <p class="section-sub" id="tracker-sub">ค้นหาชื่อสมาชิก กด Present และกรอก Buddy Notes ♥</p>
+
+      <!-- Month / Year selector -->
+      <div class="db-filter-bar" style="margin-bottom:1rem;">
+        <svg style="width:14px;height:14px;fill:none;stroke:var(--text3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span style="font-size:12px;color:var(--text2);font-weight:600;">Month:</span>
+        <select class="filter-select" id="tr-f-year" onchange="onTrackerMonthChange()" style="border-radius:var(--radius-sm);">
+          <option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+        </select>
+        <select class="filter-select" id="tr-f-month" onchange="onTrackerMonthChange()" style="border-radius:var(--radius-sm);">
+          <option value="0">มกราคม</option>
+          <option value="1">กุมภาพันธ์</option>
+          <option value="2">มีนาคม</option>
+          <option value="3">เมษายน</option>
+          <option value="4">พฤษภาคม</option>
+          <option value="5">มิถุนายน</option>
+          <option value="6">กรกฎาคม</option>
+          <option value="7">สิงหาคม</option>
+          <option value="8">กันยายน</option>
+          <option value="9">ตุลาคม</option>
+          <option value="10">พฤศจิกายน</option>
+          <option value="11">ธันวาคม</option>
+        </select>
+        <div id="tr-mode-badge" style="display:none;" class="connected-badge" style="background:var(--amber-light);color:var(--amber-text);">
+          <svg style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          View only
+        </div>
+        <div style="margin-left:auto;">
+          <button class="btn-icon" onclick="loadAll(true)" style="height:32px;font-size:12px;">
+            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Total members</div><div class="stat-val" id="s-total">—</div></div>
+        <div class="stat"><div class="stat-label">Present</div><div class="stat-val green" id="s-present">—</div></div>
+        <div class="stat"><div class="stat-label">Absent</div><div class="stat-val amber" id="s-absent">—</div></div>
+        <div class="stat"><div class="stat-label">Rate</div><div class="stat-val blue" id="s-rate">—</div></div>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" id="srch"
+            placeholder="ค้นหา ชื่อ, ชื่อเล่น…"
+            oninput="srchVal=this.value.toLowerCase().trim();render()"
+            onkeyup="if(srchVal!==this.value.toLowerCase().trim()){srchVal=this.value.toLowerCase().trim();render();}"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"/>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <button class="filter-chip active" onclick="setF('all',this)">ทั้งหมด</button>
+        <button class="filter-chip" onclick="setF('present',this)">Present</button>
+        <button class="filter-chip" onclick="setF('absent',this)">Absent</button>
+        <select class="filter-select" id="fgrp" onchange="doFilter()"><option value="">All groups</option></select>
+        <select class="filter-select" id="fregion" onchange="doFilter()"><option value="">All regions</option></select>
+        <select class="filter-select" id="fzone" onchange="doFilter()"><option value="">All zones</option></select>
+        <select class="filter-select" id="fcls" onchange="doFilter()"><option value="">All classes</option></select>
+      </div>
+
+      <div class="member-list" id="member-list"><div style="padding:2rem;text-align:center;color:var(--text3);">กำลังโหลด…</div></div>
+      <div id="no-results" style="display:none;">
+        <p class="no-results" id="no-msg">ไม่พบสมาชิก</p>
+        <button class="add-new-btn" onclick="goReg()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          ไม่พบในรายชื่อ? ลงทะเบียนสมาชิกใหม่
+        </button>
+      </div>
+
+      <!-- Always-visible add member button below list -->
+      <div style="text-align:center;padding:.75rem 0 .25rem;">
+        <button class="add-new-btn" onclick="goReg()" style="display:inline-flex;">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          ลงทะเบียนสมาชิกใหม่
+        </button>
+      </div>
+
+      <!-- Buddy Notes summary (present members with filled notes) -->
+      <div id="bn-summary-wrap" style="display:none;margin-top:1.5rem;">
+        <div class="section-badge" style="margin-bottom:8px;">
+          <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Buddy Notes บันทึกแล้ว
+        </div>
+        <div id="bn-notes-list"></div>
+      </div>
+    </div>
+
+    <!-- ══ REGISTER ══ -->
+    <div class="page" id="pg-reg">
+      <button class="back-btn" onclick="goBack()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>กลับ Tracker
+      </button>
+      <h1 class="section-title">ลงทะเบียนสมาชิกใหม่</h1>
+      <p class="section-sub">กรอกข้อมูลให้ครบ — บันทึกลง Members sheet และทำเครื่องหมาย Present อัตโนมัติ</p>
+      <div class="card">
+        <div class="pre-note" id="pre-note" style="display:none;">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="pre-note-txt"></span>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label>ชื่อ-นามสกุล <span class="req">*</span></label><input id="r-name" type="text" placeholder="ชื่อเต็ม"/></div>
+          <div class="field"><label>ชื่อเล่น</label><input id="r-nick" type="text" placeholder="ชื่อเล่น"/></div>
+        </div>
+        <div class="form-grid-3">
+          <!-- Group: fixed options -->
+          <div class="field">
+            <label>Group <span class="req">*</span></label>
+            <select id="r-group">
+              <option value="">เลือก…</option>
+              <option value="YWD">YWD</option>
+              <option value="YMD">YMD</option>
+            </select>
+          </div>
+          <!-- Region: fixed options, drives zone -->
+          <div class="field">
+            <label>Region <span class="req">*</span></label>
+            <select id="r-region" onchange="onRegionChange()">
+              <option value="">เลือก…</option>
+              <option value="มหานคร 2">มหานคร 2</option>
+              <option value="มหานคร 3">มหานคร 3</option>
+              <option value="อื่น ๆ">อื่น ๆ</option>
+            </select>
+          </div>
+          <!-- Zone: dropdown for มหานคร 2/3, free text for อื่น ๆ -->
+          <div class="field" id="r-zone-wrap">
+            <label>Zone</label>
+            <select id="r-zone" style="display:block;">
+              <option value="">เลือก Region ก่อน…</option>
+            </select>
+            <input id="r-zone-text" type="text" placeholder="ระบุ Zone…" style="display:none;"/>
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label>เบอร์โทรศัพท์ <span class="req">*</span></label><input id="r-phone" type="tel" placeholder="081-234-5678"/></div>
+          <div class="field"><label>Class</label>
+            <select id="r-class">
+              <option value="">เลือก…</option>
+              <optgroup label="ประถม">
+                <option value="อ.1">อ.1</option>
+                <option value="อ.2">อ.2</option>
+                <option value="อ.3">อ.3</option>
+                <option value="ป.1">ป.1</option>
+                <option value="ป.2">ป.2</option>
+                <option value="ป.3">ป.3</option>
+                <option value="ป.4">ป.4</option>
+                <option value="ป.5">ป.5</option>
+                <option value="ป.6">ป.6</option>
+              </optgroup>
+              <optgroup label="มัธยม">
+                <option value="ม.1">ม.1</option>
+                <option value="ม.2">ม.2</option>
+                <option value="ม.3">ม.3</option>
+              </optgroup>
+              <optgroup label="เตรียมอุดม">
+                <option value="ม.4">ม.4</option>
+                <option value="ม.5">ม.5</option>
+                <option value="ม.6">ม.6</option>
+                <option value="ปวช.1">ปวช.1</option>
+                <option value="ปวช.2">ปวช.2</option>
+                <option value="ปวช.3">ปวช.3</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>หมายเหตุ</label><textarea id="r-notes" placeholder="ข้อมูลเพิ่มเติม…"></textarea></div>
+        <div class="divider"></div>
+        <div class="form-actions">
+          <button class="btn-secondary" onclick="goBack()">ยกเลิก</button>
+          <button class="btn-primary" onclick="submitReg()">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Register &amp; Mark Present
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SUCCESS ══ -->
+    <div class="page" id="pg-suc">
+      <div class="success-wrap">
+        <div class="success-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h1 class="section-title" id="suc-title" style="margin-bottom:8px;">Registered &amp; Marked Present!</h1>
+        <p class="section-sub" id="suc-sub" style="max-width:420px;margin:0 auto 1.5rem;"></p>
+        <button class="btn-primary" style="max-width:220px;margin:0 auto;" onclick="showPage('pg-tracker')">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>กลับ Tracker
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ HISTORY LIST ══ -->
+    <div class="page" id="pg-history-list">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Monthly attendance history
+      </div>
+      <h1 class="section-title">ประวัติการเข้าร่วมประชุม</h1>
+      <p class="section-sub">คลิกชื่อสมาชิกเพื่อดูและแก้ไขประวัติรายเดือน — ข้อมูลซิงค์จาก Google Sheet ตลอดเวลา</p>
+      <div class="search-row" style="margin-bottom:10px;">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" id="hist-srch" placeholder="ค้นหาชื่อ, ชื่อเล่น…" oninput="renderHistoryList()" autocomplete="off"/>
+        </div>
+        <select class="filter-select" id="hist-fgrp" onchange="renderHistoryList()" style="padding:0 26px 0 10px;height:40px;border-radius:var(--radius-md);border:1px solid var(--border2);"><option value="">All groups</option></select>
+      </div>
+      <div class="member-list" id="history-member-list"><div style="padding:2rem;text-align:center;color:var(--text3);">กำลังโหลด…</div></div>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page" id="pg-dashboard">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span id="db-badge">Dashboard</span>
+      </div>
+      <h1 class="section-title">Attendance Dashboard</h1>
+      <p class="section-sub" id="db-sub">ภาพรวมสถานะการเข้าร่วมประชุมประจำเดือน — เป้าหมาย 5 คน/กลุ่ม/รวมภาค/เดือน</p>
+
+      <!-- Overall summary cards -->
+      <div class="stats" style="margin-bottom:1.25rem;">
+        <div class="stat"><div class="stat-label">Total members</div><div class="stat-val" id="db-total">—</div></div>
+        <div class="stat"><div class="stat-label">Present</div><div class="stat-val green" id="db-present">—</div></div>
+        <div class="stat"><div class="stat-label">Absent</div><div class="stat-val amber" id="db-absent">—</div></div>
+        <div class="stat"><div class="stat-label">Overall rate</div><div class="stat-val blue" id="db-rate">—</div></div>
+      </div>
+
+      <!-- Dashboard filters -->
+      <div class="db-filter-bar">
+        <svg style="width:14px;height:14px;fill:none;stroke:var(--text3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <span style="font-size:12px;color:var(--text2);font-weight:600;">Filter:</span>
+        <!-- Month filter -->
+        <select class="filter-select" id="db-f-year" onchange="renderDashboard()" style="border-radius:var(--radius-sm);">
+          <option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+        </select>
+        <select class="filter-select" id="db-f-month" onchange="renderDashboard()" style="border-radius:var(--radius-sm);">
+          <option value="">All months</option>
+          <option value="0">มกราคม</option>
+          <option value="1">กุมภาพันธ์</option>
+          <option value="2">มีนาคม</option>
+          <option value="3">เมษายน</option>
+          <option value="4">พฤษภาคม</option>
+          <option value="5">มิถุนายน</option>
+          <option value="6">กรกฎาคม</option>
+          <option value="7">สิงหาคม</option>
+          <option value="8">กันยายน</option>
+          <option value="9">ตุลาคม</option>
+          <option value="10">พฤศจิกายน</option>
+          <option value="11">ธันวาคม</option>
+        </select>
+        <!-- Region / Zone / Level -->
+        <select class="filter-select" id="db-f-region" onchange="renderDashboard()" style="border-radius:var(--radius-sm);">
+          <option value="">All regions</option>
+          <option value="มหานคร 2">มหานคร 2</option>
+          <option value="มหานคร 3">มหานคร 3</option>
+          <option value="อื่น ๆ">อื่น ๆ</option>
+        </select>
+        <select class="filter-select" id="db-f-zone" onchange="renderDashboard()" style="border-radius:var(--radius-sm);">
+          <option value="">All zones</option>
+        </select>
+        <select class="filter-select" id="db-f-level" onchange="renderDashboard()" style="border-radius:var(--radius-sm);">
+          <option value="">All levels</option>
+          <option value="ประถม">ประถม</option>
+          <option value="มัธยม">มัธยม</option>
+          <option value="เตรียมอุดม">เตรียมอุดม</option>
+        </select>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+          <span class="db-legend-dot" style="background:var(--green);"></span>
+          <span style="font-size:11.5px;color:var(--text2);">ถึงเป้า ≥5 คน</span>
+          <span class="db-legend-dot" style="background:var(--border2);margin-left:6px;"></span>
+          <span style="font-size:11.5px;color:var(--text2);">ยังไม่ถึงเป้า</span>
+        </div>
+      </div>
+
+      <!-- Group cards -->
+      <div id="db-group-cards"></div>
+
+      <!-- ── Dashboard Charts ── -->
+      <div style="margin-top:1rem;">
+        <!-- Row 1: donut + group bar side by side -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;" id="db-charts-row1">
+          <!-- Overall donut -->
+          <div class="db-card" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="db-card-title" style="margin-bottom:.75rem;align-self:flex-start;">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Overall Present / Absent
+            </div>
+            <canvas id="db-donut" width="180" height="180" style="max-width:180px;"></canvas>
+            <div id="db-donut-legend" style="display:flex;gap:12px;margin-top:10px;font-size:12px;color:var(--text2);"></div>
+          </div>
+          <!-- By Group bar -->
+          <div class="db-card">
+            <div class="db-card-title" style="margin-bottom:.75rem;">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              By Group
+            </div>
+            <div class="db-chart-wrap"><canvas id="db-bar-group" height="160"></canvas></div>
+          </div>
+        </div>
+        <!-- Row 2: region + zone side by side -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div class="db-card">
+            <div class="db-card-title" style="margin-bottom:.75rem;">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              By Region
+            </div>
+            <div class="db-chart-wrap"><canvas id="db-bar-region" height="160"></canvas></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title" style="margin-bottom:.75rem;">
+              <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              By Zone
+            </div>
+            <div class="db-chart-wrap"><canvas id="db-bar-zone" height="180"></canvas></div>
+          </div>
+        </div>
+        <!-- Row 3: education level full width -->
+        <div class="db-card">
+          <div class="db-card-title" style="margin-bottom:.75rem;">
+            <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            By Education Level
+          </div>
+          <div class="db-chart-wrap"><canvas id="db-bar-level" height="120"></canvas></div>
+        </div>
+      </div>
+
+      <!-- ── Buddy Notes Insights ── -->
+      <div style="margin-top:1.5rem;">
+        <div class="section-badge" style="margin-bottom:.75rem;">
+          <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Buddy Notes Insights
+        </div>
+        <div class="db-filter-bar" style="margin-bottom:1rem;">
+          <svg style="width:14px;height:14px;fill:none;stroke:var(--text3);stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span style="font-size:12px;color:var(--text2);font-weight:600;">Buddy Filter:</span>
+          <select class="filter-select" id="bi-f-year" onchange="renderBuddyInsights()" style="border-radius:var(--radius-sm);">
+            <option value="2025">2025</option><option value="2026" selected>2026</option>
+            <option value="2027">2027</option><option value="2028">2028</option>
+          </select>
+          <select class="filter-select" id="bi-f-month" onchange="renderBuddyInsights()" style="border-radius:var(--radius-sm);">
+            <option value="">All months</option>
+            <option value="0">มกราคม</option><option value="1">กุมภาพันธ์</option>
+            <option value="2">มีนาคม</option><option value="3">เมษายน</option>
+            <option value="4">พฤษภาคม</option><option value="5">มิถุนายน</option>
+            <option value="6">กรกฎาคม</option><option value="7">สิงหาคม</option>
+            <option value="8">กันยายน</option><option value="9">ตุลาคม</option>
+            <option value="10">พฤศจิกายน</option><option value="11">ธันวาคม</option>
+          </select>
+          <select class="filter-select" id="bi-f-group" onchange="renderBuddyInsights()" style="border-radius:var(--radius-sm);">
+            <option value="">All groups</option>
+          </select>
+          <select class="filter-select" id="bi-f-zone" onchange="renderBuddyInsights()" style="border-radius:var(--radius-sm);">
+            <option value="">All zones</option>
+          </select>
+        </div>
+        <div class="stats" style="margin-bottom:1rem;" id="bi-stats"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div class="db-card">
+            <div class="db-card-title" style="margin-bottom:.75rem;">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Q1 ความสุขจากกิจกรรม</div>
+            <div id="bi-q1-bars"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title" style="margin-bottom:.75rem;">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Q2 ความสนิทกับเพื่อน</div>
+            <div id="bi-q2-bars"></div>
+          </div>
+        </div>
+        <div class="db-card" style="margin-bottom:1rem;">
+          <div class="db-card-title" style="margin-bottom:.75rem;">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Q3 ข้อเสนอแนะ</div>
+          <div style="display:flex;gap:6px;margin-bottom:.75rem;flex-wrap:wrap;" id="bi-q3-month-tabs"></div>
+          <div id="bi-q3-wall" class="bi-comment-wall"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="db-card">
+            <div class="db-card-title" style="margin-bottom:.75rem;">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Q4 คณะที่อยากเข้า</div>
+            <div id="bi-q4-bars"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title" style="margin-bottom:.75rem;">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>Q5 ความรู้สึก</div>
+            <div id="bi-q5-bars"></div>
+            <div id="bi-q5-legend" class="bi-legend" style="margin-top:.5rem;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ MONTHLY CHART ══ -->
+    <div class="page" id="pg-chart">
+      <div class="section-badge">
+        <svg style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Monthly trend
+      </div>
+      <h1 class="section-title">Monthly Attendance Chart</h1>
+      <p class="section-sub">สถิติจำนวนผู้เข้าร่วมประชุมรายเดือน แบ่งตามกลุ่ม เทียบเป้าหมาย 5 คน/กลุ่ม/รวมภาค/เดือน</p>
+
+      <!-- Chart filters -->
+      <div class="db-filter-bar" style="margin-bottom:.75rem;">
+        <svg style="width:14px;height:14px;fill:none;stroke:var(--text3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <span style="font-size:12px;color:var(--text2);font-weight:600;">Filter:</span>
+        <select class="filter-select" id="ch-f-region" onchange="onChartRegionChange()" style="border-radius:var(--radius-sm);">
+          <option value="">All regions</option>
+          <option value="มหานคร 2">มหานคร 2</option>
+          <option value="มหานคร 3">มหานคร 3</option>
+          <option value="อื่น ๆ">อื่น ๆ</option>
+        </select>
+        <select class="filter-select" id="ch-f-zone" onchange="renderMonthlyChart()" style="border-radius:var(--radius-sm);">
+          <option value="">All zones</option>
+        </select>
+        <select class="filter-select" id="ch-f-level" onchange="renderMonthlyChart()" style="border-radius:var(--radius-sm);">
+          <option value="">All levels</option>
+          <option value="ประถม">ประถม</option>
+          <option value="มัธยม">มัธยม</option>
+          <option value="เตรียมอุดม">เตรียมอุดม</option>
+        </select>
+      </div>
+
+      <!-- Chart controls -->
+      <div class="ch-controls">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <label style="font-size:12px;font-weight:600;color:var(--text2);">Year:</label>
+          <div class="ch-year-tabs" id="ch-year-tabs"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <label style="font-size:12px;font-weight:600;color:var(--text2);">View:</label>
+          <button class="ch-view-btn active" id="ch-btn-bar" onclick="setChartView('bar',this)">
+            <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>Bar
+          </button>
+          <button class="ch-view-btn" id="ch-btn-line" onclick="setChartView('line',this)">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Line
+          </button>
+        </div>
+      </div>
+
+      <!-- Main chart -->
+      <div class="ch-card">
+        <div class="ch-card-title">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Attendance by Month
+        </div>
+        <div class="ch-legend" id="ch-legend"></div>
+        <div class="ch-wrap">
+          <canvas id="ch-main" height="300"></canvas>
+        </div>
+        <div class="ch-xaxis" id="ch-xaxis"></div>
+      </div>
+
+      <!-- Per-group rate cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;" id="ch-group-charts"></div>
+
+      <!-- Month-by-month table -->
+      <div class="ch-card" style="margin-top:1rem;">
+        <div class="ch-card-title">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          Monthly Summary Table
+        </div>
+        <div id="ch-table" style="overflow-x:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ══ BUDDY NOTES ══ -->
+    <!-- Buddy Notes form modal -->
+    <div class="modal-overlay" id="bn-modal" onclick="if(event.target===this)closeBnModalDirect()">
+      <div class="modal" style="max-width:560px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title" id="bn-modal-name">—</div>
+            <div class="modal-sub" id="bn-modal-meta">Buddy Notes — <span id="bn-modal-month"></span></div>
+          </div>
+          <button class="modal-close" onclick="closeBnModalDirect()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body" style="padding:0;display:flex;flex-direction:column;">
+
+          <!-- Previous notes log (collapsible) -->
+          <div id="bn-prev-log" style="display:none;border-bottom:1px solid var(--border);background:var(--bg);">
+            <button class="bn-log-toggle" id="bn-log-toggle-btn" onclick="toggleBnLog()">
+              <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+              <span id="bn-log-toggle-label">ดูบันทึกเดือนก่อน ▾</span>
+            </button>
+            <div id="bn-log-body" style="display:none;padding:0 1.25rem 1rem;max-height:280px;overflow-y:auto;">
+              <div id="bn-log-entries"></div>
+            </div>
+          </div>
+
+          <!-- Form area -->
+          <div style="padding:1.25rem 1.5rem;overflow-y:auto;flex:1;">
+
+          <!-- Q1 -->
+          <div class="bn-q">
+            <div class="bn-q-label"><span class="bn-q-num">1</span>ความสุขที่ได้จากกิจกรรมเดือนนี้</div>
+            <div class="bn-stars" id="bn-q1-stars" data-q="q1"></div>
+            <div class="bn-star-label" id="bn-q1-label">เลือกคะแนน</div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="bn-q">
+            <div class="bn-q-label"><span class="bn-q-num">2</span>ความสนิทกับเพื่อน ๆ พี่ ๆ น้อง ๆ</div>
+            <div class="bn-stars" id="bn-q2-stars" data-q="q2"></div>
+            <div class="bn-star-label" id="bn-q2-label">เลือกคะแนน</div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="bn-q">
+            <div class="bn-q-label"><span class="bn-q-num">3</span>ข้อเสนอแนะในกิจกรรม</div>
+            <textarea class="bn-textarea" id="bn-q3" placeholder="ข้อเสนอแนะ / ความคิดเห็น…"></textarea>
+          </div>
+
+          <!-- Q4 -->
+          <div class="bn-q">
+            <div class="bn-q-label"><span class="bn-q-num">4</span>3 คณะที่อยากเข้า</div>
+            <div class="bn-faculty-row">
+              <input class="bn-input" id="bn-q4a" type="text" placeholder="คณะที่ 1"/>
+              <input class="bn-input" id="bn-q4b" type="text" placeholder="คณะที่ 2"/>
+              <input class="bn-input" id="bn-q4c" type="text" placeholder="คณะที่ 3"/>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="bn-q" style="margin-bottom:0;">
+            <div class="bn-q-label"><span class="bn-q-num">5</span>ตอนนี้เป็นอย่างไรบ้าง</div>
+            <div class="bn-mood-row" id="bn-q5-moods"></div>
+            <textarea class="bn-textarea" id="bn-q5-text" placeholder="เล่าให้ฟังได้เลย…" style="margin-top:8px;"></textarea>
+          </div>
+
+          </div><!-- end form area -->
+        <div style="padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:10px;">
+          <button class="btn-secondary" onclick="closeBnModalDirect()">ยกเลิก</button>
+          <button class="btn-primary" onclick="saveBuddyNote()">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            บันทึก Buddy Note
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BUDDY INSIGHTS ══ -->
+    <div class="page" id="pg-buddy-insights" style="display:none!important;"></div>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="history-modal" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-name">—</div>
+        <div class="modal-sub" id="modal-meta">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="year-tabs" id="year-tabs"></div>
+      <div class="history-summary" id="hist-summary"></div>
+      <div class="month-grid" id="month-grid"></div>
+      <p style="font-size:11.5px;color:var(--text3);text-align:center;">แตะที่เดือนเพื่อสลับสถานะ — บันทึกลง Google Sheet ทันที (เฉพาะเดือนที่ผ่านมาแล้ว)</p>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-msg" id="loading-msg">กำลังโหลดข้อมูล…</div>
+</div>
+
+<!-- TOAST -->
+<div class="save-toast" id="save-toast">
+  <svg id="toast-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-msg">Saved</span>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  ▶  PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
+// ════════════════════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3b4JbmC_b6uSNnyJfvuxr_4hao9RWUSalY27p0-lmldB8hOxAl-GEUrBESliWLIgwRg/exec';
+// ════════════════════════════════════════════════════════
+
+const MONTHS     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHS_TH  = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                    'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const YEARS      = [2025, 2026, 2027, 2028];
+const AVC        = ['av0','av1','av2','av3','av4'];
+const NOW        = new Date();
+const CUR_YEAR   = NOW.getFullYear();
+const CUR_MONTH  = NOW.getMonth();  // 0-indexed
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let members    = [];               // [{id,group,region,zone,name,nick,phone,cls,idx,present}]
+let attendance = {};               // {memberId: {"2025-0":true, "2025-5":false, ...}}
+let curFilter  = 'all';
+let srchVal    = '';
+let modalMid   = null;
+let modalYear  = CUR_YEAR;
+let pollTimer  = null;
+
+// ── SEED MEMBERS (fallback if sheet unavailable) ──────────────────────
+// SEED removed — all data loads from Google Sheet via SCRIPT_URL
+const SEED = [];
+
+// ── INIT ──────────────────────────────────────────────────────────────
+function init(){
+  const mo = NOW.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  document.getElementById('badge-month').textContent = 'Monthly meeting — '+mo;
+
+  // default dashboard month filter to current month
+  document.getElementById('db-f-month').value = String(CUR_MONTH);
+  document.getElementById('db-f-year').value  = String(CUR_YEAR);
+  // default tracker month/year to current month
+  document.getElementById('tr-f-month').value = String(CUR_MONTH);
+  document.getElementById('tr-f-year').value  = String(CUR_YEAR);
+  // default buddy insights filter to current month
+  document.getElementById('bi-f-month').value = String(CUR_MONTH);
+  document.getElementById('bi-f-year').value  = String(CUR_YEAR);
+
+  // compositionend for Thai/CJK mobile keyboards that batch characters
+  const srchEl = document.getElementById('srch');
+  if(srchEl){
+    srchEl.addEventListener('compositionend', ()=>{
+      srchVal=srchEl.value.toLowerCase().trim(); render();
+    }, {passive:true});
+  }
+
+  if(false){ // URL is hardcoded — banner never shown
+    document.getElementById('config-banner').style.display='flex';
+    setSyncDot('err');
+    // load seed data anyway
+    loadSeed();
+    return;
+  }
+  loadAll(true);
+  // poll every 30s for multi-device sync
+  pollTimer = setInterval(()=>loadAll(false), 30000);
+  // also refresh when tab becomes visible again
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) loadAll(false); });
+}
+
+function loadSeed(){
+  // No seed data — show empty state while waiting for sheet
+  members = [];
+  populateFilters(); render(); renderHistoryList();
+  updateStats();
+  document.getElementById('member-list').innerHTML =
+    '<div style="padding:2rem;text-align:center;color:var(--text3);font-size:14px;">กำลังโหลดข้อมูลจาก Google Sheet…<br><span style="font-size:12px;margin-top:6px;display:block;">หากใช้เวลานาน ให้กด Refresh</span></div>';
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function avInit(n){ if(!n)return'?'; const p=n.trim().split(' '); return p.length>=2?(p[0][0]||'')+(p[1][0]||''):n.slice(0,2); }
+function avc(i){ return AVC[i%AVC.length]; }
+function ts(){ return new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok'}); }
+function attKey(y,m){ return `${y}-${m}`; }
+function isPresent(mid,y,m){
+  const v=attendance[mid]&&attendance[mid][attKey(y,m)];
+  if(v===null||v===undefined) return false;
+  if(typeof v==='object') return !!v.present;
+  return !!v; // legacy boolean
+}
+function getAttCls(mid,y,m){
+  // returns the class stored in the attendance row for that month, falls back to current member cls
+  const v=attendance[mid]&&attendance[mid][attKey(y,m)];
+  if(v&&typeof v==='object'&&v.cls) return v.cls;
+  const member=members.find(x=>x.id===mid);
+  return member?member.cls:'';
+}
+function setAtt(mid,y,m,v){ if(!attendance[mid])attendance[mid]={}; attendance[mid][attKey(y,m)]=v; }
+function setSyncDot(s){ const d=document.getElementById('sync-dot'); d.className='sync-dot '+(s==='ok'?'ok':s==='syncing'?'syncing':'err'); }
+
+// ── LOAD FROM SHEET (GET) ──────────────────────────────────────────────
+async function loadAll(showLoader){
+  if(!SCRIPT_URL||SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL') return;
+  if(showLoader){ showLoading('กำลังโหลดข้อมูลจาก Google Sheet…'); }
+  setSyncDot('syncing');
+  try{
+    const res = await fetch(SCRIPT_URL+'?data=1&t='+Date.now()); // cache-bust, data=1 returns JSON
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const json = await res.json();
+
+    // members — columns: MemberID, Group, Region, Zone, Name, Nickname, Class, Phone
+    if((json.members||[]).length){
+      members = json.members.map((m,i)=>({
+        idx:    i,
+        id:     String(m['MemberID'] || m['Name'] || i), // MemberID is now the stable key
+        mid:    String(m['MemberID'] || ''),
+        group:  m['Group']         || '',
+        region: m['Region']        || '',
+        zone:   m['Zone']          || '',
+        name:   m['Name']          || '',
+        nick:   m['Nickname']      || '',
+        cls:    m['Class'] || '',
+        phone:  m['Phone']         || '',
+        present: false
+      }));
+    }
+
+    // attendance keyed by MemberID — stores {present, cls} per month
+    if(json.attendance){
+      attendance = {};
+      Object.entries(json.attendance).forEach(([id, months]) => {
+        attendance[id] = months; // months: {"2025-4": {present:true, cls:"ม.3"}}
+      });
+    }
+
+    // sync present state for current month
+    members.forEach(m=>{ m.present = isPresent(m.id, CUR_YEAR, CUR_MONTH); });
+
+    // buddy notes keyed by MemberID
+    if(json.buddynotes){
+      Object.entries(json.buddynotes).forEach(([id, months])=>{
+        if(!buddyNotes[id]) buddyNotes[id]={};
+        Object.entries(months).forEach(([key, note])=>{
+          if(!buddyNotes[id][key]) buddyNotes[id][key]=note;
+        });
+      });
+    }
+
+    populateFilters(); render(); renderHistoryList();
+    // refresh buddy insights if dashboard is currently visible
+    const activePage = document.querySelector('.page.active');
+    if(activePage && activePage.id === 'pg-dashboard'){
+      renderDashboard();
+      renderBuddyInsights();
+    }
+    setSyncDot('ok');
+    if(showLoader) showToast('โหลดข้อมูลสำเร็จ','ok');
+  }catch(e){
+    setSyncDot('err');
+    if(showLoader) showToast('โหลดไม่สำเร็จ: '+e.message,'err');
+  }
+  if(showLoader) hideLoading();
+}
+
+// ── WRITE TO SHEET ────────────────────────────────────────────────────
+// Uses GET with URL params — the only method that reliably reaches Apps Script
+// through fetch() with mode:no-cors without CORS preflight issues.
+async function writeToSheet(payload){
+  if(!SCRIPT_URL||SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL') return;
+  setSyncDot('syncing');
+  try{
+    const params = new URLSearchParams(payload);
+    await fetch(SCRIPT_URL + '?' + params.toString(), {
+      method: 'GET',
+      mode:   'no-cors'
+    });
+    setSyncDot('ok');
+  }catch(e){
+    setSyncDot('err');
+    throw e;
+  }
+}
+
+// ── TRACKER MONTH STATE ───────────────────────────────────────────────
+let trYear  = CUR_YEAR;
+let trMonth = CUR_MONTH; // 0-indexed
+
+function onTrackerMonthChange(){
+  trYear  = parseInt(document.getElementById('tr-f-year').value);
+  trMonth = parseInt(document.getElementById('tr-f-month').value);
+  const isCur = trYear===CUR_YEAR && trMonth===CUR_MONTH;
+  const isFut = trYear>CUR_YEAR  || (trYear===CUR_YEAR && trMonth>CUR_MONTH);
+  const monthNames=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const label = `${monthNames[trMonth]} ${trYear}`;
+  document.getElementById('badge-month').textContent = 'Monthly meeting — '+label;
+  document.getElementById('tracker-sub').textContent = isCur
+    ? 'ค้นหาชื่อสมาชิก และกด Present'
+    : isFut ? `ดูข้อมูลล่วงหน้า — ${label} (ยังไม่ถึงเดือนนี้)`
+    : `ดูข้อมูลย้อนหลัง — ${label} (View only)`;
+  const badge = document.getElementById('tr-mode-badge');
+  badge.style.display = isCur ? 'none' : 'inline-flex';
+  badge.style.background = isFut ? 'var(--red-light)' : 'var(--amber-light)';
+  badge.style.color = isFut ? 'var(--red-text)' : 'var(--amber-text)';
+  badge.querySelector('span') && (badge.querySelector('span').textContent = isFut ? 'Future month' : 'View only');
+  render();
+}
+
+function isTrackerCurrent(){ return trYear===CUR_YEAR && trMonth===CUR_MONTH; }
+function populateFilters(){
+  const u=a=>[...new Set(a.filter(Boolean))].sort();
+  const g=u(members.map(m=>m.group)),r=u(members.map(m=>m.region)),c=u(members.map(m=>m.cls));
+  const opt=(arr,ph)=>`<option value="">${ph}</option>`+arr.map(v=>`<option>${v}</option>`).join('');
+  document.getElementById('fgrp').innerHTML=opt(g,'All groups');
+  document.getElementById('fregion').innerHTML=opt(r,'All regions');
+  document.getElementById('fcls').innerHTML=opt(c,'All classes');
+  // zone dropdown: BKK zones in order + อื่น ๆ for non-BKK
+  const ZONE_SEQ = ['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8','กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12'];
+  const memberZones = u(members.map(m=>m.zone));
+  const bkkPresent = ZONE_SEQ.filter(z=>memberZones.includes(z));
+  const hasOther = memberZones.some(z=>!KNOWN_ZONES.includes(z));
+  let zHtml = '<option value="">All zones</option>';
+  bkkPresent.forEach(z=>{ zHtml+=`<option value="${z}">${z}</option>`; });
+  if(hasOther) zHtml+=`<option value="__other__">อื่น ๆ</option>`;
+  document.getElementById('fzone').innerHTML=zHtml;
+  document.getElementById('hist-fgrp').innerHTML=opt(g,'All groups');
+}
+
+// ── ZONE LOGIC (register form) ────────────────────────────────────────
+const ZONE_MAP = {
+  'มหานคร 2': ['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8'],
+  'มหานคร 3': ['กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12'],
+};
+function onRegionChange(){
+  const region  = document.getElementById('r-region').value;
+  const selEl   = document.getElementById('r-zone');
+  const txtEl   = document.getElementById('r-zone-text');
+  const label   = document.querySelector('#r-zone-wrap label');
+  if(region === 'อื่น ๆ'){
+    // free-text input
+    selEl.style.display = 'none';
+    txtEl.style.display = 'block';
+    txtEl.value = '';
+    if(label) label.innerHTML = 'Zone';
+  } else if(ZONE_MAP[region]){
+    // dropdown from map
+    selEl.style.display = 'block';
+    txtEl.style.display = 'none';
+    selEl.innerHTML = '<option value="">เลือก Zone…</option>' +
+      ZONE_MAP[region].map(z=>`<option value="${z}">${z}</option>`).join('');
+    if(label) label.innerHTML = 'Zone <span class="req">*</span>';
+  } else {
+    // no region selected yet
+    selEl.style.display = 'block';
+    txtEl.style.display = 'none';
+    selEl.innerHTML = '<option value="">เลือก Region ก่อน…</option>';
+    if(label) label.innerHTML = 'Zone';
+  }
+}
+function getZoneValue(){
+  const region = document.getElementById('r-region').value;
+  if(region === 'อื่น ๆ') return document.getElementById('r-zone-text').value.trim();
+  return document.getElementById('r-zone').value;
+}
+function setF(f,btn){ curFilter=f; document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(); }
+function doFilter(){ render(); }
+
+// ── RENDER TRACKER ────────────────────────────────────────────────────
+function render(){
+  const q = srchVal;
+
+  const gF=document.getElementById('fgrp').value, rF=document.getElementById('fregion').value,
+        zF=document.getElementById('fzone').value, cF=document.getElementById('fcls').value;
+  const isCur = isTrackerCurrent();
+  const isFut = trYear>CUR_YEAR||(trYear===CUR_YEAR&&trMonth>CUR_MONTH);
+
+  // resolve present for selected month
+  const list=members
+    .map(m=>({
+      ...m,
+      present: isCur ? m.present : isPresent(m.id, trYear, trMonth)
+    }))
+    .filter(m=>{
+      if(q){
+        const nameMatch  = (m.name||'').toLowerCase().trim().includes(q);
+        const nickMatch  = (m.nick||'').toLowerCase().trim().includes(q);
+        const phoneMatch = (m.phone||'').includes(q);
+        if(!nameMatch && !nickMatch && !phoneMatch) return false;
+      }
+      if(curFilter==='present' && !m.present) return false;
+      if(curFilter==='absent'  &&  m.present) return false;
+      if(gF && m.group!==gF) return false;
+      if(rF && m.region!==rF) return false;
+      if(zF){
+        if(zF==='__other__' && KNOWN_ZONES.includes(m.zone)) return false;
+        if(zF!=='__other__' && m.zone!==zF) return false;
+      }
+      if(cF && m.cls!==cF) return false;
+      return true;
+    });
+
+  const el=document.getElementById('member-list'), nr=document.getElementById('no-results');
+  if(!list.length){
+    el.innerHTML=''; nr.style.display='block';
+    document.getElementById('no-msg').textContent=srchVal?`"${srchVal}" ไม่พบในรายชื่อสมาชิก`:'ไม่พบสมาชิกที่ตรงกับตัวกรองนี้';
+  } else {
+    nr.style.display='none';
+    el.innerHTML=list.map(m=>`
+      <div class="member-row">
+        <div class="avatar ${avc(m.idx)}">${avInit(m.name)}</div>
+        <div class="member-info">
+          <div class="member-name">${m.name}${m.nick?`<span class="nick">(${m.nick})</span>`:''}</div>
+          <div class="member-meta"><span class="tag tag-g">${m.region}</span><span class="tag tag-b">${m.zone}</span><span class="tag tag-p">${m.cls}</span></div>
+        </div>
+        <span class="status-pill ${m.present?'pill-present':'pill-absent'}">${m.present?'Present':'Absent'}</span>
+        <button class="history-btn" onclick="openModal('${m.id}')" title="ประวัติรายเดือน">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>ประวัติ
+        </button>
+        ${isCur
+          ? (m.present
+              ? `<button class="action-btn" id="btn-${m.id}" onclick="togglePresence('${m.id}')">
+                   <svg viewBox="0 0 24 24"><polyline points="9 14 4 9 1 12"/><line x1="8" y1="21" x2="8" y2="14"/></svg>Undo
+                 </button>`
+              : `<button class="action-btn mark" id="btn-${m.id}" onclick="togglePresence('${m.id}')">
+                   <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Present
+                 </button>`)
+          : `<span style="font-size:11px;color:var(--text3);padding:0 4px;">${isFut?'—':'ดูเท่านั้น'}</span>`
+        }
+        <button class="history-btn" onclick="openBuddyForm('${m.id}')" title="Buddy Notes" style="position:relative;">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:${bnGetNote(m.id,bnCurKey())?'var(--red)':'none'};stroke:${bnGetNote(m.id,bnCurKey())?'var(--red)':'currentColor'};stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Notes
+        </button>
+      </div>`).join('');
+  }
+  updateStats(list);
+  // update buddy notes summary below the list
+  renderBuddySummary();
+}
+
+function updateStats(list){
+  // list is the already-filtered+resolved list from render()
+  // if called directly (e.g. from loadAll), resolve from current tracker month
+  if(!list){
+    list = members.map(m=>({...m, present: isTrackerCurrent() ? m.present : isPresent(m.id, trYear, trMonth)}));
+  }
+  const t=list.length, p=list.filter(m=>m.present).length;
+  document.getElementById('s-total').textContent=members.length; // total is always all members
+  document.getElementById('s-present').textContent=p;
+  document.getElementById('s-absent').textContent=members.length-p;
+  document.getElementById('s-rate').textContent=members.length?Math.round(p/members.length*100)+'%':'0%';
+}
+
+// ── TOGGLE PRESENCE (direct write) ───────────────────────────────────
+async function togglePresence(id){
+  const m=members.find(x=>x.id===id); if(!m) return;
+  // optimistic update
+  m.present=!m.present;
+  setAtt(id, CUR_YEAR, CUR_MONTH, m.present);
+  // disable button while saving
+  const btn=document.getElementById('btn-'+id);
+  if(btn){ btn.classList.add('saving'); btn.textContent='…'; }
+  render();
+  try{
+    await writeToSheet({
+      action:'attendance', memberid:m.id, id:m.id, name:m.name, nick:m.nick,
+      group:m.group, region:m.region, zone:m.zone, phone:m.phone, cls:m.cls,
+      year:CUR_YEAR, month:MONTHS[CUR_MONTH], monthIndex:CUR_MONTH+1,
+      present:m.present, timestamp:ts()
+    });
+    showToast(m.present?`✓ ${m.name} — Present`:`↩ ${m.name} — Absent`,'ok');
+  }catch(e){
+    // rollback on error
+    m.present=!m.present;
+    setAtt(id, CUR_YEAR, CUR_MONTH, m.present);
+    render();
+    showToast('บันทึกไม่สำเร็จ — ลองใหม่อีกครั้ง','err');
+  }
+}
+
+// ── REGISTER ──────────────────────────────────────────────────────────
+function goReg(){
+  const pre=srchVal||'';
+  document.getElementById('r-name').value=pre;
+  ['r-nick','r-phone','r-notes'].forEach(id=>document.getElementById(id).value='');
+  // reset hardcoded selects
+  document.getElementById('r-group').value='';
+  document.getElementById('r-region').value='';
+  document.getElementById('r-class').value='';
+  // reset zone UI to initial state
+  const selEl=document.getElementById('r-zone');
+  const txtEl=document.getElementById('r-zone-text');
+  selEl.innerHTML='<option value="">เลือก Region ก่อน…</option>';
+  selEl.style.display='block'; txtEl.style.display='none'; txtEl.value='';
+  const label=document.querySelector('#r-zone-wrap label');
+  if(label) label.innerHTML='Zone';
+  const pn=document.getElementById('pre-note');
+  if(pre){pn.style.display='flex';document.getElementById('pre-note-txt').textContent=`"${pre}" ไม่พบในรายชื่อ — ชื่อถูกกรอกไว้ให้แล้ว กรุณากรอกข้อมูลที่เหลือ`;}
+  else{pn.style.display='none';}
+  showPage('pg-reg');
+}
+async function submitReg(){
+  const name=document.getElementById('r-name').value.trim(), phone=document.getElementById('r-phone').value.trim(),
+        grp=document.getElementById('r-group').value, region=document.getElementById('r-region').value;
+  if(!name||!phone||!grp||!region){alert('กรุณากรอก ชื่อ, เบอร์โทร, กลุ่ม และภาค');return;}
+  const nick=document.getElementById('r-nick').value.trim(), zone=getZoneValue(),
+        cls=document.getElementById('r-class').value, notes=document.getElementById('r-notes').value.trim();
+  // temp local id until sheet reload assigns real MemberID
+  const tempId = 'NEW_'+Date.now();
+  const nm={idx:members.length,id:tempId,mid:'',group:grp,region,zone,name,nick,cls,phone,present:true};
+  members.push(nm); setAtt(tempId,CUR_YEAR,CUR_MONTH,true); populateFilters();
+  try{
+    await writeToSheet({action:'register',group:grp,region,zone,name,nick,cls,phone,notes,
+      year:CUR_YEAR,month:MONTHS[CUR_MONTH],monthIndex:CUR_MONTH+1,present:true,timestamp:ts()});
+    showToast(`✓ ลงทะเบียน ${name} สำเร็จ`,'ok');
+    // reload from sheet to get real MemberID
+    setTimeout(()=>loadAll(false), 2000);
+  }catch(e){ showToast('บันทึกไม่สำเร็จ','err'); }
+  document.getElementById('suc-title').textContent='Registered & Marked Present!';
+  document.getElementById('suc-sub').textContent=`${name}${nick?' ('+nick+')':''} — ${region}${zone?' / '+zone:''} — เพิ่มในรายชื่อและทำเครื่องหมาย Present เรียบร้อยแล้ว`;
+  srchVal=''; document.getElementById('srch').value=''; curFilter='all';
+  document.querySelectorAll('.filter-chip').forEach((b,i)=>b.classList.toggle('active',i===0));
+  ['fgrp','fregion','fzone','fcls'].forEach(id=>document.getElementById(id).value='');
+  showPage('pg-suc');
+}
+
+// ── HISTORY LIST ──────────────────────────────────────────────────────
+function renderHistoryList(){
+  const q=(document.getElementById('hist-srch').value||'').toLowerCase().trim();
+  const grp=document.getElementById('hist-fgrp').value;
+  const list=members.filter(m=>(!q||m.name.toLowerCase().includes(q)||(m.nick||'').toLowerCase().includes(q))&&(!grp||m.group===grp));
+  const el=document.getElementById('history-member-list');
+  if(!list.length){el.innerHTML='<p class="no-results">ไม่พบสมาชิก</p>';return;}
+  el.innerHTML=list.map(m=>{
+    let total=0;
+    if(attendance[m.id]) Object.values(attendance[m.id]).forEach(v=>{if(v)total++;});
+    const dots=MONTHS.map((_,mi)=>{
+      const isFut=CUR_YEAR<CUR_YEAR||(mi>CUR_MONTH&&CUR_YEAR===CUR_YEAR);
+      // simplified: future if same year and month index > current
+      const fut=(mi>CUR_MONTH);
+      const p=isPresent(m.id,CUR_YEAR,mi);
+      return `<span style="width:8px;height:8px;border-radius:50%;display:inline-block;margin:1px;
+        background:${fut?'var(--border)':p?'var(--green)':'var(--border2)'};opacity:${fut?.35:1};" title="${MONTHS[mi]} ${CUR_YEAR}"></span>`;
+    }).join('');
+    return `
+      <div class="member-row" style="cursor:pointer;" onclick="openModal('${m.id}')">
+        <div class="avatar ${avc(m.idx)}">${avInit(m.name)}</div>
+        <div class="member-info">
+          <div class="member-name">${m.name}${m.nick?`<span class="nick">(${m.nick})</span>`:''}</div>
+          <div class="member-meta">${m.phone||'—'}<span class="tag tag-g">${m.region}</span><span class="tag tag-b">${m.zone}</span></div>
+          <div style="margin-top:6px;">${dots}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;min-width:44px;">
+          <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--green);">${total}</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;">ครั้ง</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────
+function openModal(mid){
+  modalMid=mid; modalYear=CUR_YEAR;
+  const m=members.find(x=>x.id===mid); if(!m) return;
+  document.getElementById('modal-name').textContent=m.name+(m.nick?' ('+m.nick+')':'');
+  document.getElementById('modal-meta').textContent=`${m.group} · ${m.region} · ${m.zone} · ${m.cls}`;
+  document.getElementById('year-tabs').innerHTML=YEARS.map(y=>
+    `<button class="year-tab${y===CUR_YEAR?' active':''}" onclick="setModalYear(${y},this)">${y}</button>`).join('');
+  renderModal();
+  document.getElementById('history-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function setModalYear(y,btn){
+  modalYear=y;
+  document.querySelectorAll('.year-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  renderModal();
+}
+function renderModal(){
+  const m=members.find(x=>x.id===modalMid); if(!m) return;
+  let yPresent=0, yPossible=0;
+  MONTHS.forEach((_,mi)=>{
+    const fut=modalYear>CUR_YEAR||(modalYear===CUR_YEAR&&mi>CUR_MONTH);
+    if(!fut){ yPossible++; if(isPresent(m.id,modalYear,mi)) yPresent++; }
+  });
+  let allTotal=0;
+  if(attendance[m.id]) Object.values(attendance[m.id]).forEach(v=>{if(v)allTotal++;});
+  document.getElementById('hist-summary').innerHTML=`
+    <div class="hsumstat"><div class="hsumstat-val green">${yPresent}</div><div class="hsumstat-label">Present ${modalYear}</div></div>
+    <div class="hsumstat"><div class="hsumstat-val">${yPossible-yPresent}</div><div class="hsumstat-label">Absent ${modalYear}</div></div>
+    <div class="hsumstat"><div class="hsumstat-val">${yPossible?Math.round(yPresent/yPossible*100):0}%</div><div class="hsumstat-label">Rate ${modalYear}</div></div>
+    <div class="hsumstat"><div class="hsumstat-val green">${allTotal}</div><div class="hsumstat-label">All-time</div></div>`;
+  document.getElementById('month-grid').innerHTML=MONTHS.map((mn,mi)=>{
+    const fut=modalYear>CUR_YEAR||(modalYear===CUR_YEAR&&mi>CUR_MONTH);
+    const isCur=modalYear===CUR_YEAR&&mi===CUR_MONTH;
+    const p=isPresent(m.id,modalYear,mi);
+    let cls='month-cell';
+    if(p) cls+=' present'; if(fut) cls+=' future'; if(isCur) cls+=' current-month';
+    return `<div class="${cls}" id="mc-${modalYear}-${mi}" ${!fut?`onclick="toggleModal('${m.id}',${modalYear},${mi})"`:''}>
+      <div class="month-name">${mn}</div>
+      <div class="month-status">${fut?'—':p?'Present':'Absent'}</div>
+      <div class="month-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>`;
+  }).join('');
+}
+async function toggleModal(mid,year,mi){
+  const m=members.find(x=>x.id===mid); if(!m) return;
+  const newVal=!isPresent(mid,year,mi);
+  setAtt(mid,year,mi,newVal);
+  if(year===CUR_YEAR&&mi===CUR_MONTH) m.present=newVal;
+  // dim cell while saving
+  const cell=document.getElementById(`mc-${year}-${mi}`);
+  if(cell) cell.classList.add('saving-cell');
+  renderModal(); render(); renderHistoryList();
+  try{
+    await writeToSheet({action:'attendance',memberid:m.id,id:m.id,name:m.name,nick:m.nick,
+      group:m.group,region:m.region,zone:m.zone,phone:m.phone,cls:m.cls,
+      year,month:MONTHS[mi],monthIndex:mi+1,present:newVal,timestamp:ts()});
+    showToast(newVal?`✓ ${mn(mi)} ${year} — Present`:`↩ ${mn(mi)} ${year} — Absent`,'ok');
+  }catch(e){ showToast('บันทึกไม่สำเร็จ','err'); }
+  renderModal();
+}
+function mn(i){ return MONTHS_TH[i]||MONTHS[i]; }
+function closeModal(){ document.getElementById('history-modal').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalBg(e){ if(e.target.id==='history-modal') closeModal(); }
+
+// ── UI HELPERS ────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg,type='ok'){
+  const t=document.getElementById('save-toast'), ic=document.getElementById('toast-icon');
+  document.getElementById('toast-msg').textContent=msg;
+  t.className='save-toast show '+type;
+  ic.innerHTML=type==='err'?'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>':'<polyline points="20 6 9 17 4 12"/>';
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+function showLoading(msg){ document.getElementById('loading-msg').textContent=msg||'กำลังโหลด…'; document.getElementById('loading-overlay').classList.add('show'); }
+function hideLoading(){ document.getElementById('loading-overlay').classList.remove('show'); }
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────
+// Target rules:
+//   Group total (all zones, all levels) = 90
+//   Per zone per education level          = 5
+const TARGET_GROUP = 90;
+const TARGET_ZONE_LEVEL = 5;
+const KNOWN_ZONES = ['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 8','กรุงเทพ 11','กรุงเทพ 12'];
+
+function clsLevel(cls){
+  const c=(cls||'').trim();
+  if(['ม.1','ม.2','ม.3'].includes(c)) return 'มัธยม';
+  if(['ม.4','ม.5','ม.6','ปวช.1','ปวช.2','ปวช.3'].includes(c)) return 'เตรียมอุดม';
+  if(['อ.1','อ.2','อ.3','ป.1','ป.2','ป.3','ป.4','ป.5','ป.6'].includes(c)) return 'ประถม';
+  return c||'(ไม่ระบุ)';
+}
+
+function renderDashboard(){
+  const mo = NOW.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  document.getElementById('db-badge').textContent = 'Dashboard — '+mo;
+
+  // ── read month/year filter ────────────────────────────────────
+  const fYear  = parseInt(document.getElementById('db-f-year').value)  || CUR_YEAR;
+  const fMonthRaw = document.getElementById('db-f-month').value;
+  const fMonth = fMonthRaw !== '' ? parseInt(fMonthRaw) : null; // null = all months
+
+  // ── read region/zone/level filters ───────────────────────────
+  const fRegion = document.getElementById('db-f-region').value;
+  const fLevel  = document.getElementById('db-f-level').value;
+
+  // zone map by region
+  const zMap = {'มหานคร 2':['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8'],'มหานคร 3':['กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12']};
+  const ZONE_SEQ = ['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8','กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12'];
+
+  // update zone dropdown in fixed order
+  const zSel = document.getElementById('db-f-zone');
+  const prevZone = zSel.value;
+  let zHtml = '<option value="">All zones</option>';
+  if(fRegion && zMap[fRegion]){
+    // specific region: show its zones in fixed order
+    zMap[fRegion].forEach(z=>{ zHtml+=`<option value="${z}"${z===prevZone?' selected':''}>${z}</option>`; });
+  } else {
+    // all regions or อื่น ๆ: show BKK zones in order then อื่น ๆ
+    if(fRegion !== 'อื่น ๆ'){
+      ZONE_SEQ.forEach(z=>{ zHtml+=`<option value="${z}"${z===prevZone?' selected':''}>${z}</option>`; });
+    }
+    const hasOther = members.some(m=>m.zone && !KNOWN_ZONES.includes(m.zone));
+    if(hasOther || fRegion==='อื่น ๆ'){
+      zHtml+=`<option value="__other__"${'__other__'===prevZone?' selected':''}>อื่น ๆ</option>`;
+    }
+  }
+  zSel.innerHTML = zHtml;
+  const fZone = zSel.value;
+
+  // ── build filtered member pool ────────────────────────────────
+  const isCurMonth = fMonth===CUR_MONTH && fYear===CUR_YEAR;
+
+  const filtered = members
+    .filter(m=>{
+      if(fRegion && fRegion!=='อื่น ๆ' && m.region!==fRegion) return false;
+      if(fRegion==='อื่น ๆ' && KNOWN_ZONES.includes(m.zone)) return false;
+      if(fZone && fZone!=='__other__' && m.zone!==fZone) return false;
+      if(fZone==='__other__' && KNOWN_ZONES.includes(m.zone)) return false;
+      // use historical class for level filter
+      const historicalCls = fMonth!==null ? getAttCls(m.id, fYear, fMonth) : m.cls;
+      if(fLevel && clsLevel(historicalCls)!==fLevel) return false;
+      return true;
+    })
+    .map(m=>{
+      // resolve class from attendance row for the selected period
+      const historicalCls = fMonth!==null ? getAttCls(m.id, fYear, fMonth) : m.cls;
+      let present;
+      if(fMonth !== null){
+        present = isCurMonth ? m.present : isPresent(m.id, fYear, fMonth);
+      } else {
+        present = MONTHS.some((_,mi)=>{
+          const fut = fYear>CUR_YEAR||(fYear===CUR_YEAR&&mi>CUR_MONTH);
+          return !fut && isPresent(m.id, fYear, mi);
+        });
+      }
+      return {...m, cls: historicalCls, present};
+    });
+
+  // ── badge / subtitle update ───────────────────────────────────
+  const monthNames=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const periodLabel = fMonth!==null ? `${monthNames[fMonth]} ${fYear}` : `ทั้งปี ${fYear}`;
+  document.getElementById('db-badge').textContent = `Dashboard — ${periodLabel}`;
+
+  const total   = filtered.length;
+  const present = filtered.filter(m=>m.present).length;
+  document.getElementById('db-total').textContent   = total;
+  document.getElementById('db-present').textContent = present;
+  document.getElementById('db-absent').textContent  = total-present;
+  document.getElementById('db-rate').textContent    = total?Math.round(present/total*100)+'%':'—';
+
+  // group → members
+  const groupMap={};
+  filtered.forEach(m=>{ const g=m.group||'(ไม่ระบุ)'; if(!groupMap[g])groupMap[g]=[]; groupMap[g].push(m); });
+  const groups=Object.keys(groupMap).sort();
+
+  const PALETTE=['#1D9E75','#185FA5','#854F0B','#712B13','#3C3489','#0F6E56','#BA7517','#0C447C'];
+  const LEVEL_ORDER=['ประถม','มัธยม','เตรียมอุดม'];
+  const LEVEL_COLOR={'ประถม':'#185FA5','มัธยม':'#0F6E56','เตรียมอุดม':'#854F0B'};
+
+  // ── ring SVG ─────────────────────────────────────────────────────────
+  function ring(val, target, met, size=52){
+    const r=(size-8)/2, circ=2*Math.PI*r;
+    const fill=target?Math.min(val/target,1):0;
+    const col=met?'var(--green)':'var(--border2)';
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--surface2)" stroke-width="4"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${col}" stroke-width="4" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-fill)}" stroke-linecap="round" style="transition:stroke-dashoffset .6s ease;"/></svg>`;
+  }
+
+  // ── simple bar row ────────────────────────────────────────────────────
+  function barRow(label, present, total, col, target){
+    const pct=total?Math.round(present/total*100):0;
+    const met=target!=null&&present>=target;
+    const tLabel=target!=null?`<span style="font-size:10px;color:${met?'var(--green)':'var(--text3)'};margin-left:4px;">/ เป้า ${target}</span>`:'';
+    return `<div class="db-bar-row">
+      <div class="db-bar-label" title="${label}">${label}${tLabel}</div>
+      <div class="db-bar-track" style="${met?'outline:1.5px solid var(--green);border-radius:20px;':''}" >
+        <div class="db-bar-fill" style="width:${pct}%;background:${met?'var(--green)':col};">
+          <span class="db-bar-pct">${pct}%</span>
+        </div>
+      </div>
+      <div class="db-bar-count" style="${met?'color:var(--green);font-weight:700;':''}">${present}/${total}</div>
+    </div>`;
+  }
+
+  // ── zone×level breakdown (the core sub-target grid) ─────────────────
+  function zoneLevelSection(ms){
+    const zones=[...new Set(ms.map(m=>m.zone).filter(Boolean))].sort();
+    const levels=LEVEL_ORDER.filter(lv=>ms.some(m=>clsLevel(m.cls)===lv));
+    if(!zones.length&&!levels.length) return '<div class="db-empty">ไม่มีข้อมูล</div>';
+
+    // build zone×level matrix
+    let html='';
+    zones.forEach(z=>{
+      const zMs=ms.filter(m=>m.zone===z);
+      html+=`<div style="margin-bottom:14px;">
+        <div style="font-size:11.5px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;display:flex;align-items:center;gap:6px;">
+          <svg style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.5;" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>${z}
+        </div>`;
+      LEVEL_ORDER.forEach(lv=>{
+        const lvMs=zMs.filter(m=>clsLevel(m.cls)===lv);
+        if(!lvMs.length) return;
+        const p=lvMs.filter(m=>m.present).length, t=lvMs.length;
+        const col=LEVEL_COLOR[lv]||'#888';
+        html+=barRow(lv,p,t,col,TARGET_ZONE_LEVEL);
+      });
+      // also show ประถม if present (they may not have sub-targets but show anyway)
+      html+='</div>';
+    });
+    return html||'<div class="db-empty">ไม่มีข้อมูล</div>';
+  }
+
+  // ── zone breakdown bars ───────────────────────────────────────────────
+  function zoneSection(ms){
+    const zones=[...new Set(ms.map(m=>m.zone).filter(Boolean))].sort();
+    return zones.map((z,i)=>{
+      const zMs=ms.filter(m=>m.zone===z);
+      const p=zMs.filter(m=>m.present).length, t=zMs.length;
+      return barRow(z,p,t,PALETTE[i%PALETTE.length],null);
+    }).join('')||'<div class="db-empty">ไม่มีข้อมูล</div>';
+  }
+
+  // ── region breakdown ──────────────────────────────────────────────────
+  function regionSection(ms){
+    const rMap={};
+    ms.forEach(m=>{ const r=m.region||'(ไม่ระบุ)'; if(!rMap[r])rMap[r]={p:0,t:0}; rMap[r].t++; if(m.present)rMap[r].p++; });
+    return Object.entries(rMap).sort((a,b)=>b[1].t-a[1].t).map(([r,d],i)=>barRow(r,d.p,d.t,PALETTE[i%PALETTE.length],null)).join('')||'<div class="db-empty">ไม่มีข้อมูล</div>';
+  }
+
+  // ── build cards ───────────────────────────────────────────────────────
+  const container=document.getElementById('db-group-cards');
+  if(!groups.length){ container.innerHTML='<div class="db-empty" style="padding:2rem;">ไม่มีข้อมูล</div>'; return; }
+
+  container.innerHTML=groups.map((g,gi)=>{
+    const ms  =groupMap[g];
+    const gP  =ms.filter(m=>m.present).length;
+    const gT  =ms.length;
+    const met =gP>=TARGET_GROUP;
+    const uid ='grp-'+gi;
+
+    // zone×level sub-target summary: count how many zone+level combos have met target
+    const zls=[];
+    const zones=[...new Set(ms.map(m=>m.zone).filter(Boolean))].sort();
+    zones.forEach(z=>{
+      LEVEL_ORDER.forEach(lv=>{
+        const sub=ms.filter(m=>m.zone===z&&clsLevel(m.cls)===lv);
+        if(sub.length) zls.push({z,lv,p:sub.filter(m=>m.present).length,t:sub.length,met:sub.filter(m=>m.present).length>=TARGET_ZONE_LEVEL});
+      });
+    });
+    const zlMet=zls.filter(x=>x.met).length, zlTotal=zls.length;
+
+    return `
+    <div class="db-group-card${met?' target-met':''}" id="card-${uid}">
+      <div class="db-group-header" onclick="toggleDbCard('${uid}')">
+        <div class="db-group-name">
+          <div class="db-target-ring" title="${gP}/${TARGET_GROUP} เป้าหมายรวม">
+            ${ring(gP,TARGET_GROUP,met)}
+            <div class="db-target-ring-val" style="color:${met?'var(--green)':'var(--text2)'};">${gP}</div>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:15px;font-weight:700;">${g}</span>
+              <span class="db-group-badge ${met?'met':'unmet'}">${met?`✓ ถึงเป้า ${TARGET_GROUP}`:`${gP}/${TARGET_GROUP} เป้ารวม`}</span>
+            </div>
+            <div style="font-size:11.5px;color:var(--text2);margin-top:3px;">
+              Sub-targets met: <strong style="color:${zlMet===zlTotal&&zlTotal>0?'var(--green)':'var(--amber)'};">${zlMet}/${zlTotal}</strong> zone×level combos
+            </div>
+          </div>
+        </div>
+        <div class="db-group-right">
+          <div class="db-group-stat">
+            <div class="db-group-stat-val ${met?'green':'grey'}">${gP}/${gT}</div>
+            <div class="db-group-stat-label">Present</div>
+          </div>
+          <div class="db-group-stat">
+            <div class="db-group-stat-val">${gT?Math.round(gP/gT*100):0}%</div>
+            <div class="db-group-stat-label">Rate</div>
+          </div>
+          <svg class="db-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="db-breakdown">
+        <div class="db-breakdown-tabs">
+          <button class="db-btab active" onclick="switchDbTab(this,'${uid}','zonelevel')">Zone × Level <span style="background:${zlMet===zlTotal&&zlTotal>0?'var(--green)':'var(--amber)'};color:#fff;font-size:10px;padding:1px 7px;border-radius:20px;margin-left:4px;">${zlMet}/${zlTotal}</span></button>
+          <button class="db-btab" onclick="switchDbTab(this,'${uid}','zone')">Zone</button>
+          <button class="db-btab" onclick="switchDbTab(this,'${uid}','region')">Region</button>
+        </div>
+        <div class="db-section active" id="${uid}-zonelevel">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;padding:8px 10px;background:var(--surface2);border-radius:var(--radius-md);font-size:12px;color:var(--text2);">
+            <svg style="width:13px;height:13px;fill:none;stroke:var(--green);stroke-width:2.5;flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            เป้าหมาย <strong style="color:var(--text1);">${TARGET_ZONE_LEVEL} คน</strong> ต่อ Zone × ระดับชั้น — แถบสีเขียว = ถึงเป้าแล้ว
+          </div>
+          ${zoneLevelSection(ms)}
+        </div>
+        <div class="db-section" id="${uid}-zone">${zoneSection(ms)}</div>
+        <div class="db-section" id="${uid}-region">${regionSection(ms)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // animate bars
+  requestAnimationFrame(()=>{ document.querySelectorAll('.db-bar-fill').forEach(b=>b.classList.add('loaded')); });
+
+  // ── draw charts ───────────────────────────────────────────────
+  requestAnimationFrame(()=>{
+    drawDbDonut(filtered);
+    drawDbBarChart('db-bar-group',  filtered, m=>m.group,         ['#1D9E75','#185FA5','#854F0B','#712B13','#3C3489']);
+    drawDbBarChart('db-bar-region', filtered, m=>m.region,        ['#185FA5','#854F0B','#1D9E75']);
+    const ZONE_ORDER = ['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8','กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12'];
+    // for chart: map unknown zones to "อื่น ๆ" label
+    const zoneLabel = m => KNOWN_ZONES.includes(m.zone) ? m.zone : 'อื่น ๆ';
+    drawDbBarChart('db-bar-zone', filtered, zoneLabel, ['#3C3489','#0C447C','#085041','#712B13','#0F6E56','#BA7517','#854F0B','#185FA5'], [...ZONE_ORDER,'อื่น ๆ'], {fullLabel:true});
+    drawDbBarChart('db-bar-level',  filtered, m=>clsLevel(m.cls), ['#185FA5','#0F6E56','#854F0B'],
+      ['ประถม','มัธยม','เตรียมอุดม'], {fullLabel:true});
+  });
+}
+
+// ── DASHBOARD CHART HELPERS ────────────────────────────────────────────
+function drawDbDonut(pool){
+  const canvas = document.getElementById('db-donut'); if(!canvas) return;
+  const dpr = window.devicePixelRatio||1;
+  const size = 180;
+  canvas.width = canvas.height = size*dpr;
+  canvas.style.width = canvas.style.height = size+'px';
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  const cx=size/2, cy=size/2, r=70, ir=46;
+  const present = pool.filter(m=>m.present).length;
+  const absent  = pool.length - present;
+  const total   = pool.length;
+  const slices = [
+    {val:present, color:'#1D9E75', label:'Present'},
+    {val:absent,  color:'#E4E2D9', label:'Absent'},
+  ];
+  let angle = -Math.PI/2;
+  slices.forEach(s=>{
+    if(!s.val) return;
+    const sweep = (s.val/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+sweep);
+    ctx.closePath(); ctx.fillStyle=s.color; ctx.fill();
+    angle+=sweep;
+  });
+  // inner hole
+  ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2);
+  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()||'#fff';
+  ctx.fill();
+  // centre text
+  ctx.fillStyle='#1A1A18'; ctx.textAlign='center';
+  ctx.font=`bold ${22}px IBM Plex Mono, monospace`;
+  ctx.fillText(total?Math.round(present/total*100)+'%':'—', cx, cy+4);
+  ctx.font=`${10}px Sarabun, sans-serif`; ctx.fillStyle='#9A9890';
+  ctx.fillText(`${present}/${total}`, cx, cy+18);
+  // legend
+  const leg = document.getElementById('db-donut-legend');
+  leg.innerHTML = slices.map(s=>`<div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;border-radius:3px;background:${s.color};"></div><span>${s.label} ${s.val}</span></div>`).join('');
+}
+
+// bar click state: canvasId → [{key, x, w, members}]
+const DB_BAR_HITS = {};
+
+function drawDbBarChart(canvasId, pool, keyFn, colors, fixedOrder, opts={}){
+  const canvas = document.getElementById(canvasId); if(!canvas) return;
+  const dpr = window.devicePixelRatio||1;
+  const W = canvas.parentElement.clientWidth||300;
+  const H = parseInt(canvas.getAttribute('height'))||160;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
+
+  // build data — keep full member lists for click detail
+  const map={};
+  pool.forEach(m=>{
+    const k=keyFn(m)||'(ไม่ระบุ)';
+    if(!map[k]) map[k]={p:0,t:0,members:[]};
+    map[k].t++; map[k].members.push(m);
+    if(m.present) map[k].p++;
+  });
+  let keys = fixedOrder ? fixedOrder.filter(k=>map[k]) : Object.keys(map).sort((a,b)=>map[b].t-map[a].t);
+  if(!keys.length){
+    ctx.fillStyle='#9A9890'; ctx.font=`12px Sarabun`; ctx.textAlign='center';
+    ctx.fillText('ไม่มีข้อมูล',W/2,H/2); return;
+  }
+
+  const PAD={t:8,r:12,b:28,l:10};
+  const cW=W-PAD.l-PAD.r, cH=H-PAD.t-PAD.b;
+  const n=keys.length;
+  const grpW=cW/n;
+  const bW=Math.min(grpW*0.55, 40);
+  const maxVal=Math.max(...keys.map(k=>map[k].t),1);
+
+  // store hit zones
+  const hits=[];
+  keys.forEach((k,i)=>{
+    const d=map[k];
+    const col=colors[i%colors.length];
+    const x=PAD.l+i*grpW+(grpW-bW)/2;
+    const bHp=d.p?(d.p/maxVal)*cH:0;
+    const bHa=d.t?(d.t/maxVal)*cH:0;
+    hits.push({key:k, x, w:bW, members:d.members, col});
+    // present bar only (no absent background)
+    if(d.p>0){ ctx.fillStyle=col+'CC'; roundRectDb(ctx,x,PAD.t+cH-bHp,bW,bHp,3,0,0,3); ctx.fill(); }
+    // count label
+    ctx.fillStyle='#1A1A18'; ctx.font=`bold 10px IBM Plex Mono`; ctx.textAlign='center';
+    ctx.fillText(`${d.p}`, x+bW/2, PAD.t+cH-bHp-4);
+    // x label
+    ctx.fillStyle='#9A9890'; ctx.font=`10px Sarabun`; ctx.textAlign='center';
+    ctx.fillText(opts.fullLabel ? k : (k.length>8?k.slice(0,7)+'…':k), x+bW/2, H-PAD.b+14);
+  });
+  // y=0 line
+  ctx.beginPath(); ctx.moveTo(PAD.l,PAD.t+cH); ctx.lineTo(W-PAD.r,PAD.t+cH);
+  ctx.strokeStyle='#D3D0C6'; ctx.lineWidth=1; ctx.stroke();
+
+  // hover cursor
+  canvas.style.cursor='pointer';
+  canvas.title='คลิกเพื่อดูรายละเอียด';
+
+  // register click (remove old listener first)
+  DB_BAR_HITS[canvasId] = hits;
+  canvas.onclick = null;
+  canvas.onclick = (e)=>{
+    const rect=canvas.getBoundingClientRect();
+    const cx=(e.clientX-rect.left)*(W/rect.width);
+    const hit=hits.find(h=>cx>=h.x&&cx<=h.x+h.w);
+    if(hit) openDbDetail(hit.key, hit.members, hit.col);
+  };
+}
+
+function roundRectDb(ctx,x,y,w,h,tl,tr,br,bl){
+  ctx.beginPath();
+  ctx.moveTo(x+tl,y); ctx.lineTo(x+w-tr,y); ctx.quadraticCurveTo(x+w,y,x+w,y+tr);
+  ctx.lineTo(x+w,y+h-br); ctx.quadraticCurveTo(x+w,y+h,x+w-br,y+h);
+  ctx.lineTo(x+bl,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-bl);
+  ctx.lineTo(x,y+tl); ctx.quadraticCurveTo(x,y,x+tl,y); ctx.closePath();
+}
+
+// ── BAR DETAIL MODAL ─────────────────────────────────────────────────
+function openDbDetail(label, mems, col){
+  const present = mems.filter(m=>m.present);
+  const absent  = mems.filter(m=>!m.present);
+  const pct     = mems.length ? Math.round(present.length/mems.length*100) : 0;
+
+  document.getElementById('dbdet-title').textContent = label;
+  document.getElementById('dbdet-meta').textContent  =
+    `${present.length} Present · ${absent.length} Absent · ${pct}%`;
+  document.getElementById('dbdet-title').style.color = col;
+
+  function memberChips(arr, status){
+    if(!arr.length) return `<div style="font-size:13px;color:var(--text3);padding:.5rem 0;">ไม่มีสมาชิก</div>`;
+    return arr.map(m=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div class="avatar ${avc(m.idx)}" style="width:30px;height:30px;font-size:10px;">${avInit(m.name)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--text1);">${m.name}${m.nick?` <span style="font-weight:400;color:var(--text2);">(${m.nick})</span>`:''}</div>
+          <div style="font-size:11px;color:var(--text3);">${m.region} · ${m.zone} · ${m.cls}</div>
+        </div>
+        <span class="status-pill ${status==='present'?'pill-present':'pill-absent'}" style="font-size:10px;">${status==='present'?'Present':'Absent'}</span>
+      </div>`).join('');
+  }
+
+  // progress bar
+  document.getElementById('dbdet-progress').innerHTML=`
+    <div style="display:flex;gap:12px;margin-bottom:12px;">
+      <div class="hsumstat"><div class="hsumstat-val green">${present.length}</div><div class="hsumstat-label">Present</div></div>
+      <div class="hsumstat"><div class="hsumstat-val">${absent.length}</div><div class="hsumstat-label">Absent</div></div>
+      <div class="hsumstat"><div class="hsumstat-val" style="color:${col};">${pct}%</div><div class="hsumstat-label">Rate</div></div>
+      <div class="hsumstat" style="flex:2;">
+        <div style="height:10px;background:var(--surface2);border-radius:20px;overflow:hidden;margin-top:4px;">
+          <div style="height:100%;width:${pct}%;background:${col};border-radius:20px;transition:width .5s ease;"></div>
+        </div>
+        <div class="hsumstat-label" style="margin-top:4px;">${present.length} / ${mems.length}</div>
+      </div>
+    </div>`;
+
+  // tabs
+  document.getElementById('dbdet-present-list').innerHTML = memberChips(present,'present');
+  document.getElementById('dbdet-absent-list').innerHTML  = memberChips(absent,'absent');
+  // reset to present tab
+  dbDetTab('present');
+
+  document.getElementById('db-detail-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function dbDetTab(tab){
+  ['present','absent'].forEach(t=>{
+    document.getElementById('dbdet-tab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('dbdet-'+t+'-list').style.display = t===tab?'block':'none';
+  });
+}
+function closeDbDetail(e){
+  if(!e||e.target.id==='db-detail-modal'||e==='direct')
+    { document.getElementById('db-detail-modal').classList.remove('open'); document.body.style.overflow=''; }
+}
+
+function toggleDbCard(uid){
+  const card=document.getElementById('card-'+uid);
+  card.classList.toggle('open');
+}
+function switchDbTab(btn,uid,section){
+  const card=document.getElementById('card-'+uid);
+  card.querySelectorAll('.db-btab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  card.querySelectorAll('.db-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(uid+'-'+section).classList.add('active');
+  // re-animate bars in newly shown section
+  requestAnimationFrame(()=>{
+    document.querySelectorAll(`#${uid}-${section} .db-bar-fill`).forEach(b=>b.classList.add('loaded'));
+  });
+}
+
+// ── MONTHLY CHART ─────────────────────────────────────────────────────
+let chartYear = CUR_YEAR;
+let chartView = 'bar'; // 'bar' | 'line'
+const GROUP_COLORS = {'YWD':'#1D9E75','YMD':'#185FA5'};
+const DEFAULT_COLORS = ['#1D9E75','#185FA5','#854F0B','#712B13','#3C3489'];
+// Per-group monthly targets — add/edit here as needed
+const CH_GROUP_TARGET = {'YWD':90,'YMD':90};
+const CH_TARGET_TOTAL = 180; // sum of all group targets
+const CH_ZONE_MAP = {'มหานคร 2':['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8'],'มหานคร 3':['กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12']};
+
+function onChartRegionChange(){
+  const region = document.getElementById('ch-f-region').value;
+  const zSel   = document.getElementById('ch-f-zone');
+  const prev   = zSel.value;
+  const ZONE_SEQ = ['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8','กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12'];
+
+  let zHtml = '<option value="">All zones</option>';
+  if(region && CH_ZONE_MAP[region]){
+    CH_ZONE_MAP[region].forEach(z=>{ zHtml+=`<option value="${z}"${z===prev?' selected':''}>${z}</option>`; });
+  } else if(region === 'อื่น ๆ'){
+    const hasOther = members.some(m=>m.zone && !KNOWN_ZONES.includes(m.zone));
+    if(hasOther) zHtml+=`<option value="__other__"${'__other__'===prev?' selected':''}>อื่น ๆ</option>`;
+  } else {
+    ZONE_SEQ.forEach(z=>{ zHtml+=`<option value="${z}"${z===prev?' selected':''}>${z}</option>`; });
+    const hasOther = members.some(m=>m.zone && !KNOWN_ZONES.includes(m.zone));
+    if(hasOther) zHtml+=`<option value="__other__"${'__other__'===prev?' selected':''}>อื่น ๆ</option>`;
+  }
+  zSel.innerHTML = zHtml;
+  renderMonthlyChart();
+}
+
+function renderMonthlyChart(){
+  // ── read filters ─────────────────────────────────────────────
+  const fRegion = document.getElementById('ch-f-region').value;
+  const fZone   = document.getElementById('ch-f-zone').value;
+  const fLevel  = document.getElementById('ch-f-level').value;
+
+  // filtered member pool
+  const pool = members.filter(m=>{
+    if(fRegion && fRegion!=='อื่น ๆ' && m.region!==fRegion) return false;
+    if(fRegion==='อื่น ๆ' && KNOWN_ZONES.includes(m.zone)) return false;
+    if(fZone && fZone!=='__other__' && m.zone!==fZone) return false;
+    if(fZone==='__other__' && KNOWN_ZONES.includes(m.zone)) return false;
+    if(fLevel && clsLevel(m.cls)!==fLevel) return false;
+    return true;
+  });
+
+  // build year tabs
+  const ytEl = document.getElementById('ch-year-tabs');
+  ytEl.innerHTML = YEARS.map(y=>
+    `<button class="ch-year-tab${y===chartYear?' active':''}" onclick="setChartYear(${y},this)">${y}</button>`
+  ).join('');
+
+  // gather groups from filtered pool
+  const groups = [...new Set(pool.map(m=>m.group).filter(Boolean))].sort();
+
+  // for each month count present in filtered pool
+  const monthData = MONTHS.map((_,mi)=>{
+    const isFut = chartYear > CUR_YEAR || (chartYear === CUR_YEAR && mi > CUR_MONTH);
+    const total = pool.filter(m => isPresent(m.id, chartYear, mi)).length;
+    const byGrp = {};
+    groups.forEach(g=>{
+      byGrp[g] = pool.filter(m=>m.group===g && isPresent(m.id, chartYear, mi)).length;
+    });
+    return {month: MONTHS[mi], mi, isFut, total, byGrp};
+  });
+
+  // legend
+  const legEl = document.getElementById('ch-legend');
+  legEl.innerHTML =
+    groups.map((g,i)=>{
+      const col = GROUP_COLORS[g] || DEFAULT_COLORS[i % DEFAULT_COLORS.length];
+      const tgt = CH_GROUP_TARGET[g] || '—';
+      return `<div class="ch-legend-item"><div class="ch-legend-swatch" style="background:${col};"></div>${g} (เป้า ${tgt})</div>`;
+    }).join('') +
+    (fRegion||fZone||fLevel
+      ? `<div class="ch-legend-item" style="margin-left:auto;"><div class="ch-legend-swatch" style="background:var(--amber-light);border:1px solid var(--amber-border);"></div><span style="color:var(--amber-text);">Filtered view</span></div>`
+      : `<div class="ch-legend-item"><div class="ch-legend-swatch" style="background:var(--red);opacity:.35;border:1.5px dashed var(--red);"></div>รวมเป้า ${CH_TARGET_TOTAL} คน</div>`
+    );
+
+  // draw main canvas
+  drawChart('ch-main', monthData, groups, false);
+
+  // x-axis labels
+  const xEl = document.getElementById('ch-xaxis');
+  xEl.innerHTML = MONTHS.map((m,i)=>{
+    const d = monthData[i];
+    return `<span style="opacity:${d.isFut?.35:1};">${m}</span>`;
+  }).join('');
+
+  // per-group mini charts
+  const gcEl = document.getElementById('ch-group-charts');
+  gcEl.innerHTML = groups.map((g,gi)=>{
+    const col = GROUP_COLORS[g] || DEFAULT_COLORS[gi % DEFAULT_COLORS.length];
+    const uid = 'ch-mini-'+gi;
+    const gData = monthData.map(d=>({...d, singleVal: d.byGrp[g]||0}));
+    return `<div class="ch-card">
+      <div class="ch-card-title" style="color:${col};">
+        <svg viewBox="0 0 24 24" style="stroke:${col};"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        ${g}${fRegion?' · '+fRegion:''}${fZone?' / '+fZone:''}${fLevel?' · '+fLevel:''}
+      </div>
+      <div class="ch-mini-wrap"><canvas id="${uid}" height="140"></canvas></div>
+      <div style="display:flex;justify-content:space-around;margin-top:4px;">${MONTHS.map((m,i)=>`<span style="font-size:10px;color:var(--text3);font-family:var(--mono);opacity:${monthData[i].isFut?.35:1};">${m}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  // draw mini canvases after DOM is built
+  requestAnimationFrame(()=>{
+    groups.forEach((g,gi)=>{
+      const gData = monthData.map(d=>({...d, singleVal: d.byGrp[g]||0}));
+      drawMiniChart('ch-mini-'+gi, gData, GROUP_COLORS[g]||DEFAULT_COLORS[gi%DEFAULT_COLORS.length], g);
+    });
+  });
+
+  // table
+  buildChartTable(monthData, groups);
+}
+
+// hit-test registry for monthly chart clicks
+const CH_HITS = {};
+
+function drawChart(canvasId, monthData, groups, mini=false){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const dpr = window.devicePixelRatio||1;
+  const W = canvas.parentElement.clientWidth||600;
+  const H = canvas.height? parseInt(canvas.getAttribute('height')): 300;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W+'px';
+  canvas.style.height = H+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const PAD = {t:20, r:20, b:10, l:44};
+  const chartW = W - PAD.l - PAD.r;
+  const chartH = H - PAD.t - PAD.b;
+  const maxVal = Math.max(CH_TARGET_TOTAL + 10, ...monthData.filter(d=>!d.isFut).map(d=>d.total), 1);
+  const yStep = niceStep(maxVal);
+  const yMax  = Math.ceil(maxVal/yStep)*yStep;
+  const toY = v => PAD.t + chartH - (v/yMax)*chartH;
+  const toX = i => PAD.l + (i/(MONTHS.length-1))*chartW;
+  const barW = chartW/MONTHS.length * 0.65;
+
+  // grid lines & y-axis labels
+  ctx.font = `${10*dpr/dpr}px IBM Plex Mono, monospace`;
+  ctx.fillStyle = '#9A9890';
+  ctx.textAlign = 'right';
+  for(let v=0; v<=yMax; v+=yStep){
+    const y = toY(v);
+    ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(W-PAD.r,y);
+    ctx.strokeStyle = v===0?'#D3D0C6':'#E4E2D9'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillText(v, PAD.l-6, y+4);
+  }
+
+  // per-group target lines
+  groups.forEach((g,gi)=>{
+    const tgt = CH_GROUP_TARGET[g];
+    if(!tgt) return;
+    const col = GROUP_COLORS[g] || DEFAULT_COLORS[gi%DEFAULT_COLORS.length];
+    const ty = toY(tgt);
+    ctx.beginPath(); ctx.moveTo(PAD.l,ty); ctx.lineTo(W-PAD.r,ty);
+    ctx.strokeStyle = col+'66'; ctx.lineWidth=1.2;
+    ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = col+'AA'; ctx.textAlign='right';
+    ctx.fillText(g+' '+tgt, W-PAD.r-2, ty-3);
+  });
+
+  // total target line
+  const totalTy = toY(CH_TARGET_TOTAL);
+  ctx.beginPath(); ctx.moveTo(PAD.l,totalTy); ctx.lineTo(W-PAD.r,totalTy);
+  ctx.strokeStyle = 'rgba(216,90,48,.5)'; ctx.lineWidth=1.8;
+  ctx.setLineDash([6,4]); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(216,90,48,.8)'; ctx.textAlign='left';
+  ctx.fillText('รวมเป้า '+CH_TARGET_TOTAL, PAD.l+4, totalTy-4);
+
+  const hits = [];
+
+  if(chartView==='bar'){
+    monthData.forEach((d,i)=>{
+      if(d.isFut) return;
+      const x = PAD.l + (i/MONTHS.length)*chartW + (chartW/MONTHS.length - barW)/2;
+      let yBase = PAD.t + chartH;
+      groups.forEach((g,gi)=>{
+        const val = d.byGrp[g]||0; if(!val) return;
+        const bh = (val/yMax)*chartH;
+        ctx.fillStyle = (GROUP_COLORS[g]||DEFAULT_COLORS[gi%DEFAULT_COLORS.length])+(d.isFut?'55':'CC');
+        ctx.beginPath();
+        const r=3;
+        if(gi===groups.length-1||!groups.slice(gi+1).some(gg=>d.byGrp[gg])){
+          roundRect(ctx,x,yBase-bh,barW,bh,r,0,0,r);
+        } else { ctx.rect(x,yBase-bh,barW,bh); }
+        ctx.fill();
+        yBase -= bh;
+      });
+      if(d.total>0){
+        ctx.fillStyle = d.total>=CH_TARGET_TOTAL ? '#1D9E75' : '#5F5E5A';
+        ctx.font = `bold ${11}px IBM Plex Mono, monospace`;
+        ctx.textAlign='center';
+        ctx.fillText(d.total, x+barW/2, toY(d.total)-5);
+      }
+      hits.push({x, w:barW, data:d});
+    });
+  } else {
+    // line chart — dots are clickable
+    const allLines = [
+      {label:'Total', color:'#1A1A18', data: monthData.map(d=>d.isFut?null:d.total)},
+      ...groups.map((g,gi)=>({label:g, color:GROUP_COLORS[g]||DEFAULT_COLORS[gi%DEFAULT_COLORS.length], data:monthData.map(d=>d.isFut?null:d.byGrp[g]||0)}))
+    ];
+    allLines.forEach(({color,data})=>{
+      ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath();
+      let first=true;
+      data.forEach((v,i)=>{
+        if(v===null){first=true;return;}
+        const x = toX(i); const y = toY(v);
+        first ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+        first=false;
+      });
+      ctx.stroke();
+      data.forEach((v,i)=>{
+        if(v===null) return;
+        const x = toX(i);
+        ctx.beginPath(); ctx.arc(x,toY(v),4,0,Math.PI*2);
+        ctx.fillStyle=color; ctx.fill();
+      });
+    });
+    // hit zones centred on each month x
+    monthData.forEach((d,i)=>{
+      if(d.isFut) return;
+      const x = toX(i);
+      const zoneW = chartW/MONTHS.length;
+      hits.push({x: x-zoneW/2, w:zoneW, data:d});
+    });
+  }
+
+  // register click
+  CH_HITS[canvasId] = hits;
+  canvas.style.cursor = 'pointer';
+  canvas.title = 'คลิกที่แต่ละเดือนเพื่อดูรายละเอียด';
+  canvas.onclick = null;
+  canvas.onclick = (e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) * (W / rect.width);
+    const hit = hits.find(h => cx >= h.x && cx <= h.x + h.w);
+    if(hit) openChartMonthDetail(hit.data, groups);
+  };
+}
+
+function drawMiniChart(canvasId, gData, color, groupName){
+  const canvas=document.getElementById(canvasId); if(!canvas) return;
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.parentElement.clientWidth||200, H=parseInt(canvas.getAttribute('height'))||140;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  const PAD={t:16,r:8,b:4,l:28};
+  const cW=W-PAD.l-PAD.r, cH=H-PAD.t-PAD.b;
+  const maxVal=Math.max(...gData.filter(d=>!d.isFut).map(d=>d.singleVal),1,10);
+  const toY=v=>PAD.t+cH-(v/maxVal)*cH;
+  const bW=cW/MONTHS.length*0.6;
+  const hits=[];
+  ctx.strokeStyle='#E4E2D9'; ctx.lineWidth=0.5;
+  [0, Math.round(maxVal/2), maxVal].forEach(v=>{
+    ctx.beginPath(); ctx.moveTo(PAD.l,toY(v)); ctx.lineTo(W-PAD.r,toY(v)); ctx.stroke();
+    ctx.fillStyle='#9A9890'; ctx.font=`9px IBM Plex Mono`; ctx.textAlign='right';
+    ctx.fillText(v,PAD.l-3,toY(v)+3);
+  });
+  gData.forEach((d,i)=>{
+    if(d.isFut) return;
+    const v=d.singleVal;
+    const x=PAD.l+(i/MONTHS.length)*cW+(cW/MONTHS.length-bW)/2;
+    const bh=v?(v/maxVal)*cH:0;
+    ctx.fillStyle=color+(v?'BB':'44');
+    ctx.beginPath(); roundRect(ctx,x,toY(v),bW,bh,2,0,0,2); ctx.fill();
+    if(v>0){
+      ctx.fillStyle=color; ctx.font=`bold 9px IBM Plex Mono`; ctx.textAlign='center';
+      ctx.fillText(v,x+bW/2,toY(v)-3);
+    }
+    hits.push({x, w:bW, data:d, groupName});
+  });
+  CH_HITS[canvasId]=hits;
+  canvas.style.cursor='pointer';
+  canvas.title='คลิกเพื่อดูรายละเอียด';
+  canvas.onclick=null;
+  canvas.onclick=(e)=>{
+    const rect=canvas.getBoundingClientRect();
+    const cx=(e.clientX-rect.left)*(W/rect.width);
+    const hit=hits.find(h=>cx>=h.x&&cx<=h.x+h.w);
+    if(hit) openChartMonthDetail(hit.data, null, hit.groupName);
+  };
+}
+
+// ── MONTHLY CHART DETAIL MODAL ────────────────────────────────────────
+function openChartMonthDetail(d, groups, singleGroup){
+  const monthNames=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const label = `${monthNames[d.mi]} ${chartYear}`;
+  const totalMet = d.total >= CH_TARGET_TOTAL;
+
+  document.getElementById('chdet-title').textContent = label;
+  const metTxt = totalMet ? `✓ ถึงเป้า ${CH_TARGET_TOTAL}` : `${d.total}/${CH_TARGET_TOTAL} — ยังไม่ถึงเป้า`;
+  document.getElementById('chdet-meta').textContent = metTxt;
+  document.getElementById('chdet-meta').style.color = totalMet ? 'var(--green)' : 'var(--amber)';
+
+  // overall progress bar
+  const pct = CH_TARGET_TOTAL ? Math.min(Math.round(d.total/CH_TARGET_TOTAL*100),100) : 0;
+  let summaryHtml = `<div style="margin-bottom:1rem;">
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:4px;">
+      <span>รวมทั้งหมด</span><span style="font-family:var(--mono);font-weight:700;color:${totalMet?'var(--green)':'var(--amber)'};">${d.total} คน</span>
+    </div>
+    <div style="height:10px;background:var(--surface2);border-radius:20px;overflow:hidden;">
+      <div style="height:100%;width:${pct}%;background:${totalMet?'var(--green)':'var(--amber)'};border-radius:20px;transition:width .5s;"></div>
+    </div>
+  </div>`;
+
+  // per-group breakdown
+  const grpList = groups || (singleGroup ? [singleGroup] : Object.keys(d.byGrp||{}));
+  summaryHtml += grpList.map((g,i)=>{
+    const val = d.byGrp[g]||0;
+    const tgt = CH_GROUP_TARGET[g]||0;
+    const met = tgt && val>=tgt;
+    const col = GROUP_COLORS[g]||DEFAULT_COLORS[i%DEFAULT_COLORS.length];
+    const gpct = tgt ? Math.min(Math.round(val/tgt*100),100) : 0;
+    return `<div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+        <span style="font-weight:600;color:${col};">${g}</span>
+        <span style="font-family:var(--mono);font-weight:700;color:${met?'var(--green)':'var(--text2)'};">${val}${tgt?' / เป้า '+tgt:''} ${met?'✓':''}</span>
+      </div>
+      <div style="height:8px;background:var(--surface2);border-radius:20px;overflow:hidden;">
+        <div style="height:100%;width:${gpct}%;background:${met?'var(--green)':col+'99'};border-radius:20px;transition:width .5s;"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('chdet-summary').innerHTML = summaryHtml;
+
+  // member list — present members for that month
+  const presentMems = members.filter(m=>isPresent(m.id, chartYear, d.mi) && (!singleGroup||m.group===singleGroup));
+  const absentMems  = members.filter(m=>!isPresent(m.id, chartYear, d.mi) && (!singleGroup||m.group===singleGroup));
+
+  function memberList(arr, status){
+    if(!arr.length) return `<div style="font-size:13px;color:var(--text3);padding:.5rem 0;">ไม่มีสมาชิก</div>`;
+    return arr.map(m=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div class="avatar ${avc(m.idx)}" style="width:30px;height:30px;font-size:10px;">${avInit(m.name)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--text1);">${m.name}${m.nick?` <span style="font-weight:400;color:var(--text2);">(${m.nick})</span>`:''}</div>
+          <div style="font-size:11px;color:var(--text3);">${m.group} · ${m.region} · ${m.zone} · ${m.cls}</div>
+        </div>
+        <span class="status-pill ${status==='present'?'pill-present':'pill-absent'}" style="font-size:10px;">${status==='present'?'Present':'Absent'}</span>
+      </div>`).join('');
+  }
+
+  document.getElementById('chdet-present-list').innerHTML = memberList(presentMems,'present');
+  document.getElementById('chdet-absent-list').innerHTML  = memberList(absentMems,'absent');
+  // tab counts
+  document.getElementById('chdet-tab-present').textContent = `✓ Present (${presentMems.length})`;
+  document.getElementById('chdet-tab-absent').textContent  = `✗ Absent (${absentMems.length})`;
+  chDetTab('present');
+
+  document.getElementById('ch-detail-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function chDetTab(tab){
+  ['present','absent'].forEach(t=>{
+    document.getElementById('chdet-tab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('chdet-'+t+'-list').style.display=t===tab?'block':'none';
+  });
+}
+function closeChDetail(e){
+  if(!e||e.target.id==='ch-detail-modal'||e==='direct')
+    { document.getElementById('ch-detail-modal').classList.remove('open'); document.body.style.overflow=''; }
+}
+
+function roundRect(ctx,x,y,w,h,tl,tr,br,bl){
+  ctx.moveTo(x+tl,y);
+  ctx.lineTo(x+w-tr,y); ctx.quadraticCurveTo(x+w,y,x+w,y+tr);
+  ctx.lineTo(x+w,y+h-br); ctx.quadraticCurveTo(x+w,y+h,x+w-br,y+h);
+  ctx.lineTo(x+bl,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-bl);
+  ctx.lineTo(x,y+tl); ctx.quadraticCurveTo(x,y,x+tl,y);
+  ctx.closePath();
+}
+
+function niceStep(max){
+  const steps=[1,2,5,10,20,25,50,100,200];
+  const target=max/5;
+  return steps.find(s=>s>=target)||100;
+}
+
+function buildChartTable(monthData, groups){
+  const el=document.getElementById('ch-table');
+  const pastData=monthData.filter(d=>!d.isFut);
+  if(!pastData.length){el.innerHTML='<p style="text-align:center;color:var(--text3);padding:1rem;">ยังไม่มีข้อมูลในปีนี้</p>';return;}
+  // group header cols with their targets
+  const groupCols=groups.map(g=>`<th>${g}<br><span style="font-size:10px;font-weight:400;color:var(--text3);">เป้า ${CH_GROUP_TARGET[g]||'—'}</span></th>`).join('');
+  const rows=pastData.map(d=>{
+    const totalMet=d.total>=CH_TARGET_TOTAL;
+    const gCols=groups.map(g=>{
+      const tgt=CH_GROUP_TARGET[g]||0;
+      const gVal=d.byGrp[g]||0;
+      const gMet=tgt&&gVal>=tgt;
+      return `<td style="font-family:var(--mono);${gMet?'color:var(--green);font-weight:700;':''}">${gVal}${gMet?' ✓':''}</td>`;
+    }).join('');
+    return `<tr>
+      <td style="font-weight:600;">${d.month} ${chartYear}</td>
+      ${gCols}
+      <td style="font-family:var(--mono);font-weight:700;" class="${totalMet?'met':'unmet'}">${d.total}${totalMet?' ✓':''}</td>
+      <td><div style="flex:1;height:8px;background:var(--surface2);border-radius:20px;overflow:hidden;width:80px;display:inline-block;"><div style="height:100%;width:${Math.min(d.total/CH_TARGET_TOTAL*100,100)}%;background:${totalMet?'var(--green)':'var(--amber)'};border-radius:20px;"></div></div> <span style="font-size:10px;color:var(--text3);font-family:var(--mono);">${d.total}/${CH_TARGET_TOTAL}</span></td>
+    </tr>`;
+  }).join('');
+  el.innerHTML=`<table class="ch-tbl"><thead><tr><th>Month</th>${groupCols}<th>Total<br><span style="font-size:10px;font-weight:400;color:var(--text3);">เป้า ${CH_TARGET_TOTAL}</span></th><th>Progress</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function setChartYear(y,btn){
+  chartYear=y;
+  document.querySelectorAll('.ch-year-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMonthlyChart();
+}
+function setChartView(v,btn){
+  chartView=v;
+  document.querySelectorAll('.ch-view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMonthlyChart();
+}
+function switchTab(pid,btn){
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  showPage(pid);
+  if(pid==='pg-history-list') renderHistoryList();
+  if(pid==='pg-dashboard'){ renderDashboard(); renderBuddyInsights(); }
+  if(pid==='pg-chart') renderMonthlyChart();
+}
+
+// ── BUDDY INSIGHTS ─────────────────────────────────────────────────────
+const MOODS_LIST = ['😄 สุขใจ','😌 สงบ','🤔 กังวล','😴 เหนื่อย','😤 หงุดหงิด','😢 เศร้า','🔥 มีพลัง','🥰 อบอุ่น'];
+const MOOD_COLORS = {'😄 สุขใจ':'#F59E0B','😌 สงบ':'#1D9E75','🤔 กังวล':'#185FA5','😴 เหนื่อย':'#9CA3AF',
+                     '😤 หงุดหงิด':'#D85A30','😢 เศร้า':'#712B13','🔥 มีพลัง':'#EF4444','🥰 อบอุ่น':'#EC4899'};
+const BI_COLORS = ['#1D9E75','#185FA5','#854F0B','#712B13','#3C3489','#0F6E56','#BA7517','#0C447C'];
+let biQ3ActiveMonth = null;
+
+function isFutureMonth(year,mi){
+  return year>CUR_YEAR||(year===CUR_YEAR&&mi>CUR_MONTH);
+}
+
+function getBuddyData(year, fGroup, fZone, fMonth){
+  const entries = [];
+  // build reverse map: buddyNotes key → member (handles ID padding differences)
+  const keyToMember = {};
+  Object.keys(buddyNotes).forEach(k=>{
+    let m = members.find(m=>m.id===k);
+    if(!m) m = members.find(m=>m.name===k);
+    if(!m) m = members.find(m=>{
+      const mN=m.id.replace(/^[A-Z]+0*/,''), kN=k.replace(/^[A-Z]+0*/,'');
+      return mN===kN && mN!=='';
+    });
+    if(m) keyToMember[k]=m;
+  });
+  Object.entries(buddyNotes).forEach(([key, months])=>{
+    const m=keyToMember[key]; if(!m) return;
+    if(fGroup && m.group!==fGroup) return;
+    if(fZone){ if(fZone==='__other__'?KNOWN_ZONES.includes(m.zone):m.zone!==fZone) return; }
+    Object.entries(months).forEach(([monthKey, note])=>{
+      const [y,mi]=monthKey.split('-').map(Number);
+      if(y!==year) return;
+      if(fMonth!==null && fMonth!==undefined && fMonth!=='' && mi!==parseInt(fMonth)) return;
+      entries.push({m,mi,note,key:monthKey});
+    });
+  });
+  return entries;
+}
+
+// generic horizontal bar row (CSS, no canvas)
+function biBarRow(label, value, maxVal, color, suffix='', sublabel=''){
+  const pct = maxVal ? Math.round(value/maxVal*100) : 0;
+  return `<div class="bi-q4-row">
+    <div class="bi-q4-label" title="${label}">${label}${sublabel?'<br><span style="font-size:10px;color:var(--text3);">'+sublabel+'</span>':''}</div>
+    <div class="bi-q4-track">
+      <div class="bi-q4-fill" style="width:${pct}%;background:${color};min-width:${value?2:0}px;">
+        ${value>0?`<span class="bi-q4-count">${typeof value==='number'&&value%1!==0?value.toFixed(2):value}${suffix}</span>`:''}
+      </div>
+    </div>
+    <div class="bi-q4-total">${typeof value==='number'&&value%1!==0?value.toFixed(2):value}${suffix}</div>
+  </div>`;
+}
+
+function renderBuddyInsights(){
+  const year   = parseInt(document.getElementById('bi-f-year').value)||CUR_YEAR;
+  const fMonth = document.getElementById('bi-f-month').value;
+  const fGroup = document.getElementById('bi-f-group').value;
+  const fZone  = document.getElementById('bi-f-zone').value;
+
+  // populate filters
+  const groups=[...new Set(members.map(m=>m.group).filter(Boolean))].sort();
+  const zones=[...new Set(members.map(m=>m.zone).filter(Boolean))].sort();
+  document.getElementById('bi-f-group').innerHTML=
+    '<option value="">All groups</option>'+groups.map(g=>`<option${g===fGroup?' selected':''}>${g}</option>`).join('');
+  document.getElementById('bi-f-zone').innerHTML=
+    '<option value="">All zones</option>'+zones.map(z=>`<option${z===fZone?' selected':''}>${z}</option>`).join('');
+
+  const entries = getBuddyData(year, fGroup, fZone, fMonth);
+  const total = entries.length;
+
+  // summary stats
+  const avgQ1 = total ? (entries.reduce((s,e)=>s+(e.note.q1||0),0)/total) : 0;
+  const avgQ2 = total ? (entries.reduce((s,e)=>s+(e.note.q2||0),0)/total) : 0;
+  document.getElementById('bi-stats').innerHTML=`
+    <div class="stat"><div class="stat-label">Responses</div><div class="stat-val blue">${total}</div></div>
+    <div class="stat"><div class="stat-label">Avg Q1 ความสุข</div><div class="stat-val green">${avgQ1.toFixed(1)}</div></div>
+    <div class="stat"><div class="stat-label">Avg Q2 ความสนิท</div><div class="stat-val" style="color:#185FA5;">${avgQ2.toFixed(1)}</div></div>
+    <div class="stat"><div class="stat-label">Months</div><div class="stat-val">${[...new Set(entries.map(e=>e.mi))].length}</div></div>`;
+
+  if(!total){
+    ['bi-q1-bars','bi-q2-bars','bi-q4-bars','bi-q5-bars'].forEach(id=>{
+      document.getElementById(id).innerHTML='<div class="bi-comment-empty">ยังไม่มีข้อมูล Buddy Notes</div>';
+    });
+    document.getElementById('bi-q3-wall').innerHTML='<div class="bi-comment-empty">ยังไม่มีข้อมูล</div>';
+    document.getElementById('bi-q3-month-tabs').innerHTML='';
+    return;
+  }
+
+  // ── Q1 bar chart by month ──────────────────────────────────────
+  renderScoreByMonth('bi-q1-bars', entries, 'q1', '#1D9E75', year);
+
+  // ── Q2 bar chart by month ──────────────────────────────────────
+  renderScoreByMonth('bi-q2-bars', entries, 'q2', '#185FA5', year);
+
+  // ── Q3 comments ────────────────────────────────────────────────
+  const monthsWithComments=[...new Set(
+    entries.filter(e=>e.note.q3&&e.note.q3.trim()).map(e=>e.mi)
+  )].sort((a,b)=>a-b);
+  const tabEl=document.getElementById('bi-q3-month-tabs');
+  if(!monthsWithComments.length){
+    tabEl.innerHTML='';
+    document.getElementById('bi-q3-wall').innerHTML='<div class="bi-comment-empty">ยังไม่มีข้อเสนอแนะ</div>';
+  } else {
+    if(biQ3ActiveMonth===null||!monthsWithComments.includes(biQ3ActiveMonth))
+      biQ3ActiveMonth=monthsWithComments[monthsWithComments.length-1];
+    tabEl.innerHTML=monthsWithComments.map(mi=>
+      `<button class="bi-month-tab${mi===biQ3ActiveMonth?' active':''}" onclick="setQ3Month(${mi},${year},'${fGroup}','${fZone}',${fMonth||'null'})">${MONTHS[mi]}</button>`
+    ).join('');
+    renderQ3Comments(entries, biQ3ActiveMonth);
+  }
+
+  // ── Q4 faculty ranking ─────────────────────────────────────────
+  const tally={};
+  entries.forEach(e=>{
+    [e.note.q4a,e.note.q4b,e.note.q4c].filter(Boolean).forEach(f=>{
+      const k=f.trim(); if(k) tally[k]=(tally[k]||0)+1;
+    });
+  });
+  const sorted=Object.entries(tally).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  const q4el=document.getElementById('bi-q4-bars');
+  if(!sorted.length){ q4el.innerHTML='<div class="bi-comment-empty">ยังไม่มีข้อมูลคณะ</div>'; }
+  else {
+    const maxV=sorted[0][1];
+    const medals=['🥇','🥈','🥉'];
+    q4el.innerHTML=sorted.map(([name,cnt],i)=>
+      `<div class="bi-q4-row">
+        <div class="bi-q4-label" title="${name}">${medals[i]||''} ${name}</div>
+        <div class="bi-q4-track"><div class="bi-q4-fill" style="width:${Math.round(cnt/maxV*100)}%;background:${BI_COLORS[i%BI_COLORS.length]};">
+          <span class="bi-q4-count">${cnt}</span></div></div>
+        <div class="bi-q4-total">${cnt}x</div>
+      </div>`).join('');
+  }
+
+  // ── Q5 mood bar chart by month ─────────────────────────────────
+  renderMoodBars(entries, year);
+}
+
+function renderScoreByMonth(elId, entries, qKey, color, year){
+  const el=document.getElementById(elId);
+  const monthsWithData=[...new Set(entries.filter(e=>e.note[qKey]>0).map(e=>e.mi))].sort((a,b)=>a-b);
+  if(!monthsWithData.length){ el.innerHTML='<div class="bi-comment-empty">ยังไม่มีข้อมูล</div>'; return; }
+  const rows=monthsWithData.map(mi=>{
+    const monthEntries=entries.filter(e=>e.mi===mi&&e.note[qKey]>0);
+    const avg=monthEntries.reduce((s,e)=>s+(e.note[qKey]||0),0)/monthEntries.length;
+    const count=monthEntries.length;
+    return biBarRow(
+      MONTHS[mi]+' '+year,
+      avg, 5, color, '',
+      `${count} คน · avg ${avg.toFixed(2)}/5`
+    );
+  }).join('');
+  // also overall avg row
+  const all=entries.filter(e=>e.note[qKey]>0);
+  const overall=all.reduce((s,e)=>s+(e.note[qKey]||0),0)/(all.length||1);
+  el.innerHTML=rows+`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">`+
+    biBarRow('📊 รวมทั้งหมด', overall, 5, color+'99', '', `${all.length} responses`)+
+    `</div>`;
+  // animate
+  requestAnimationFrame(()=>{
+    el.querySelectorAll('.bi-q4-fill').forEach(b=>b.style.transition='width .5s ease');
+  });
+}
+
+function renderMoodBars(entries, year){
+  const el=document.getElementById('bi-q5-bars');
+  const legEl=document.getElementById('bi-q5-legend');
+  // count per mood per month
+  const monthsWithMood=[...new Set(entries.filter(e=>e.note.q5mood).map(e=>e.mi))].sort((a,b)=>a-b);
+  if(!monthsWithMood.length){ el.innerHTML='<div class="bi-comment-empty">ยังไม่มีข้อมูล</div>'; legEl.innerHTML=''; return; }
+
+  const moodsUsed=[...new Set(entries.map(e=>e.note.q5mood).filter(Boolean))];
+
+  // for each month: stacked bar sections
+  el.innerHTML=monthsWithMood.map(mi=>{
+    const moodCounts={};
+    entries.filter(e=>e.mi===mi&&e.note.q5mood).forEach(e=>{
+      const k=e.note.q5mood; moodCounts[k]=(moodCounts[k]||0)+1;
+    });
+    const total=Object.values(moodCounts).reduce((s,v)=>s+v,0);
+    const sections=Object.entries(moodCounts).sort((a,b)=>b[1]-a[1]);
+    const bar=sections.map(([mood,cnt])=>{
+      const pct=Math.round(cnt/total*100);
+      const col=MOOD_COLORS[mood]||'#888';
+      return `<div title="${mood}: ${cnt}" style="flex:${cnt};background:${col};height:100%;min-width:4px;position:relative;">
+        ${cnt>0&&pct>8?`<span style="position:absolute;left:50%;transform:translateX(-50%);top:50%;transform:translate(-50%,-50%);font-size:9px;color:#fff;font-weight:700;white-space:nowrap;">${cnt}</span>`:''}
+      </div>`;
+    }).join('');
+    return `<div class="bi-q4-row" style="align-items:center;">
+      <div class="bi-q4-label">${MONTHS[mi]} ${year}</div>
+      <div style="flex:1;height:24px;border-radius:20px;overflow:hidden;display:flex;background:var(--surface2);">${bar}</div>
+      <div class="bi-q4-total">${total}</div>
+    </div>`;
+  }).join('');
+
+  // legend
+  legEl.innerHTML=moodsUsed.map(mood=>
+    `<div class="bi-legend-item"><div class="bi-legend-swatch" style="background:${MOOD_COLORS[mood]||'#888'};border-radius:50%;"></div>${mood}</div>`
+  ).join('');
+}
+
+function setQ3Month(mi, year, fGroup, fZone, fMonth){
+  biQ3ActiveMonth=mi;
+  document.querySelectorAll('.bi-month-tab').forEach(b=>b.classList.toggle('active',b.textContent.trim()===MONTHS[mi]));
+  const entries=getBuddyData(year, fGroup||'', fZone||'', fMonth);
+  renderQ3Comments(entries, mi);
+}
+
+function renderQ3Comments(entries, mi){
+  const comments = entries
+    .filter(e=>e.mi===mi && e.note.q3 && e.note.q3.trim())
+    .map(e=>e.note.q3.trim());
+
+  const wall = document.getElementById('bi-q3-wall');
+  if(!comments.length){
+    wall.innerHTML='<div class="bi-comment-empty">ไม่มีข้อเสนอแนะในเดือนนี้</div>';
+    return;
+  }
+
+  // count frequency of each unique response
+  const freq = {};
+  comments.forEach(c=>{ freq[c]=(freq[c]||0)+1; });
+  const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+  const maxFreq = sorted[0][1];
+
+  // font size scale: min 13px → max 32px based on frequency
+  const minSize=13, maxSize=32;
+  const scale = v => maxFreq===1 ? 18 : Math.round(minSize + (v-1)/(maxFreq-1)*(maxSize-minSize));
+
+  // colour palette cycling
+  const PALETTE=['#1D9E75','#185FA5','#854F0B','#712B13','#3C3489','#0F6E56','#BA7517','#D85A30'];
+
+  wall.innerHTML='';
+  sorted.forEach(([text,count],i)=>{
+    setTimeout(()=>{
+      const span=document.createElement('span');
+      span.className='bi-cloud-word';
+      span.textContent=text;
+      span.title=`${count} คน`;
+      span.style.fontSize=scale(count)+'px';
+      span.style.color=PALETTE[i%PALETTE.length];
+      span.style.fontWeight=count>1?'700':'400';
+      if(count>1){
+        const badge=document.createElement('sup');
+        badge.textContent=count;
+        badge.style.cssText='font-size:10px;font-weight:700;margin-left:2px;opacity:.7;';
+        span.appendChild(badge);
+      }
+      wall.appendChild(span);
+    },i*40);
+  });
+}
+
+function getBuddyData(year, fGroup, fZone){
+  const entries = [];
+
+  // build a lookup: all possible keys for each member
+  // buddyNotes may be keyed by MemberID (e.g. YWD0004) while m.id is YWD00004
+  // so we try both m.id and all buddyNotes keys that match the member's name
+  const nameToKeys = {};
+  members.forEach(m=>{
+    // direct key match
+    if(buddyNotes[m.id]) nameToKeys[m.id] = m.id;
+    // also scan all buddyNotes keys for case-insensitive or padded variants
+  });
+  // build reverse map: buddyNote key → member
+  const keyToMember = {};
+  Object.keys(buddyNotes).forEach(k=>{
+    // try exact match first
+    const m = members.find(m=>m.id===k);
+    if(m){ keyToMember[k]=m; return; }
+    // try matching by name (buddyNotes keyed by name in older data)
+    const mByName = members.find(m=>m.name===k);
+    if(mByName){ keyToMember[k]=mByName; return; }
+    // try numeric suffix match (YWD0004 vs YWD00004)
+    const mByNum = members.find(m=>{
+      const mNum = m.id.replace(/^[A-Z]+0*/,'');
+      const kNum = k.replace(/^[A-Z]+0*/,'');
+      return mNum===kNum && mNum!=='';
+    });
+    if(mByNum){ keyToMember[k]=mByNum; }
+  });
+
+  Object.entries(buddyNotes).forEach(([key, months])=>{
+    const m = keyToMember[key]; if(!m) return;
+    if(fGroup && m.group!==fGroup) return;
+    if(fZone){ if(fZone==='__other__'?KNOWN_ZONES.includes(m.zone):m.zone!==fZone) return; }
+    Object.entries(months).forEach(([monthKey, note])=>{
+      const [y,mi] = monthKey.split('-').map(Number);
+      if(y !== year) return;
+      entries.push({m, mi, note, key:monthKey});
+    });
+  });
+  return entries;
+}
+
+function renderBuddyInsights(){
+  const year   = parseInt(document.getElementById('bi-f-year').value)||CUR_YEAR;
+  const fMonth = document.getElementById('bi-f-month').value; // "" = all months
+  const fGroup = document.getElementById('bi-f-group').value;
+  const fZone  = document.getElementById('bi-f-zone').value;
+
+  // populate group/zone dropdowns with grouped zones
+  const groups=[...new Set(members.map(m=>m.group).filter(Boolean))].sort();
+  const ZONE_SEQ=['กรุงเทพ 2','กรุงเทพ 3','กรุงเทพ 4','กรุงเทพ 8','กรุงเทพ 5','กรุงเทพ 6','กรุงเทพ 7','กรุงเทพ 11','กรุงเทพ 12'];
+  const memberZones=[...new Set(members.map(m=>m.zone).filter(Boolean))];
+  const bkkPresent=ZONE_SEQ.filter(z=>memberZones.includes(z));
+  const hasOther=memberZones.some(z=>!KNOWN_ZONES.includes(z));
+  document.getElementById('bi-f-group').innerHTML=
+    '<option value="">All groups</option>'+groups.map(g=>`<option${g===fGroup?' selected':''}>${g}</option>`).join('');
+  let zHtml='<option value="">All zones</option>';
+  bkkPresent.forEach(z=>{ zHtml+=`<option value="${z}"${z===fZone?' selected':''}>${z}</option>`; });
+  if(hasOther) zHtml+=`<option value="__other__"${'__other__'===fZone?' selected':''}>อื่น ๆ</option>`;
+  document.getElementById('bi-f-zone').innerHTML=zHtml;
+
+  const entries=getBuddyData(year,fGroup,fZone,fMonth);
+  const total=entries.length;
+
+  // summary stats
+  const avgQ1=total?(entries.reduce((s,e)=>s+(e.note.q1||0),0)/total):0;
+  const avgQ2=total?(entries.reduce((s,e)=>s+(e.note.q2||0),0)/total):0;
+  document.getElementById('bi-stats').innerHTML=`
+    <div class="stat"><div class="stat-label">Responses</div><div class="stat-val blue">${total}</div></div>
+    <div class="stat"><div class="stat-label">Avg Q1 ความสุข</div><div class="stat-val green">${avgQ1.toFixed(1)}</div></div>
+    <div class="stat"><div class="stat-label">Avg Q2 ความสนิท</div><div class="stat-val" style="color:#185FA5;">${avgQ2.toFixed(1)}</div></div>
+    <div class="stat"><div class="stat-label">Months</div><div class="stat-val">${[...new Set(entries.map(e=>e.mi))].length}</div></div>`;
+
+  const empty='<div class="bi-comment-empty">ยังไม่มีข้อมูล</div>';
+
+  if(!total){
+    ['bi-q1-bars','bi-q2-bars','bi-q4-bars','bi-q5-bars'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.innerHTML=empty;
+    });
+    document.getElementById('bi-q3-wall').innerHTML=empty;
+    document.getElementById('bi-q3-month-tabs').innerHTML='';
+    document.getElementById('bi-q5-legend').innerHTML='';
+    return;
+  }
+
+  // Q1 bars
+  renderScoreByMonth('bi-q1-bars',entries,'q1','#1D9E75',year);
+  // Q2 bars
+  renderScoreByMonth('bi-q2-bars',entries,'q2','#185FA5',year);
+
+  // Q3 comment wall with month tabs
+  const monthsWithComments=[...new Set(
+    entries.filter(e=>e.note.q3&&e.note.q3.trim()).map(e=>e.mi)
+  )].sort((a,b)=>a-b);
+  const tabEl=document.getElementById('bi-q3-month-tabs');
+  if(!monthsWithComments.length){
+    tabEl.innerHTML='';
+    document.getElementById('bi-q3-wall').innerHTML='<div class="bi-comment-empty">ยังไม่มีข้อเสนอแนะ</div>';
+  } else {
+    if(biQ3ActiveMonth===null||!monthsWithComments.includes(biQ3ActiveMonth))
+      biQ3ActiveMonth=monthsWithComments[monthsWithComments.length-1];
+    tabEl.innerHTML=monthsWithComments.map(mi=>
+      `<button class="bi-month-tab${mi===biQ3ActiveMonth?' active':''}"
+        onclick="biQ3ActiveMonth=${mi}; document.querySelectorAll('.bi-month-tab').forEach(b=>b.classList.toggle('active',parseInt(b.getAttribute('data-mi'))===${mi})); renderQ3Comments(getBuddyData(${year},'${fGroup}','${fZone}','${fMonth}'),${mi});"
+        data-mi="${mi}">${MONTHS[mi]}</button>`
+    ).join('');
+    renderQ3Comments(entries,biQ3ActiveMonth);
+  }
+
+  // Q4 faculty ranking
+  const tally={};
+  entries.forEach(e=>{
+    [e.note.q4a,e.note.q4b,e.note.q4c].filter(Boolean).forEach(f=>{
+      const k=f.trim(); if(k) tally[k]=(tally[k]||0)+1;
+    });
+  });
+  const sorted=Object.entries(tally).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  const q4el=document.getElementById('bi-q4-bars');
+  if(!sorted.length){ q4el.innerHTML=empty; }
+  else {
+    const maxV=sorted[0][1];
+    const medals=['🥇','🥈','🥉'];
+    q4el.innerHTML=sorted.map(([name,cnt],i)=>
+      `<div class="bi-q4-row">
+        <div class="bi-q4-label" title="${name}">${medals[i]||''} ${name}</div>
+        <div class="bi-q4-track"><div class="bi-q4-fill" style="width:${Math.round(cnt/maxV*100)}%;background:${BI_COLORS[i%BI_COLORS.length]};">
+          <span class="bi-q4-count">${cnt}</span></div></div>
+        <div class="bi-q4-total">${cnt}x</div>
+      </div>`).join('');
+  }
+
+  // Q5 mood stacked bars by month
+  renderMoodBars(entries,year);
+}
+
+// ── BUDDY NOTES ───────────────────────────────────────────────────────
+const STAR_LABELS = ['','แย่มาก 😞','ไม่ค่อยดี 😕','พอใช้ 😐','ดี 😊','ดีมาก 🤩'];
+const MOODS = [
+  {emoji:'😄',label:'สุขใจ'},{emoji:'😌',label:'สงบ'},{emoji:'🤔',label:'กังวล'},
+  {emoji:'😴',label:'เหนื่อย'},{emoji:'😤',label:'หงุดหงิด'},{emoji:'😢',label:'เศร้า'},
+  {emoji:'🔥',label:'มีพลัง'},{emoji:'🥰',label:'อบอุ่น'},
+];
+
+// buddyNotes[memberId][monthKey] = {q1,q2,q3,q4a,q4b,q4c,q5mood,q5text,savedAt,monthLabel}
+// monthKey = "YYYY-M"  e.g. "2025-4"
+let buddyNotes = {};
+let bnCurrentId = null;
+let bnLogOpen = false;
+
+function bnMonthKey(year, monthIdx){ return `${year}-${monthIdx}`; }
+function bnCurKey(){ return bnMonthKey(CUR_YEAR, CUR_MONTH); }
+function bnGetNote(mid, key){ return (buddyNotes[mid]||{})[key]||null; }
+function bnSetNote(mid, key, note){ if(!buddyNotes[mid]) buddyNotes[mid]={}; buddyNotes[mid][key]=note; }
+function bnPrevNotes(mid){
+  // all saved month keys for this member, sorted newest first, excluding current month
+  const curKey = bnCurKey();
+  return Object.entries(buddyNotes[mid]||{})
+    .filter(([k])=>k!==curKey)
+    .sort((a,b)=>b[0].localeCompare(a[0]));
+}
+
+function renderBuddyPage(){
+  const mo = NOW.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  document.getElementById('bn-badge').textContent = 'Buddy Notes — '+mo;
+  renderBuddyList();
+  renderBuddySummary();
+}
+
+function renderBuddyList(){
+  const q = (document.getElementById('bn-srch').value||'').toLowerCase().trim();
+  const presentMembers = members.filter(m=>{
+    if(!m.present) return false;
+    if(q && !m.name.toLowerCase().includes(q) && !(m.nick||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const el  = document.getElementById('bn-member-list');
+  const nop = document.getElementById('bn-no-present');
+  if(!presentMembers.length){ el.innerHTML=''; nop.style.display='block'; return; }
+  nop.style.display='none';
+  el.innerHTML = presentMembers.map(m=>{
+    const hasNote = !!bnGetNote(m.id, bnCurKey());
+    const prevCount = bnPrevNotes(m.id).length;
+    return `
+    <div class="member-row">
+      <div class="avatar ${avc(m.idx)}">${avInit(m.name)}</div>
+      <div class="member-info">
+        <div class="member-name">${m.name}${m.nick?`<span class="nick">(${m.nick})</span>`:''}</div>
+        <div class="member-meta">
+          <span class="tag tag-g">${m.region}</span><span class="tag tag-b">${m.zone}</span><span class="tag tag-p">${m.cls}</span>
+          ${prevCount>0?`<span class="tag" style="background:var(--amber-light);color:var(--amber-text);">📋 ${prevCount} บันทึกเก่า</span>`:''}
+        </div>
+      </div>
+      ${hasNote
+        ? `<span class="status-pill pill-present" style="white-space:nowrap;">✓ บันทึกแล้ว</span>
+           <button class="bn-note-edit" onclick="openBuddyForm('${m.id}')">แก้ไข</button>`
+        : `<button class="action-btn mark" onclick="openBuddyForm('${m.id}')">
+             <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+             กรอก
+           </button>`
+      }
+    </div>`;
+  }).join('');
+}
+
+function renderBuddySummary(){
+  const wrap = document.getElementById('bn-summary-wrap');
+  const list = document.getElementById('bn-notes-list');
+  // collect all members with a note for THIS month
+  const thisMonthEntries = members
+    .filter(m=>bnGetNote(m.id, bnCurKey()))
+    .map(m=>({m, note:bnGetNote(m.id, bnCurKey())}));
+  if(!thisMonthEntries.length){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  const stars = v => v ? '⭐'.repeat(v)+`<span style="font-size:11px;color:var(--text3);margin-left:4px;">${STAR_LABELS[v]}</span>` : '—';
+  list.innerHTML = thisMonthEntries.map(({m,note:n})=>`
+    <div class="bn-note-card">
+      <div class="bn-note-header">
+        <div>
+          <div class="bn-note-name clickable" onclick="openBnHistory('${m.id}')" title="คลิกเพื่อดูประวัติทั้งหมด">${m.name}${m.nick?' ('+m.nick+')':''}</div>
+          <div class="bn-note-meta">${m.region} · ${m.zone} · ${m.cls} — ${n.monthLabel}</div>
+        </div>
+        <button class="bn-note-edit" onclick="openBuddyForm('${m.id}')">แก้ไข</button>
+      </div>
+      <div class="bn-note-row"><span class="bn-note-q">1. ความสุขจากกิจกรรม</span><span class="bn-note-a">${stars(n.q1)}</span></div>
+      <div class="bn-note-row"><span class="bn-note-q">2. ความสนิทกับเพื่อน</span><span class="bn-note-a">${stars(n.q2)}</span></div>
+      <div class="bn-note-row"><span class="bn-note-q">3. ข้อเสนอแนะ</span><span class="bn-note-a">${n.q3||'—'}</span></div>
+      <div class="bn-note-row"><span class="bn-note-q">4. คณะที่อยากเข้า</span><span class="bn-note-a">${[n.q4a,n.q4b,n.q4c].filter(Boolean).join(' · ')||'—'}</span></div>
+      <div class="bn-note-row"><span class="bn-note-q">5. ตอนนี้เป็นอย่างไรบ้าง</span><span class="bn-note-a">${n.q5mood?n.q5mood+' ':''} ${n.q5text||'—'}</span></div>
+    </div>`).join('');
+}
+
+function openBuddyForm(mid){
+  bnCurrentId = mid; bnLogOpen = false;
+  const m = members.find(x=>x.id===mid); if(!m) return;
+  const curKey = bnCurKey();
+  const n = bnGetNote(mid, curKey) || {};
+  const prevList = bnPrevNotes(mid);
+
+  document.getElementById('bn-modal-name').textContent = m.name+(m.nick?' ('+m.nick+')':'');
+  document.getElementById('bn-modal-month').textContent = NOW.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+
+  // ── previous notes log ──────────────────────────────
+  const logWrap = document.getElementById('bn-prev-log');
+  if(prevList.length){
+    logWrap.style.display='block';
+    const toggle = document.getElementById('bn-log-toggle-btn');
+    document.getElementById('bn-log-toggle-label').textContent = `ดูบันทึกเดือนก่อน (${prevList.length} เดือน) ▾`;
+    document.getElementById('bn-log-body').style.display='none';
+    bnLogOpen=false;
+
+    const stars = v => v ? '⭐'.repeat(v) : '—';
+    document.getElementById('bn-log-entries').innerHTML = prevList.map(([key,note])=>{
+      const [y,mi] = key.split('-').map(Number);
+      const label = note.monthLabel || (MONTHS_TH[mi]||MONTHS[mi])+' '+y;
+      return `
+      <div class="bn-log-entry">
+        <div class="bn-log-month">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          ${label}
+        </div>
+        <div class="bn-log-row"><span class="bn-log-q">1. ความสุขจากกิจกรรม</span><span class="bn-log-a">${stars(note.q1)}</span></div>
+        <div class="bn-log-row"><span class="bn-log-q">2. ความสนิทกับเพื่อน</span><span class="bn-log-a">${stars(note.q2)}</span></div>
+        <div class="bn-log-row"><span class="bn-log-q">3. ข้อเสนอแนะ</span><span class="bn-log-a">${note.q3||'—'}</span></div>
+        <div class="bn-log-row"><span class="bn-log-q">4. คณะที่อยากเข้า</span><span class="bn-log-a">${[note.q4a,note.q4b,note.q4c].filter(Boolean).join(' · ')||'—'}</span></div>
+        <div class="bn-log-row"><span class="bn-log-q">5. ตอนนี้เป็นอย่างไร</span><span class="bn-log-a">${note.q5mood?note.q5mood+' ':''} ${note.q5text||'—'}</span></div>
+      </div>`;
+    }).join('');
+  } else {
+    logWrap.style.display='none';
+  }
+
+  // ── star widgets ─────────────────────────────────────
+  ['q1','q2'].forEach(q=>{
+    const el = document.getElementById(`bn-${q}-stars`);
+    el.innerHTML = [1,2,3,4,5].map(v=>`
+      <div class="bn-star" onclick="setStar('${q}',${v})">
+        <svg viewBox="0 0 24 24" fill="${(n[q]||0)>=v?'#F59E0B':'none'}" stroke="${(n[q]||0)>=v?'#F59E0B':'#D3D0C6'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>`).join('');
+    document.getElementById(`bn-${q}-label`).textContent = n[q] ? STAR_LABELS[n[q]] : 'เลือกคะแนน';
+  });
+
+  // ── text fields ──────────────────────────────────────
+  document.getElementById('bn-q3').value      = n.q3    || '';
+  document.getElementById('bn-q4a').value     = n.q4a   || '';
+  document.getElementById('bn-q4b').value     = n.q4b   || '';
+  document.getElementById('bn-q4c').value     = n.q4c   || '';
+  document.getElementById('bn-q5-text').value = n.q5text|| '';
+
+  // ── mood buttons ─────────────────────────────────────
+  document.getElementById('bn-q5-moods').innerHTML = MOODS.map(({emoji,label})=>{
+    const val=emoji+' '+label;
+    return `<div class="bn-mood${n.q5mood===val?' selected':''}" onclick="selectMood(this,'${val}')">
+      <span class="bn-mood-emoji">${emoji}</span><span>${label}</span>
+    </div>`;
+  }).join('');
+
+  // store current q1/q2 state so setStar works before save
+  if(!buddyNotes[mid]) buddyNotes[mid]={};
+  if(!buddyNotes[mid][curKey]) buddyNotes[mid][curKey]={q1:n.q1||0,q2:n.q2||0};
+
+  document.getElementById('bn-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function toggleBnLog(){
+  bnLogOpen=!bnLogOpen;
+  document.getElementById('bn-log-body').style.display=bnLogOpen?'block':'none';
+  const [txt,arr] = bnLogOpen ? ['ซ่อนบันทึกเดือนก่อน ▴', '▴'] : ['ดูบันทึกเดือนก่อน ▾', '▾'];
+  const el = document.getElementById('bn-log-toggle-label');
+  const count = document.getElementById('bn-log-entries').children.length;
+  el.textContent = `${bnLogOpen?'ซ่อน':'ดู'}บันทึกเดือนก่อน (${count} เดือน) ${bnLogOpen?'▴':'▾'}`;
+}
+
+function setStar(q, val){
+  const curKey = bnCurKey();
+  if(!buddyNotes[bnCurrentId]) buddyNotes[bnCurrentId]={};
+  if(!buddyNotes[bnCurrentId][curKey]) buddyNotes[bnCurrentId][curKey]={};
+  const prev = buddyNotes[bnCurrentId][curKey][q]||0;
+  const newVal = prev===val ? 0 : val;
+  buddyNotes[bnCurrentId][curKey][q] = newVal;
+  const el = document.getElementById(`bn-${q}-stars`);
+  el.querySelectorAll('.bn-star svg').forEach((svg,i)=>{
+    const filled = newVal >= i+1;
+    svg.setAttribute('fill', filled?'#F59E0B':'none');
+    svg.setAttribute('stroke', filled?'#F59E0B':'#D3D0C6');
+  });
+  document.getElementById(`bn-${q}-label`).textContent = newVal ? STAR_LABELS[newVal] : 'เลือกคะแนน';
+}
+function selectMood(el, val){
+  document.querySelectorAll('.bn-mood').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected'); el.dataset.val=val;
+}
+
+function saveBuddyNote(){
+  if(!bnCurrentId) return;
+  const curKey = bnCurKey();
+  const cur = (buddyNotes[bnCurrentId]||{})[curKey]||{};
+  const selectedMood = document.querySelector('.bn-mood.selected');
+  const monthLabel = NOW.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  const note = {
+    q1:      cur.q1||0,
+    q2:      cur.q2||0,
+    q3:      document.getElementById('bn-q3').value.trim(),
+    q4a:     document.getElementById('bn-q4a').value.trim(),
+    q4b:     document.getElementById('bn-q4b').value.trim(),
+    q4c:     document.getElementById('bn-q4c').value.trim(),
+    q5mood:  selectedMood ? selectedMood.dataset.val : '',
+    q5text:  document.getElementById('bn-q5-text').value.trim(),
+    monthLabel,
+    savedAt: ts()
+  };
+  bnSetNote(bnCurrentId, curKey, note);
+
+  // capture ID before closing modal (closeBnModalDirect sets bnCurrentId=null)
+  const savedId = bnCurrentId;
+
+  closeBnModalDirect();
+  render();
+  showToast('✓ บันทึก Buddy Note เรียบร้อย','ok');
+
+  const m = members.find(x=>x.id===savedId);
+  if(!m){
+    console.warn('saveBuddyNote: member not found for id:', savedId);
+    return;
+  }
+
+  console.log('saveBuddyNote sending memberid:', m.id, 'month:', CUR_MONTH+1, 'year:', CUR_YEAR);
+
+  if(SCRIPT_URL && SCRIPT_URL!=='YOUR_GOOGLE_APPS_SCRIPT_URL'){
+    const params = new URLSearchParams({
+      action:     'attendance_buddy',
+      memberid:   String(m.id),
+      name:       m.name   || '',
+      nick:       m.nick   || '',
+      group:      m.group  || '',
+      region:     m.region || '',
+      zone:       m.zone   || '',
+      cls:        m.cls    || '',
+      phone:      m.phone  || '',
+      month:      MONTHS[CUR_MONTH],
+      monthIndex: String(CUR_MONTH + 1),
+      year:       String(CUR_YEAR),
+      q1:         String(note.q1    || 0),
+      q2:         String(note.q2    || 0),
+      q3:         note.q3    || '',
+      q4a:        note.q4a   || '',
+      q4b:        note.q4b   || '',
+      q4c:        note.q4c   || '',
+      q5mood:     note.q5mood || '',
+      q5text:     note.q5text || ''
+    });
+    console.log('attendance_buddy params:', params.toString());
+    fetch(SCRIPT_URL + '?' + params.toString(), {
+      method: 'GET',
+      mode:   'no-cors'
+    }).catch(e=>console.error('fetch error:', e));
+  }
+}
+
+// ── BUDDY NOTES FULL HISTORY MODAL ────────────────────────────────────
+function openBnHistory(mid){
+  const m = members.find(x=>x.id===mid); if(!m) return;
+  document.getElementById('bnh-title').textContent = m.name+(m.nick?' ('+m.nick+')':'');
+  document.getElementById('bnh-meta').textContent  = `${m.region} · ${m.zone} · ${m.cls} — ประวัติ Buddy Notes ทั้งหมด`;
+
+  // collect ALL months with notes, sorted newest first
+  const allNotes = Object.entries(buddyNotes[mid]||{})
+    .sort((a,b)=>b[0].localeCompare(a[0]));
+
+  const curKey = bnCurKey();
+  const stars = v => v ? '⭐'.repeat(v)+`<span style="font-size:11px;color:var(--text3);margin-left:4px;">${STAR_LABELS[v]}</span>` : '—';
+
+  const el = document.getElementById('bnh-entries');
+  if(!allNotes.length){
+    el.innerHTML='<div class="bn-hist-empty">ยังไม่มีบันทึก Buddy Notes สำหรับสมาชิกคนนี้</div>';
+  } else {
+    el.innerHTML = allNotes.map(([key, note])=>{
+      const isCur = key === curKey;
+      const [y,mi] = key.split('-').map(Number);
+      const label = note.monthLabel || (MONTHS_TH[mi]||MONTHS[mi])+' '+y;
+      return `
+      <div class="bn-hist-entry" style="${isCur?'border-left-color:var(--green);background:var(--green-light);':''}">
+        <div class="bn-hist-month">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          ${label}${isCur?' <span style="background:var(--green);color:#fff;font-size:10px;padding:1px 7px;border-radius:20px;margin-left:4px;">เดือนนี้</span>':''}
+        </div>
+        <div class="bn-hist-row"><span class="bn-hist-q">1. ความสุขจากกิจกรรม</span><span class="bn-hist-a">${stars(note.q1)}</span></div>
+        <div class="bn-hist-row"><span class="bn-hist-q">2. ความสนิทกับเพื่อน</span><span class="bn-hist-a">${stars(note.q2)}</span></div>
+        <div class="bn-hist-row"><span class="bn-hist-q">3. ข้อเสนอแนะ</span><span class="bn-hist-a">${note.q3||'—'}</span></div>
+        <div class="bn-hist-row"><span class="bn-hist-q">4. คณะที่อยากเข้า</span><span class="bn-hist-a">${[note.q4a,note.q4b,note.q4c].filter(Boolean).join(' · ')||'—'}</span></div>
+        <div class="bn-hist-row"><span class="bn-hist-q">5. ตอนนี้เป็นอย่างไรบ้าง</span><span class="bn-hist-a">${note.q5mood?note.q5mood+' ':''} ${note.q5text||'—'}</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  // wire the edit button
+  const editBtn = document.getElementById('bnh-edit-btn');
+  editBtn.onclick = ()=>{ closeBnHistory('direct'); openBuddyForm(mid); };
+
+  document.getElementById('bn-history-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeBnHistory(e){
+  if(!e || e.target.id==='bn-history-modal' || e==='direct'){
+    document.getElementById('bn-history-modal').classList.remove('open');
+    document.body.style.overflow='';
+  }
+}
+function closeBnModalDirect(){ document.getElementById('bn-modal').classList.remove('open'); document.body.style.overflow=''; bnCurrentId=null; bnLogOpen=false; }
+function goBack(){ showPage('pg-tracker'); render(); }
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='pg-tracker') render();
+  window.scrollTo(0,0);
+}
+
+init();
+</script>
+<!-- Bar chart detail modal -->
+<div class="modal-overlay" id="db-detail-modal" onclick="closeDbDetail(event)">
+  <div class="modal" style="max-width:500px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="dbdet-title">—</div>
+        <div class="modal-sub" id="dbdet-meta">—</div>
+      </div>
+      <button class="modal-close" onclick="closeDbDetail('direct')">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="dbdet-progress"></div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <button class="db-btab active" id="dbdet-tab-present" onclick="dbDetTab('present')">✓ Present</button>
+        <button class="db-btab" id="dbdet-tab-absent" onclick="dbDetTab('absent')">✗ Absent</button>
+      </div>
+      <div id="dbdet-present-list" style="max-height:340px;overflow-y:auto;"></div>
+      <div id="dbdet-absent-list"  style="max-height:340px;overflow-y:auto;display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Monthly chart detail modal -->
+<div class="modal-overlay" id="ch-detail-modal" onclick="closeChDetail(event)">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="chdet-title">—</div>
+        <div class="modal-sub" id="chdet-meta">—</div>
+      </div>
+      <button class="modal-close" onclick="closeChDetail('direct')">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="chdet-summary" style="margin-bottom:1rem;"></div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <button class="db-btab active" id="chdet-tab-present" onclick="chDetTab('present')">✓ Present</button>
+        <button class="db-btab" id="chdet-tab-absent" onclick="chDetTab('absent')">✗ Absent</button>
+      </div>
+      <div id="chdet-present-list" style="max-height:320px;overflow-y:auto;"></div>
+      <div id="chdet-absent-list"  style="max-height:320px;overflow-y:auto;display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Buddy Notes full history modal -->
+<div class="modal-overlay" id="bn-history-modal" onclick="closeBnHistory(event)">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="bnh-title">—</div>
+        <div class="modal-sub" id="bnh-meta">ประวัติ Buddy Notes ทั้งหมด</div>
+      </div>
+      <button class="modal-close" onclick="closeBnHistory('direct')">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="bnh-entries"></div>
+    </div>
+    <div style="padding:1rem 1.5rem;border-top:1px solid var(--border);">
+      <button class="btn-primary" id="bnh-edit-btn" onclick="">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        กรอก / แก้ไข บันทึกเดือนนี้
+      </button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
