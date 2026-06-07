@@ -381,6 +381,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text1);min-height:
 
 .bi-wrap{position:relative;width:100%;overflow:hidden;}
 .bi-wrap canvas{display:block;}
+.search-input::-webkit-search-cancel-button{cursor:pointer;}
+.search-input{-webkit-appearance:none;appearance:none;border-radius:var(--radius-md)!important;}
 </style>
 </head>
 <body>
@@ -461,15 +463,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text1);min-height:
       <div class="search-row">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-input" type="text" id="srch"
+          <input class="search-input" type="search" id="srch"
             placeholder="ค้นหา ชื่อ, ชื่อเล่น…"
-            oninput="doFilter()"
-            onkeyup="doFilter()"
-            onchange="doFilter()"
             autocomplete="off"
             autocorrect="off"
             autocapitalize="off"
-            spellcheck="false"/>
+            spellcheck="false"
+            enterkeyhint="search"/>
         </div>
       </div>
 
@@ -1046,15 +1046,35 @@ function init(){
   document.getElementById('bi-f-month').value = String(CUR_MONTH);
   document.getElementById('bi-f-year').value  = String(CUR_YEAR);
 
-  // poll search input every 300ms — catches mobile keyboards that don't fire oninput
-  let _lastSrch='';
-  setInterval(()=>{
-    const el=document.getElementById('srch');
-    if(el && el.value.toLowerCase().trim()!==_lastSrch){
-      _lastSrch=el.value.toLowerCase().trim();
-      doFilter();
+  // ── Mobile-safe search binding ───────────────────────────────
+  // Uses multiple event strategies to handle Android/iOS Thai keyboard quirks
+  (function bindSearch(){
+    const el = document.getElementById('srch');
+    if(!el) return;
+    let composing = false;
+    let lastVal = '';
+
+    function triggerFilter(){
+      const v = el.value.toLowerCase().trim();
+      if(v !== lastVal){ lastVal=v; doFilter(); }
     }
-  },300);
+
+    // Standard events
+    el.addEventListener('input',          triggerFilter, {passive:true});
+    el.addEventListener('keyup',          triggerFilter, {passive:true});
+    el.addEventListener('change',         triggerFilter, {passive:true});
+    el.addEventListener('search',         triggerFilter, {passive:true});
+
+    // IME composition (Thai/CJK keyboards on Android)
+    el.addEventListener('compositionstart', ()=>{ composing=true; });
+    el.addEventListener('compositionend',   ()=>{ composing=false; triggerFilter(); });
+
+    // Touch-specific: fire on touchend in case input missed
+    el.addEventListener('touchend', ()=>{ setTimeout(triggerFilter,100); }, {passive:true});
+
+    // Fallback poll every 200ms — catches any remaining edge cases
+    setInterval(triggerFilter, 200);
+  })();
 
   if(false){ // URL is hardcoded — banner never shown
     document.getElementById('config-banner').style.display='flex';
